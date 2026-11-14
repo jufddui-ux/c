@@ -1,0 +1,38 @@
+# Security & Privacy - Environment variables & credentials
+.env
+.env.*
+*.key
+*.pem
+*.token
+*.cert
+*.secret
+
+# Logs & Temporary files
+*.log
+*.tmp
+_temp*
+*.bak
+
+# OS & Raw Upload Dumps
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+.DS_Store
+.Spotlight-V100
+.Trashes
+WhatsApp Image*
+*.jpeg
+
+# Editor & IDE settings
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Python cache & temp
+__pycache__/
+*.py[cod]
+*$py.class
