@@ -381,10 +381,54 @@
             class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white"></textarea>
         </div>
 
-        <div>
-          <label class="block text-xs font-semibold text-gray-300 mb-1">Image URL or File</label>
-          <input type="text" id="prodImage" placeholder="assets/products/ai_tracksuit_men.jpg" 
-            class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white">
+        <!-- Product Image Upload Section -->
+        <div class="space-y-2 pt-1 border-t border-gray-800/80">
+          <label class="block text-xs font-bold text-amber-300 uppercase tracking-wider flex items-center justify-between">
+            <span><i class="fa-solid fa-camera mr-1"></i> Product Photo *</span>
+            <span id="uploadStatusText" class="text-[10px] font-normal text-gray-400">Upload from device or enter URL</span>
+          </label>
+
+          <!-- Upload Dropzone / File Picker -->
+          <div id="dropzoneContainer" onclick="document.getElementById('prodImageFile').click()" 
+            class="border-2 border-dashed border-gray-700 hover:border-brand-gold/80 rounded-2xl p-4 text-center cursor-pointer bg-[#080b11]/80 hover:bg-[#121724] transition group">
+            <input type="file" id="prodImageFile" accept="image/*" class="hidden" onchange="handleImageFileSelected(this)">
+            
+            <div id="uploadPrompt" class="flex flex-col items-center justify-center py-2">
+              <div class="w-12 h-12 rounded-full bg-brand-gold/10 text-brand-gold flex items-center justify-center mb-2 group-hover:scale-110 transition">
+                <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
+              </div>
+              <p class="text-xs font-semibold text-gray-200">Click / Tap to choose picture from your device or mobile</p>
+              <p class="text-[10px] text-gray-500 mt-0.5">Supports JPG, PNG, WEBP (Instant Auto-Upload)</p>
+            </div>
+
+            <!-- Upload Progress / Preview Card -->
+            <div id="uploadPreviewCard" class="hidden flex items-center gap-3 bg-[#101522] border border-gray-700 p-2.5 rounded-xl text-left">
+              <img id="imagePreviewThumb" src="" alt="Preview" class="w-14 h-16 rounded-lg object-cover bg-black border border-gray-700 shrink-0">
+              <div class="flex-1 min-w-0">
+                <p id="imagePreviewFilename" class="text-xs font-bold text-white truncate">product_image.jpg</p>
+                <p id="imagePreviewSubtext" class="text-[10px] text-emerald-400 font-semibold flex items-center gap-1 mt-0.5">
+                  <i class="fa-solid fa-circle-check"></i> Ready to save
+                </p>
+              </div>
+              <button type="button" onclick="event.stopPropagation(); clearUploadedImage()" class="px-2.5 py-1.5 rounded-lg bg-red-950/80 hover:bg-red-900 text-red-300 text-[11px] font-semibold shrink-0">
+                <i class="fa-solid fa-trash mr-1"></i> Remove
+              </button>
+            </div>
+          </div>
+
+          <!-- Direct URL / Path Option -->
+          <div class="mt-2">
+            <details class="text-[11px] text-gray-400">
+              <summary class="cursor-pointer text-gray-400 hover:text-brand-gold select-none flex items-center gap-1">
+                <i class="fa-solid fa-link text-[10px]"></i> Or use custom image path / URL
+              </summary>
+              <div class="mt-2">
+                <input type="text" id="prodImage" placeholder="assets/products/... or /uploads/..." 
+                  oninput="handleManualImageUrl(this.value)"
+                  class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2 text-xs text-white focus:border-brand-gold focus:outline-none">
+              </div>
+            </details>
+          </div>
         </div>
 
         <button type="submit" class="w-full py-3 rounded-xl bg-brand-gold text-black font-extrabold text-xs uppercase shadow transition mt-2">
@@ -595,10 +639,84 @@
       } catch (e) { console.error(e); }
     }
 
+    function handleImageFileSelected(input) {
+      const file = input.files && input.files[0];
+      if (!file) return;
+
+      const prompt = document.getElementById('uploadPrompt');
+      const card = document.getElementById('uploadPreviewCard');
+      const thumb = document.getElementById('imagePreviewThumb');
+      const fname = document.getElementById('imagePreviewFilename');
+      const subtext = document.getElementById('imagePreviewSubtext');
+      const status = document.getElementById('uploadStatusText');
+
+      // Local preview immediately
+      const objectUrl = URL.createObjectURL(file);
+      thumb.src = objectUrl;
+      fname.innerText = file.name;
+      subtext.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-amber-300"></i> Uploading to server...';
+      status.innerText = 'Uploading photo...';
+      prompt.classList.add('hidden');
+      card.classList.remove('hidden');
+
+      // Upload to backend via FormData
+      const formData = new FormData();
+      formData.append('image', file);
+
+      fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById('prodImage').value = data.url;
+          subtext.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i> Uploaded & ready!';
+          status.innerText = 'Uploaded: ' + data.filename;
+          showToast('Image uploaded successfully!');
+        } else {
+          subtext.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-red-400"></i> Upload failed: ' + (data.message || 'Error');
+          status.innerText = 'Upload failed';
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        subtext.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-red-400"></i> Server error';
+        status.innerText = 'Connection error';
+      });
+    }
+
+    function handleManualImageUrl(url) {
+      if (!url) {
+        clearUploadedImage();
+        return;
+      }
+      const prompt = document.getElementById('uploadPrompt');
+      const card = document.getElementById('uploadPreviewCard');
+      const thumb = document.getElementById('imagePreviewThumb');
+      const fname = document.getElementById('imagePreviewFilename');
+      const subtext = document.getElementById('imagePreviewSubtext');
+
+      thumb.src = url;
+      fname.innerText = 'Custom Image Path';
+      subtext.innerHTML = '<i class="fa-solid fa-link text-blue-400"></i> Linked URL';
+      prompt.classList.add('hidden');
+      card.classList.remove('hidden');
+    }
+
+    function clearUploadedImage() {
+      document.getElementById('prodImageFile').value = '';
+      document.getElementById('prodImage').value = '';
+      document.getElementById('uploadPrompt').classList.remove('hidden');
+      document.getElementById('uploadPreviewCard').classList.add('hidden');
+      document.getElementById('uploadStatusText').innerText = 'Upload from device or enter URL';
+    }
+
     function openAddProductModal() {
       document.getElementById('productModalTitle').innerText = 'Add New Product';
       document.getElementById('prodEditId').value = '';
       document.getElementById('productForm').reset();
+      clearUploadedImage();
       document.getElementById('productModal').classList.remove('hidden');
     }
 
@@ -618,6 +736,14 @@
       document.getElementById('prodColors').value = (p.colors || []).join(', ');
       document.getElementById('prodDesc').value = p.description || '';
       document.getElementById('prodImage').value = p.aiImage || '';
+
+      if (p.aiImage) {
+        handleManualImageUrl(p.aiImage);
+        document.getElementById('imagePreviewFilename').innerText = p.title;
+        document.getElementById('imagePreviewSubtext').innerHTML = '<i class="fa-solid fa-image text-amber-300"></i> Current Image (Tap to change)';
+      } else {
+        clearUploadedImage();
+      }
 
       document.getElementById('productModal').classList.remove('hidden');
     }
@@ -639,7 +765,27 @@
       const colorsStr = document.getElementById('prodColors').value.trim();
       const colors = colorsStr ? colorsStr.split(',').map(c => c.trim()) : ['Standard'];
       const description = document.getElementById('prodDesc').value.trim();
-      const aiImage = document.getElementById('prodImage').value.trim() || 'assets/hero_banner.jpg';
+      let aiImage = document.getElementById('prodImage').value.trim();
+      const fileInput = document.getElementById('prodImageFile');
+
+      // If user selected file and upload is still pending, upload immediately
+      if (!aiImage && fileInput.files && fileInput.files[0]) {
+        try {
+          const formData = new FormData();
+          formData.append('image', fileInput.files[0]);
+          const upRes = await fetch('/api/upload', { method: 'POST', body: formData });
+          const upData = await upRes.json();
+          if (upData.success) {
+            aiImage = upData.url;
+          }
+        } catch (err) {
+          console.error('File upload error during submit', err);
+        }
+      }
+
+      if (!aiImage) {
+        aiImage = 'assets/hero_banner.jpg';
+      }
 
       const payload = {
         title,
@@ -761,3 +907,4 @@
 
 </body>
 </html>
+

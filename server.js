@@ -305,10 +305,19 @@ app.get('/api/stats', (req, res) => {
 });
 
 // File Upload endpoint
-app.post('/api/upload', upload.single('image'), (req, res) => {
-  if (!req.file) return res.status(400).json({ success: false, message: 'No file uploaded' });
-  const fileUrl = '/uploads/' + req.file.filename;
-  res.json({ success: true, url: fileUrl });
+app.post('/api/upload', (req, res) => {
+  upload.single('image')(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      return res.status(400).json({ success: false, message: 'Upload limit exceeded: ' + err.message });
+    } else if (err) {
+      return res.status(500).json({ success: false, message: 'Upload error: ' + err.message });
+    }
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'No file uploaded or invalid file format' });
+    }
+    const fileUrl = '/uploads/' + req.file.filename;
+    res.json({ success: true, url: fileUrl, filename: req.file.filename });
+  });
 });
 
 // Route for Admin Dashboard
