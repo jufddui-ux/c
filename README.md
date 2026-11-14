@@ -1,42 +1,43 @@
-# Lakhani Collection — E-Commerce Fashion Store
+# Lakhani Collection — Luxury Pakistani Apparel & Lifestyle
 
-Official digital storefront for **Lakhani Collection (By Fahad)**, specializing in premium men's and women's apparel, winter fleece tracksuits, luxury embroidered pashmina shawls, designer lawn 3-piece collections, handbags, footwear, and jewelry.
+Official repository for **Lakhani Collection** (`https://houseofmelone.com/` inspired minimalist luxury e-commerce platform & management portal).
 
-## 🌟 Key Features
+## Features
 
-- **Mobile-First Responsive Design:** Optimized for smartphones (2-column native app feel, smooth bottom sheets, and thumb-friendly navigation bar).
-- **Photorealistic AI Studio Visuals:** Crystal-clear catalog imagery for every product.
-- **Advance Payment System:** Instant 1-click copy buttons for:
-  - **Meezan Bank** (A/C: `1036 0113829648` | Title: Fahad)
-  - **Easypaisa** (`03302043491` | Title: Fahad Fahad)
-  - **OPay Wallet** (`03302043491` | Title: Fahad)
-- **Automated Digital Invoicing:** Auto-generates itemized order receipts with order IDs (`#LC-XXXXXX`), customer details, and total calculations.
-- **Direct WhatsApp Ordering:** Instant pre-formatted order dispatch to `03302043491`.
-- **Search & Filter:** Category pills (Men's, Women's, Bags, Accessories) and real-time live search.
+- **Storefront (`index.html`):**
+  - Minimalist aesthetic inspired by House of Melone.
+  - 100% Mobile First UX with 2-column grid, drawer navigation, and bottom sheets.
+  - Complete collections: Tracksuits, Pashmina, Summer Lawn, Cardigans, Sweaters, Farshi, Slippers, Handbags, and Jewelry.
+  - Instant WhatsApp checkout & receipt generator.
+  - Strict **Advance Payment Policy** badge & account copy buttons (Meezan Bank, Easypaisa, OPay).
 
-## 📁 Project Structure
+- **Backend & REST API (`server.js`):**
+  - Express.js architecture with JSON data store (`data/products.json`, `data/orders.json`, `data/settings.json`).
+  - Endpoints:
+    - `GET /api/products` & `POST /api/products`
+    - `PUT /api/products/:id` & `DELETE /api/products/:id`
+    - `GET /api/orders` & `POST /api/orders` & `PATCH /api/orders/:id/status`
+    - `GET /api/settings` & `PUT /api/settings`
+    - `GET /api/stats`
+    - `POST /api/upload` (Multer image upload)
 
-```text
-├── index.html             # Main storefront single-page application
-├── assets/
-│   ├── hero_banner.jpg    # Campaign hero visual
-│   ├── products/          # High-resolution product images and color grids
-│   └── flyers/            # Specification sheets / original posters
-├── .gitignore             # Privacy and security filter
-└── README.md              # Project documentation
-```
+- **Admin Portal (`admin.html`):**
+  - Direct URL: `/admin`
+  - Live revenue & order status analytics.
+  - Add new products with image upload, custom pricing, stock, fabric, colors & sizes.
+  - Order booking desk with status management (Pending, Verified, Dispatched, Delivered, Cancelled) & 1-click WhatsApp customer reply.
+  - Settings manager to update payment account numbers and delivery charges without editing code.
 
-## 🚀 Running Locally
-
-Open `index.html` directly in any web browser, or run a local server:
+## Quick Start
 
 ```bash
-# Using Python
-python -m http.server 3000
+# Install dependencies
+npm install
 
-# Using Node.js
-npx serve .
+# Start backend server
+node server.js
 ```
+The server will run on `http://localhost:3000` (Store) and `http://localhost:3000/admin` (Admin Dashboard).
 
 ---
 © 2026 Lakhani Collection. All rights reserved.

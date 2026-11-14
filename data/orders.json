@@ -1,0 +1,26 @@
+[
+  {
+    "id": "LC-928410",
+    "customerName": "Muhammad Ali",
+    "customerPhone": "03001234567",
+    "customerCity": "Lahore",
+    "customerAddress": "House 14, Street 5, Gulberg III",
+    "paymentMethod": "Easypaisa",
+    "items": [
+      {
+        "id": "tracksuit",
+        "title": "Men's Winter Fleece Baggy Tracksuit",
+        "color": "Black",
+        "size": "Large",
+        "quantity": 1,
+        "price": 2000
+      }
+    ],
+    "subtotal": 2000,
+    "deliveryFee": 250,
+    "grandTotal": 2250,
+    "status": "Pending Verification",
+    "date": "2026-11-14",
+    "createdAt": "2026-11-14T17:00:00Z"
+  }
+]

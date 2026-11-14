@@ -3,15 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Lakhani Collection | Official Fashion Store</title>
+  <title>Lakhani Collection | Luxury Pakistani Fashion</title>
+  <meta name="description" content="Shop luxury men's and women's fashion, winter fleece tracksuits, pashmina shawls, designer lawn, handbags, jewelry and footwear. Advance payment nationwide delivery in Pakistan.">
   <meta name="theme-color" content="#080b11">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
   
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -25,8 +24,7 @@
               gold: '#D4AF37',
               goldLight: '#F5E7B2',
               dark: '#080b11',
-              surface: '#0f141f',
-              card: '#121724',
+              card: '#101522',
               emerald: '#059669',
               accent: '#800020'
             }
@@ -45,33 +43,16 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
   <style>
-    * {
-      -webkit-tap-highlight-color: transparent;
-      box-sizing: border-box;
-    }
-    body {
-      overflow-x: hidden;
-      width: 100%;
-      touch-action: manipulation;
-    }
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
+    * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+    body { overflow-x: hidden; width: 100%; touch-action: manipulation; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     .gold-gradient-text {
       background: linear-gradient(135deg, #FFF3BF 0%, #D4AF37 50%, #AA7C11 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-    /* Touch Feedback */
-    .tap-active:active {
-      transform: scale(0.96);
-      transition: transform 0.1s ease;
-    }
-    /* Mobile Bottom Sheet */
+    .tap-active:active { transform: scale(0.96); transition: transform 0.1s ease; }
     @media (max-width: 640px) {
       .mobile-sheet {
         position: fixed;
@@ -92,33 +73,39 @@
 </head>
 <body class="bg-[#080b11] text-gray-100 font-sans antialiased min-h-screen flex flex-col selection:bg-brand-gold selection:text-black pb-20 md:pb-0">
 
-  <!-- Top Announcement Bar (Advance Payment Notice) -->
-  <div class="bg-gradient-to-r from-red-950 via-red-900 to-red-950 text-white text-[10px] sm:text-xs py-1.5 px-3 border-b border-red-700/40 text-center font-bold tracking-wide flex items-center justify-center gap-1.5">
-    <span class="inline-block w-2 h-2 rounded-full bg-amber-400 animate-ping shrink-0"></span>
-    <span class="text-amber-300 uppercase truncate">⚠️ ONLY ADVANCE PAYMENT ACCEPTED</span>
-    <span class="text-gray-300 font-normal hidden sm:inline">| Meezan, Easypaisa & OPay</span>
-    <button onclick="openPaymentModal()" class="ml-1.5 text-amber-300 underline font-bold text-[10px]">Accounts</button>
+  <!-- Top Announcement Bar (House of Melone Style Ticker) -->
+  <div class="bg-gradient-to-r from-red-950 via-red-900 to-red-950 text-white text-[10px] sm:text-xs py-1.5 px-3 border-b border-red-700/40 text-center font-bold tracking-wide flex items-center justify-between sm:justify-center gap-2">
+    <div class="flex items-center gap-1.5 truncate">
+      <span class="inline-block w-2 h-2 rounded-full bg-amber-400 animate-ping shrink-0"></span>
+      <span id="topNoticeText" class="text-amber-300 uppercase truncate">⚠️ ONLY ADVANCE PAYMENT ACCEPTED</span>
+      <span class="text-gray-300 font-normal hidden sm:inline">| Meezan Bank, Easypaisa & OPay</span>
+    </div>
+    <div class="flex items-center gap-2 shrink-0">
+      <button onclick="openPaymentModal()" class="text-amber-300 underline font-bold text-[10px]">Bank Accounts</button>
+      <span class="text-gray-600 hidden sm:inline">•</span>
+      <a href="/admin" target="_blank" class="hidden sm:inline text-gray-400 hover:text-white text-[10px]">Admin Login</a>
+    </div>
   </div>
 
-  <!-- Header / Navbar (Mobile Optimized 56px) -->
+  <!-- Header / Navbar (House of Melone Luxury Aesthetic) -->
   <header class="sticky top-0 z-40 bg-[#0a0e17]/95 backdrop-blur-md border-b border-gray-800">
-    <div class="max-w-7xl mx-auto px-3 sm:px-6 h-14 sm:h-20 flex items-center justify-between gap-2">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 h-14 sm:h-20 flex items-center justify-between gap-3">
       
-      <!-- Logo -->
+      <!-- Brand Logo -->
       <a href="#" class="flex items-center gap-2 group shrink-0">
         <div class="w-8 h-8 sm:w-11 sm:h-11 rounded-full border border-brand-gold/70 flex items-center justify-center bg-black text-brand-gold font-serif font-black text-sm sm:text-lg shadow">
           LC
         </div>
         <div class="flex flex-col">
           <div class="flex items-center gap-1">
-            <span class="font-serif font-bold text-base sm:text-2xl tracking-wide text-white uppercase">Lakhani</span>
+            <span class="font-serif font-bold text-base sm:text-2xl tracking-wider text-white uppercase">Lakhani</span>
             <span class="font-serif font-light text-base sm:text-2xl text-brand-gold">Collection</span>
           </div>
-          <span class="text-[8px] sm:text-[10px] tracking-widest text-gray-400 uppercase -mt-1 font-semibold">By Fahad</span>
+          <span class="text-[8px] sm:text-[10px] tracking-widest text-gray-400 uppercase -mt-1 font-semibold">House of Fashion</span>
         </div>
       </a>
 
-      <!-- Desktop Search -->
+      <!-- Desktop Search Bar -->
       <div class="hidden md:flex flex-1 max-w-sm mx-6">
         <div class="relative w-full">
           <input type="text" id="searchInput" placeholder="Search tracksuits, pashmina, lawn, bags..." 
@@ -129,18 +116,15 @@
 
       <!-- Quick Action Icons -->
       <div class="flex items-center gap-1.5 sm:gap-2">
-        <!-- Search Toggle on Mobile -->
         <button onclick="toggleMobileSearch()" class="md:hidden p-2 text-gray-300 hover:text-white tap-active">
           <i class="fa-solid fa-magnifying-glass text-base"></i>
         </button>
 
-        <!-- Payment Accounts Pill -->
         <button onclick="openPaymentModal()" class="flex items-center gap-1 px-2.5 py-1.5 rounded-full border border-amber-500/50 bg-amber-500/10 text-amber-300 text-[11px] font-bold tap-active">
           <i class="fa-solid fa-building-columns text-amber-400 text-xs"></i>
           <span>Accounts</span>
         </button>
 
-        <!-- Cart Button -->
         <button onclick="toggleCartDrawer(true)" class="relative p-2 rounded-full bg-[#121724] border border-gray-800 text-gray-200 tap-active">
           <i class="fa-solid fa-bag-shopping text-base"></i>
           <span id="cartCountBadge" class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-500 text-black font-black text-[9px] flex items-center justify-center hidden">0</span>
@@ -149,10 +133,10 @@
 
     </div>
 
-    <!-- Mobile Dropdown Search Input -->
+    <!-- Mobile Search Dropdown -->
     <div id="mobileSearchBox" class="hidden md:hidden px-3 pb-2.5 bg-[#0a0e17] border-t border-gray-800/60 pt-2">
       <div class="relative w-full">
-        <input type="text" id="mobileSearchInput" placeholder="Type to search products..." 
+        <input type="text" id="mobileSearchInput" placeholder="Search clothes, bags, jewelry..." 
           class="w-full bg-[#121724] border border-gray-700 focus:border-brand-gold rounded-xl py-2 pl-9 pr-8 text-xs text-gray-200 placeholder-gray-500 focus:outline-none">
         <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-500 text-xs"></i>
         <button onclick="clearSearchInput()" class="absolute right-3 top-2 text-gray-400 text-xs">✕</button>
@@ -160,26 +144,23 @@
     </div>
   </header>
 
-  <!-- Mobile Sleek Hero Banner (Compact 160px on phone, doesn't hide products) -->
+  <!-- Hero Banner (Clean Minimalist Editorial Look) -->
   <section class="relative bg-[#080b11] border-b border-gray-800/80">
     <div class="max-w-7xl mx-auto px-2.5 sm:px-6 py-2.5 sm:py-6">
       
-      <div class="relative rounded-2xl overflow-hidden border border-amber-500/30 h-40 sm:h-72 shadow-lg flex items-center">
-        <!-- Banner Image -->
-        <img src="assets/hero_banner.jpg" alt="Lakhani Collection Luxury" class="absolute inset-0 w-full h-full object-cover object-center filter brightness-90">
+      <div class="relative rounded-2xl overflow-hidden border border-amber-500/30 h-44 sm:h-72 shadow-lg flex items-center">
+        <img src="assets/hero_banner.jpg" alt="Lakhani Collection" class="absolute inset-0 w-full h-full object-cover object-center filter brightness-90">
         
-        <!-- Subtle Gradient -->
         <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/75 to-transparent"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
 
-        <!-- Banner Content -->
-        <div class="relative z-10 p-3.5 sm:p-8 max-w-lg space-y-1.5 sm:space-y-3">
+        <div class="relative z-10 p-4 sm:p-8 max-w-lg space-y-1.5 sm:space-y-3">
           <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[9px] sm:text-xs font-bold uppercase">
             <i class="fa-solid fa-crown text-amber-400"></i> New 2026 Collection
           </div>
 
-          <h1 class="text-lg sm:text-4xl font-serif font-black tracking-tight text-white leading-tight">
-            Premium <span class="gold-gradient-text">Men & Women</span> Wear
+          <h1 class="text-xl sm:text-4xl font-serif font-black tracking-tight text-white leading-tight">
+            Exclusive <span class="gold-gradient-text">Men & Women</span> Fashion
           </h1>
 
           <p class="text-gray-300 text-[10px] sm:text-xs line-clamp-2 leading-relaxed">
@@ -191,7 +172,7 @@
               ⚡ Advance Payment Dispatch
             </span>
             <span class="text-[9px] sm:text-[11px] font-bold text-emerald-300 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-700/40">
-              🇵🇰 Pakistan Wide
+              🚚 Nationwide Courier
             </span>
           </div>
         </div>
@@ -200,12 +181,12 @@
     </div>
   </section>
 
-  <!-- Horizontal Scrollable Category Pills (Thumb-Friendly Native Scroll) -->
+  <!-- Horizontal Scrollable Category Pills -->
   <section class="sticky top-14 sm:top-20 z-30 bg-[#0a0e17]/95 backdrop-blur-md border-b border-gray-800 py-2">
     <div class="max-w-7xl mx-auto px-2.5 sm:px-6">
       <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
         <button onclick="filterCategory('all', this)" class="cat-pill active shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold transition bg-brand-gold text-black shadow tap-active">
-          ✨ All (11)
+          ✨ All Products
         </button>
         <button onclick="filterCategory('men', this)" class="cat-pill shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold transition bg-[#121724] text-gray-300 border border-gray-800 tap-active">
           👔 Men's Tracksuits
@@ -214,7 +195,7 @@
           👗 Women's Suits
         </button>
         <button onclick="filterCategory('bags', this)" class="cat-pill shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold transition bg-[#121724] text-gray-300 border border-gray-800 tap-active">
-          👜 Handbags
+          👜 Handbags & Wallets
         </button>
         <button onclick="filterCategory('accessories', this)" class="cat-pill shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold transition bg-[#121724] text-gray-300 border border-gray-800 tap-active">
           💎 Jewelry & Slippers
@@ -223,12 +204,11 @@
     </div>
   </section>
 
-  <!-- Main Catalog: Perfect 2-Column Mobile Grid -->
+  <!-- Product Catalog Grid -->
   <main class="flex-1 max-w-7xl mx-auto px-2.5 sm:px-6 py-3 sm:py-8 w-full">
     
-    <!-- Count & Sort Bar -->
     <div class="flex items-center justify-between text-xs pb-2.5 border-b border-gray-800/80 mb-3">
-      <span class="text-gray-400 font-semibold text-[11px]">Showing <strong id="itemCount" class="text-amber-300">11 Products</strong></span>
+      <span class="text-gray-400 font-semibold text-[11px]">Live Catalog: <strong id="itemCount" class="text-amber-300">Loading...</strong></span>
       
       <div class="flex items-center gap-1">
         <label for="sortSelect" class="text-gray-500 text-[10px]">Sort:</label>
@@ -240,12 +220,11 @@
       </div>
     </div>
 
-    <!-- 2-Column Grid on Mobile, 3 on Tablet, 4 on Desktop -->
+    <!-- Product Grid (2 columns on mobile, 3 on tablet, 4 on desktop) -->
     <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-5">
-      <!-- Injected via JavaScript -->
+      <!-- Injected from backend API -->
     </div>
 
-    <!-- Empty State -->
     <div id="noProductsFound" class="hidden text-center py-12 space-y-3">
       <i class="fa-solid fa-magnifying-glass text-gray-600 text-3xl"></i>
       <h3 class="text-sm font-bold text-white">Koi Product Nahi Mila</h3>
@@ -259,26 +238,19 @@
   <!-- Product Details Modal (Mobile Bottom-Sheet) -->
   <div id="productModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-black/80 backdrop-blur-sm hidden">
     <div class="mobile-sheet bg-[#0f141f] border border-gray-800 rounded-t-3xl sm:rounded-3xl max-w-3xl w-full p-4 sm:p-6 shadow-2xl relative max-h-[88vh] overflow-y-auto no-scrollbar">
-      
-      <!-- Mobile Pull Bar -->
       <div class="sm:hidden w-10 h-1 rounded-full bg-gray-700 mx-auto mb-2.5"></div>
-
       <button onclick="closeProductModal()" class="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-white text-base z-20 bg-black/80 p-2 rounded-full tap-active">
         <i class="fa-solid fa-xmark"></i>
       </button>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="modalProductContent">
-        <!-- Injected via JS -->
-      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="modalProductContent"></div>
     </div>
   </div>
 
-  <!-- Advance Payment Modal (Mobile Bottom-Sheet) -->
+  <!-- Advance Payment Modal -->
   <div id="paymentModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-black/80 backdrop-blur-sm hidden">
     <div class="mobile-sheet bg-[#0f141f] border border-amber-500/40 rounded-t-3xl sm:rounded-3xl max-w-md w-full p-4 sm:p-6 shadow-2xl relative max-h-[88vh] overflow-y-auto no-scrollbar">
-      
       <div class="sm:hidden w-10 h-1 rounded-full bg-gray-700 mx-auto mb-2.5"></div>
-
       <button onclick="closePaymentModal()" class="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-white text-base tap-active">
         <i class="fa-solid fa-xmark"></i>
       </button>
@@ -292,75 +264,12 @@
         <p class="text-[10px] text-gray-400">Account copy karein aur transfer ke baad WhatsApp par slip send karein.</p>
       </div>
 
-      <div class="space-y-2.5">
-        
-        <!-- Meezan Bank -->
-        <div class="p-3 rounded-xl bg-[#080b11] border border-gray-800 space-y-0.5">
-          <div class="flex items-center justify-between">
-            <span class="text-[11px] font-bold text-amber-400 flex items-center gap-1">
-              <i class="fa-solid fa-building-columns"></i> Meezan Bank
-            </span>
-            <span class="text-[9px] bg-emerald-950 text-emerald-300 px-1.5 py-0.5 rounded font-bold uppercase">Bank</span>
-          </div>
-          <div class="flex justify-between text-[11px]">
-            <span class="text-gray-400">Title:</span>
-            <span class="font-bold text-white">Fahad</span>
-          </div>
-          <div class="flex justify-between text-[11px]">
-            <span class="text-gray-400">A/C No:</span>
-            <span class="font-mono font-bold text-amber-300 text-xs">1036 0113829648</span>
-          </div>
-          <button onclick="copyToClipboard('10360113829648', this)" class="mt-1.5 w-full py-1.5 rounded-lg bg-[#141b29] text-[10px] font-bold text-gray-200 flex items-center justify-center gap-1 tap-active">
-            <i class="fa-regular fa-copy"></i> Copy Bank Account
-          </button>
-        </div>
-
-        <!-- Easypaisa -->
-        <div class="p-3 rounded-xl bg-[#080b11] border border-gray-800 space-y-0.5">
-          <div class="flex items-center justify-between">
-            <span class="text-[11px] font-bold text-emerald-400 flex items-center gap-1">
-              <i class="fa-solid fa-mobile-screen-button"></i> Easypaisa Wallet
-            </span>
-            <span class="text-[9px] bg-emerald-950 text-emerald-300 px-1.5 py-0.5 rounded font-bold uppercase">Instant</span>
-          </div>
-          <div class="flex justify-between text-[11px]">
-            <span class="text-gray-400">Title:</span>
-            <span class="font-bold text-white">Fahad Fahad</span>
-          </div>
-          <div class="flex justify-between text-[11px]">
-            <span class="text-gray-400">Number:</span>
-            <span class="font-mono font-bold text-emerald-300 text-xs">03302043491</span>
-          </div>
-          <button onclick="copyToClipboard('03302043491', this)" class="mt-1.5 w-full py-1.5 rounded-lg bg-[#141b29] text-[10px] font-bold text-gray-200 flex items-center justify-center gap-1 tap-active">
-            <i class="fa-regular fa-copy"></i> Copy Easypaisa Number
-          </button>
-        </div>
-
-        <!-- OPay -->
-        <div class="p-3 rounded-xl bg-[#080b11] border border-gray-800 space-y-0.5">
-          <div class="flex items-center justify-between">
-            <span class="text-[11px] font-bold text-blue-400 flex items-center gap-1">
-              <i class="fa-solid fa-wallet"></i> OPay Wallet
-            </span>
-            <span class="text-[9px] bg-blue-950 text-blue-300 px-1.5 py-0.5 rounded font-bold uppercase">Wallet</span>
-          </div>
-          <div class="flex justify-between text-[11px]">
-            <span class="text-gray-400">Title:</span>
-            <span class="font-bold text-white">Fahad</span>
-          </div>
-          <div class="flex justify-between text-[11px]">
-            <span class="text-gray-400">Number:</span>
-            <span class="font-mono font-bold text-blue-300 text-xs">03302043491</span>
-          </div>
-          <button onclick="copyToClipboard('03302043491', this)" class="mt-1.5 w-full py-1.5 rounded-lg bg-[#141b29] text-[10px] font-bold text-gray-200 flex items-center justify-center gap-1 tap-active">
-            <i class="fa-regular fa-copy"></i> Copy OPay Number
-          </button>
-        </div>
-
+      <div class="space-y-2.5" id="paymentAccountsContainer">
+        <!-- Rendered dynamically from backend settings -->
       </div>
 
       <div class="mt-3 pt-2 border-t border-gray-800">
-        <a href="https://wa.me/923302043491?text=Assalam%20o%20Alaikum!%20Maine%20Advance%20Payment%20kar%20di%20hai,%20screenshot%20share%20kar%20raha%20hoon" target="_blank"
+        <a id="shareSlipWaBtn" href="https://wa.me/923302043491?text=Assalam%20o%20Alaikum!%20Maine%20Advance%20Payment%20kar%20di%20hai,%20screenshot%20share%20kar%20raha%20hoon" target="_blank"
            class="w-full py-2.5 rounded-xl bg-emerald-600 text-white font-bold text-xs uppercase flex items-center justify-center gap-1.5 tap-active shadow">
           <i class="fa-brands fa-whatsapp text-sm"></i> Share Receipt on WhatsApp
         </a>
@@ -368,13 +277,12 @@
     </div>
   </div>
 
-  <!-- Shopping Cart Slide-over Drawer -->
+  <!-- Cart Slide-Over Drawer -->
   <div id="cartDrawer" class="fixed inset-0 z-50 overflow-hidden hidden">
     <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="toggleCartDrawer(false)"></div>
     <div class="fixed inset-y-0 right-0 max-w-full flex pl-4 sm:pl-10">
       <div class="w-screen max-w-sm sm:max-w-md bg-[#0b0f17] border-l border-gray-800 flex flex-col shadow-2xl">
         
-        <!-- Header -->
         <div class="p-3.5 sm:p-5 border-b border-gray-800 flex items-center justify-between">
           <div class="flex items-center gap-2">
             <i class="fa-solid fa-bag-shopping text-brand-gold text-base"></i>
@@ -386,12 +294,8 @@
           </button>
         </div>
 
-        <!-- Items -->
-        <div id="cartItemsList" class="flex-1 overflow-y-auto p-3 space-y-2.5 no-scrollbar">
-          <!-- Injected via JS -->
-        </div>
+        <div id="cartItemsList" class="flex-1 overflow-y-auto p-3 space-y-2.5 no-scrollbar"></div>
 
-        <!-- Footer -->
         <div class="p-3.5 sm:p-5 border-t border-gray-800 bg-[#0e131d] space-y-2.5">
           <div class="space-y-1 text-xs text-gray-300">
             <div class="flex justify-between">
@@ -409,7 +313,7 @@
           </div>
 
           <button onclick="openCheckoutModal()" id="checkoutButton" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-black font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow tap-active">
-            <i class="fa-solid fa-file-invoice-dollar"></i> Generate Digital Bill
+            <i class="fa-solid fa-file-invoice-dollar"></i> Book Advance Order
           </button>
         </div>
 
@@ -417,23 +321,20 @@
     </div>
   </div>
 
-  <!-- Checkout Modal (Mobile Bottom-Sheet) -->
+  <!-- Checkout Modal -->
   <div id="checkoutModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-black/85 backdrop-blur-md hidden">
     <div class="mobile-sheet bg-[#0f141f] border border-amber-500/30 rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-4 sm:p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto no-scrollbar">
-      
       <div class="sm:hidden w-10 h-1 rounded-full bg-gray-700 mx-auto mb-2.5"></div>
-
       <button onclick="closeCheckoutModal()" class="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-white text-base tap-active">
         <i class="fa-solid fa-xmark"></i>
       </button>
 
       <div class="border-b border-gray-800 pb-2 mb-3">
-        <h3 class="text-base sm:text-lg font-serif font-bold text-white">Delivery & Advance Order</h3>
-        <p class="text-[10px] text-gray-400">Apni delivery details enter karein.</p>
+        <h3 class="text-base sm:text-lg font-serif font-bold text-white">Delivery & Order Booking</h3>
+        <p class="text-[10px] text-gray-400">Order confirm karne ke liye apni delivery details enter karein.</p>
       </div>
 
       <form id="orderForm" onsubmit="handleOrderSubmit(event)" class="space-y-2.5">
-        
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block text-[10px] font-semibold text-gray-300 mb-0.5">Naam *</label>
@@ -475,29 +376,25 @@
         </div>
 
         <button type="submit" class="w-full py-2.5 rounded-xl bg-emerald-600 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow tap-active">
-          <i class="fa-solid fa-file-invoice"></i> Generate Bill & Open WhatsApp
+          <i class="fa-solid fa-file-invoice"></i> Confirm Booking & Open WhatsApp
         </button>
-
       </form>
     </div>
   </div>
 
-  <!-- Invoice Modal (Mobile Bottom-Sheet) -->
+  <!-- Digital Invoice Modal -->
   <div id="invoiceModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-black/90 backdrop-blur-md hidden">
     <div class="mobile-sheet bg-[#0f141f] border border-amber-500/50 rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-4 shadow-2xl relative max-h-[92vh] overflow-y-auto no-scrollbar">
-      
       <div class="sm:hidden w-10 h-1 rounded-full bg-gray-700 mx-auto mb-2"></div>
-
       <button onclick="closeInvoiceModal()" class="absolute top-3 right-3 text-gray-400 hover:text-white text-base tap-active">
         <i class="fa-solid fa-xmark"></i>
       </button>
 
       <div class="bg-gray-950 p-3.5 rounded-xl border border-gray-800 space-y-3">
-        <!-- Invoice Header -->
         <div class="flex justify-between items-center border-b border-gray-800 pb-2">
           <div>
             <h2 class="font-serif font-black text-sm text-white">LAKHANI COLLECTION</h2>
-            <p class="text-[9px] text-gray-400">Proprietor: Fahad</p>
+            <p class="text-[9px] text-gray-400">Order Booking Confirmed</p>
           </div>
           <div class="text-right">
             <span class="text-[9px] bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded font-bold">INVOICE</span>
@@ -505,14 +402,12 @@
           </div>
         </div>
 
-        <!-- Transfer Info -->
         <div class="p-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-[10px] space-y-0.5">
           <span class="text-amber-300 font-bold block uppercase">Advance Payment Transfer To:</span>
           <p id="invPaymentAccountTitle" class="font-bold text-white"></p>
           <p id="invPaymentAccountDetails" class="font-mono text-amber-300 font-bold"></p>
         </div>
 
-        <!-- Items Table -->
         <div class="overflow-x-auto">
           <table class="w-full text-left text-[10px] border border-gray-800 rounded">
             <thead class="bg-[#121724] text-gray-400 uppercase text-[9px]">
@@ -522,9 +417,7 @@
                 <th class="p-1.5 text-right">Total</th>
               </tr>
             </thead>
-            <tbody id="invItemsBody" class="divide-y divide-gray-800 text-gray-200">
-              <!-- Injected via JS -->
-            </tbody>
+            <tbody id="invItemsBody" class="divide-y divide-gray-800 text-gray-200"></tbody>
           </table>
         </div>
 
@@ -534,25 +427,23 @@
         </div>
       </div>
 
-      <!-- Button -->
       <div class="mt-3">
         <button id="sendInvoiceWhatsAppBtn" class="w-full py-2.5 rounded-xl bg-emerald-600 text-white font-black text-xs uppercase flex items-center justify-center gap-1.5 shadow tap-active">
-          <i class="fa-brands fa-whatsapp text-sm"></i> Send Bill to WhatsApp
+          <i class="fa-brands fa-whatsapp text-sm"></i> Send Slip on WhatsApp
         </button>
       </div>
-
     </div>
   </div>
 
-  <!-- Toast Notification -->
+  <!-- Toast -->
   <div id="toastNotification" class="fixed bottom-20 right-4 z-50 bg-[#0f141f] border border-brand-gold text-white px-3.5 py-2 rounded-xl shadow-2xl flex items-center gap-2 transform translate-y-28 opacity-0 transition duration-300 pointer-events-none text-xs font-bold">
     <i class="fa-solid fa-circle-check text-brand-gold"></i>
     <span id="toastMessage">Item added</span>
   </div>
 
-  <!-- Mobile Sticky Bottom Navigation Bar (App Bar) -->
+  <!-- Mobile Bottom App Bar -->
   <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0a0e17]/95 border-t border-gray-800 backdrop-blur-lg px-2 py-1.5 flex items-center justify-around text-center shadow-2xl">
-    <button onclick="document.getElementById('catalogHeading').scrollIntoView({behavior: 'smooth'})" class="flex flex-col items-center text-brand-gold w-14 tap-active">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="flex flex-col items-center text-brand-gold w-14 tap-active">
       <i class="fa-solid fa-store text-base"></i>
       <span class="text-[9px] font-bold mt-0.5">Shop</span>
     </button>
@@ -568,287 +459,118 @@
       <span class="text-[9px] font-bold mt-0.5">Cart</span>
     </button>
 
-    <a href="https://wa.me/923302043491?text=Assalam%20o%20Alaikum!%20Lakhani%20Collection%20se%20order%20karna%20hai" target="_blank" class="flex flex-col items-center text-emerald-400 w-14 tap-active">
+    <a id="mobileWaLink" href="https://wa.me/923302043491?text=Assalam%20o%20Alaikum!%20Lakhani%20Collection%20se%20order%20karna%20hai" target="_blank" class="flex flex-col items-center text-emerald-400 w-14 tap-active">
       <i class="fa-brands fa-whatsapp text-lg"></i>
       <span class="text-[9px] font-bold mt-0.5">WhatsApp</span>
     </a>
   </nav>
 
-  <!-- Product Data & Scripts -->
+  <!-- Complete Storefront Dynamic Logic with Backend API Integration -->
   <script>
-    const products = [
-      {
-        id: "tracksuit",
-        title: "Men's Winter Fleece Baggy Tracksuit",
-        category: "men",
-        categoryLabel: "Men's Wear",
-        badge: "Bestseller",
-        badgeColor: "bg-blue-900/90 text-blue-300 border-blue-700",
-        originalPrice: 2499,
-        price: 2000,
-        aiImage: "assets/products/ai_tracksuit_men.jpg",
-        colorsImage: "assets/products/tracksuit_colors.jpg",
-        flyerImage: "assets/flyers/tracksuit_flyer.jpg",
-        fabric: "Winter Fleece (Soft & Heavyweight)",
-        description: "Winter stylish printed baggy trouser and sweatshirt tracksuit set. Features premium winter fleece fabric, trendy Arabic 'Musafir' back print, adjustable waistband drawstring, and ribbed cuffs.",
-        specs: [
-          { label: "Fabric", val: "Winter Fleece (Warm)" },
-          { label: "Fit", val: "Baggy Trouser + Sweatshirt" },
-          { label: "Trouser Length", val: "39 / 40 Inches" }
-        ],
-        sizes: [
-          { name: "Medium", desc: "Chest: 20\" | L: 26\"" },
-          { name: "Large", desc: "Chest: 21\" | L: 28\"" },
-          { name: "XL", desc: "Chest: 22\" | L: 29\"" }
-        ],
-        colors: ["White", "Black", "Baby Pink", "Lavender", "Maroon", "Beige", "Navy Blue"]
-      },
-      {
-        id: "pashmina",
-        title: "Luxury Pashmina Embroidered 3-Pc Suit",
-        category: "women",
-        categoryLabel: "Women's Luxury",
-        badge: "Pashmina",
-        badgeColor: "bg-amber-900/90 text-amber-300 border-amber-700",
-        originalPrice: 4500,
-        price: 3800,
-        aiImage: "assets/products/ai_pashmina_women.jpg",
-        colorsImage: "assets/products/pashmina_colors.jpg",
-        flyerImage: "assets/flyers/pashmina_flyer.jpg",
-        fabric: "Self Wool Bara Arz + Pure Pashmina Shawl",
-        description: "Premium Winter Pashmina Embroidery Collection. Features self wool bara arz suit with applic gala embroidery and heavy 72-grade pure pashmina jacquard 4-sided border shawl.",
-        specs: [
-          { label: "Suit Fabric", val: "Self Wool Bara Arz" },
-          { label: "Shawl", val: "72 Grade Pure Pashmina" }
-        ],
-        sizes: [
-          { name: "Unstitched 3-Piece", desc: "Full 3-Piece Fabric" }
-        ],
-        colors: ["Camel Beige", "Royal Maroon", "Midnight Navy"]
-      },
-      {
-        id: "aliza_flora",
-        title: "Aliza Flora Leopard Digital Lawn 3-Pc",
-        category: "women",
-        categoryLabel: "Designer Lawn",
-        badge: "Trending",
-        badgeColor: "bg-purple-900/90 text-purple-300 border-purple-700",
-        originalPrice: 3600,
-        price: 3050,
-        aiImage: "assets/products/ai_aliza_flora.jpg",
-        colorsImage: "assets/products/aliza_flora_colors.jpg",
-        flyerImage: "assets/flyers/aliza_flora_flyer.jpg",
-        fabric: "100% Original Digital Printed Fabric",
-        description: "100% Original Aliza Flora by Jazmine Collection 2026. Designer animal and leopard motifs on breathable cotton lawn with matching printed dupatta.",
-        specs: [
-          { label: "Shirt", val: "Airjet Digital Lawn" },
-          { label: "Dupatta", val: "Soft Voil Dupatta" }
-        ],
-        sizes: [
-          { name: "Unstitched 3-Piece", desc: "Complete 3-Piece" }
-        ],
-        colors: ["Leopard Brown", "Zebra Mustard", "Monochrome"]
-      },
-      {
-        id: "cambric",
-        title: "Sapphire Cambric Stitched 3-Piece Suit",
-        category: "women",
-        categoryLabel: "Stitched Suits",
-        badge: "Stitched",
-        badgeColor: "bg-emerald-900/90 text-emerald-300 border-emerald-700",
-        originalPrice: 4200,
-        price: 3500,
-        aiImage: "assets/products/ai_cambric_women.jpg",
-        colorsImage: "assets/products/cambric_colors.jpg",
-        flyerImage: "assets/flyers/cambric_flyer.jpg",
-        fabric: "Sapphire Platinum Cambric (Vol-4)",
-        description: "Ready-to-wear stitched 3-piece cambric collection with delicate lace detailing on neckline, printed lawn dupatta, and dyed trouser.",
-        specs: [
-          { label: "Quality", val: "Platinum Cambric Stitched" }
-        ],
-        sizes: [
-          { name: "Medium", desc: "Chest: 21\" | L: 38\"" },
-          { name: "Large", desc: "Chest: 23\" | L: 40\"" }
-        ],
-        colors: ["Sky Blue", "Brown", "Mustard", "Mint Green", "Peach Pink", "Teal", "Black & Red", "Maroon"]
-      },
-      {
-        id: "firdous_lawn",
-        title: "Firdous New Digital Lawn 3-Piece Suit",
-        category: "women",
-        categoryLabel: "Unstitched Lawn",
-        badge: "Wholesale",
-        badgeColor: "bg-red-900/90 text-red-300 border-red-700",
-        originalPrice: 3200,
-        price: 2500,
-        aiImage: "assets/products/ai_firdous_lawn.jpg",
-        colorsImage: "assets/products/firdous_lawn_colors.jpg",
-        flyerImage: "assets/flyers/firdous_lawn_flyer.jpg",
-        fabric: "Airjet Premium Lawn 90/70",
-        description: "Firdous New Lawn Collection 2026 (Design: 3790). Superior airjet lawn 90/70 quality with digital printed shirt, voil dupatta, and plain trouser.",
-        specs: [
-          { label: "Fabric", val: "90/70 Airjet Lawn" }
-        ],
-        sizes: [
-          { name: "Unstitched 3-Piece", desc: "Full 3-Pc Fabric" }
-        ],
-        colors: ["Navy", "Hot Pink", "Black/Orange", "Teal", "Rust", "White", "Red/Black"]
-      },
-      {
-        id: "farshi_suit",
-        title: "Embroidered 2-Pc Farshi Shalwar Kurti",
-        category: "women",
-        categoryLabel: "Stitched Kurti",
-        badge: "Special Cut",
-        badgeColor: "bg-yellow-900/90 text-yellow-300 border-yellow-700",
-        originalPrice: 2800,
-        price: 2200,
-        aiImage: "assets/products/ai_farshi_suit.jpg",
-        colorsImage: "assets/products/farshi_suit_colors.jpg",
-        flyerImage: "assets/flyers/farshi_suit_flyer.jpg",
-        fabric: "Soft Breathable Cotton",
-        description: "Trendy 2-piece embroidered kurti suit with signature Farshi Shalwar (Code: C1E5T5) and tassel neck detailing.",
-        specs: [
-          { label: "Shirt Chest", val: "21 Inches" },
-          { label: "Shalwar", val: "36\" Length | Bottom: 11\"" }
-        ],
-        sizes: [
-          { name: "Standard Fit", desc: "Chest: 21\" | Shalwar: 36\"" }
-        ],
-        colors: ["Lemon Yellow", "Grey", "Turquoise", "Black", "Maroon"]
-      },
-      {
-        id: "sweater",
-        title: "T&H Long China Wool Cardigan Sweater",
-        category: "women",
-        categoryLabel: "Winter Wear",
-        badge: "Cozy Wool",
-        badgeColor: "bg-stone-900/90 text-stone-300 border-stone-700",
-        originalPrice: 3500,
-        price: 2900,
-        aiImage: "assets/products/ai_sweater_women.jpg",
-        colorsImage: "assets/products/sweater_colors.jpg",
-        flyerImage: "assets/flyers/sweater_flyer.jpg",
-        fabric: "Imported China Wool (Ultra Soft)",
-        description: "T&H Long Sweater (Article: L2S2W0) with diamond knit embroidery, front buttons, and side pockets. Free size fit.",
-        specs: [
-          { label: "Chest", val: "Up to 21 Inches" },
-          { label: "Length", val: "30 Inches" }
-        ],
-        sizes: [
-          { name: "Free Size", desc: "Chest: Up to 21\"" }
-        ],
-        colors: ["Dark Brown", "Maroon", "Navy Blue", "Dark Purple"]
-      },
-      {
-        id: "hoodie",
-        title: "Customized Name Fleece Zipper Hoodie",
-        category: "women",
-        categoryLabel: "Hoodies",
-        badge: "Custom Name",
-        badgeColor: "bg-pink-900/90 text-pink-300 border-pink-700",
-        originalPrice: 2200,
-        price: 1700,
-        aiImage: "assets/products/ai_hoodie_women.jpg",
-        colorsImage: "assets/products/hoodie_colors.jpg",
-        flyerImage: "assets/flyers/hoodie_flyer.jpg",
-        fabric: "Heavy Fleece (Waterproof DTF Print)",
-        description: "Women's stylish zipper hoodie with customizable name & heart crown print. Water-proof and heat-resistant DTF print.",
-        specs: [
-          { label: "Print", val: "Water & Heat Proof DTF" }
-        ],
-        sizes: [
-          { name: "Medium", desc: "Chest: 20\"" },
-          { name: "Large", desc: "Chest: 21\"" },
-          { name: "XL", desc: "Chest: 22\"" }
-        ],
-        colors: ["Baby Pink", "Navy Blue", "Grey", "Maroon", "Black"]
-      },
-      {
-        id: "handbag",
-        title: "2-Piece Luxury Handbag & Matching Wallet",
-        category: "bags",
-        categoryLabel: "Handbags",
-        badge: "2-in-1 Set",
-        badgeColor: "bg-amber-900/90 text-amber-300 border-amber-700",
-        originalPrice: 2200,
-        price: 1550,
-        aiImage: "assets/products/ai_handbag_set.jpg",
-        colorsImage: "assets/products/handbag_colors.jpg",
-        flyerImage: "assets/flyers/handbag_flyer.jpg",
-        fabric: "PU Leather with Golden Hardware",
-        description: "2-Piece Ladies Handbag Set (Ted Baker Style). Includes spacious structured handbag, matching travel wallet, and long shoulder belt.",
-        specs: [
-          { label: "Set", val: "Handbag + Matching Wallet" }
-        ],
-        sizes: [
-          { name: "Standard Set", desc: "Handbag + Wallet" }
-        ],
-        colors: ["Black", "Maroon", "Khaki", "Taupe", "Mint", "Cream", "Navy", "Dusty Pink", "Light Pink", "Tan"]
-      },
-      {
-        id: "bangle_ring",
-        title: "Fancy Zircon Flower Bangle & Ring Set",
-        category: "accessories",
-        categoryLabel: "Jewelry",
-        badge: "2-Pc Jewelry",
-        badgeColor: "bg-rose-900/90 text-rose-300 border-rose-700",
-        originalPrice: 1200,
-        price: 750,
-        aiImage: "assets/products/ai_jewelry_bangle.jpg",
-        colorsImage: "assets/products/bangle_ring_colors.jpg",
-        flyerImage: "assets/flyers/bangle_ring_flyer.jpg",
-        fabric: "Gold Finish with Sparkling Zircon Crystals",
-        description: "Openable Bangle and Adjustable Matching Ring for Her (Article: J2J5SF) with multi-faceted flower petals.",
-        specs: [
-          { label: "Fit", val: "Openable Bangle + Adjustable Ring" }
-        ],
-        sizes: [
-          { name: "Free Size", desc: "Universal Fit" }
-        ],
-        colors: ["Ruby Red", "White", "Peach", "Multi"]
-      },
-      {
-        id: "slippers",
-        title: "Designer Embellished Flat Slippers",
-        category: "accessories",
-        categoryLabel: "Footwear",
-        badge: "Sale Offer",
-        badgeColor: "bg-red-900/90 text-red-300 border-red-700",
-        originalPrice: 1800,
-        price: 1300,
-        aiImage: "assets/products/ai_slippers_flat.jpg",
-        colorsImage: "assets/products/slippers_colors.jpg",
-        flyerImage: "assets/flyers/slippers_flyer.jpg",
-        fabric: "Cushioned Insole & Anti-Slip Outsole",
-        description: "Ladies flat chappals/mules in 8 stylish variants: Silver Glitter Braided, Black Beaded, Blue Metallic, Leopard, and Tan.",
-        specs: [
-          { label: "Sole", val: "Comfort Cushioned Sole" }
-        ],
-        sizes: [
-          { name: "36", desc: "UK 3" },
-          { name: "37", desc: "UK 4" },
-          { name: "38", desc: "UK 5" },
-          { name: "39", desc: "UK 6" },
-          { name: "40", desc: "UK 7" },
-          { name: "41", desc: "UK 8" }
-        ],
-        colors: ["Silver Glitter", "Black Beaded", "Blue", "Leopard", "Tan Brown", "Pink Bow"]
-      }
-    ];
-
+    let products = [];
+    let storeSettings = {};
     let currentCategory = 'all';
     let searchQuery = '';
     let currentSort = 'featured';
     let cart = [];
 
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", async () => {
       loadCartFromStorage();
-      renderCatalog();
+      await fetchStoreSettings();
+      await loadProducts();
       setupSearch();
     });
 
-    // Render 2-Column Mobile Grid
+    async function fetchStoreSettings() {
+      try {
+        const res = await fetch('/api/settings');
+        const json = await res.json();
+        if (json.success && json.data) {
+          storeSettings = json.data;
+          renderPaymentAccounts();
+        }
+      } catch (e) { console.error('Settings load error:', e); }
+    }
+
+    function renderPaymentAccounts() {
+      const container = document.getElementById('paymentAccountsContainer');
+      const s = storeSettings;
+      container.innerHTML = `
+        <div class="p-3 rounded-xl bg-[#080b11] border border-gray-800 space-y-0.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold text-amber-400 flex items-center gap-1">
+              <i class="fa-solid fa-building-columns"></i> Meezan Bank
+            </span>
+            <span class="text-[9px] bg-emerald-950 text-emerald-300 px-1.5 py-0.5 rounded font-bold uppercase">Bank</span>
+          </div>
+          <div class="flex justify-between text-[11px]">
+            <span class="text-gray-400">Title:</span>
+            <span class="font-bold text-white">${s.meezanBankTitle || 'Fahad'}</span>
+          </div>
+          <div class="flex justify-between text-[11px]">
+            <span class="text-gray-400">A/C No:</span>
+            <span class="font-mono font-bold text-amber-300 text-xs">${s.meezanBankNo || '1036 0113829648'}</span>
+          </div>
+          <button onclick="copyToClipboard('${(s.meezanBankNo || '10360113829648').replace(/\s+/g, '')}', this)" class="mt-1.5 w-full py-1.5 rounded-lg bg-[#141b29] text-[10px] font-bold text-gray-200 flex items-center justify-center gap-1 tap-active">
+            <i class="fa-regular fa-copy"></i> Copy Bank Account
+          </button>
+        </div>
+
+        <div class="p-3 rounded-xl bg-[#080b11] border border-gray-800 space-y-0.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold text-emerald-400 flex items-center gap-1">
+              <i class="fa-solid fa-mobile-screen-button"></i> Easypaisa Wallet
+            </span>
+            <span class="text-[9px] bg-emerald-950 text-emerald-300 px-1.5 py-0.5 rounded font-bold uppercase">Instant</span>
+          </div>
+          <div class="flex justify-between text-[11px]">
+            <span class="text-gray-400">Title:</span>
+            <span class="font-bold text-white">${s.easypaisaTitle || 'Fahad Fahad'}</span>
+          </div>
+          <div class="flex justify-between text-[11px]">
+            <span class="text-gray-400">Number:</span>
+            <span class="font-mono font-bold text-emerald-300 text-xs">${s.easypaisaNo || '03302043491'}</span>
+          </div>
+          <button onclick="copyToClipboard('${s.easypaisaNo || '03302043491'}', this)" class="mt-1.5 w-full py-1.5 rounded-lg bg-[#141b29] text-[10px] font-bold text-gray-200 flex items-center justify-center gap-1 tap-active">
+            <i class="fa-regular fa-copy"></i> Copy Easypaisa Number
+          </button>
+        </div>
+
+        <div class="p-3 rounded-xl bg-[#080b11] border border-gray-800 space-y-0.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold text-blue-400 flex items-center gap-1">
+              <i class="fa-solid fa-wallet"></i> OPay Wallet
+            </span>
+            <span class="text-[9px] bg-blue-950 text-blue-300 px-1.5 py-0.5 rounded font-bold uppercase">Wallet</span>
+          </div>
+          <div class="flex justify-between text-[11px]">
+            <span class="text-gray-400">Title:</span>
+            <span class="font-bold text-white">${s.opayTitle || 'Fahad'}</span>
+          </div>
+          <div class="flex justify-between text-[11px]">
+            <span class="text-gray-400">Number:</span>
+            <span class="font-mono font-bold text-blue-300 text-xs">${s.opayNo || '03302043491'}</span>
+          </div>
+          <button onclick="copyToClipboard('${s.opayNo || '03302043491'}', this)" class="mt-1.5 w-full py-1.5 rounded-lg bg-[#141b29] text-[10px] font-bold text-gray-200 flex items-center justify-center gap-1 tap-active">
+            <i class="fa-regular fa-copy"></i> Copy OPay Number
+          </button>
+        </div>
+      `;
+    }
+
+    async function loadProducts() {
+      try {
+        const res = await fetch('/api/products');
+        const json = await res.json();
+        if (json.success) {
+          products = json.data;
+          renderCatalog();
+        }
+      } catch (e) {
+        console.error('Failed to load products from API:', e);
+      }
+    }
+
     function renderCatalog() {
       const grid = document.getElementById("productGrid");
       const noFound = document.getElementById("noProductsFound");
@@ -859,9 +581,9 @@
         const q = searchQuery.toLowerCase().trim();
         const matchesSearch = !q || 
           item.title.toLowerCase().includes(q) ||
-          item.categoryLabel.toLowerCase().includes(q) ||
-          item.fabric.toLowerCase().includes(q) ||
-          item.colors.some(c => c.toLowerCase().includes(q));
+          (item.categoryLabel && item.categoryLabel.toLowerCase().includes(q)) ||
+          (item.fabric && item.fabric.toLowerCase().includes(q)) ||
+          (item.colors && item.colors.some(c => c.toLowerCase().includes(q)));
         return matchesCategory && matchesSearch;
       });
 
@@ -880,35 +602,30 @@
       grid.innerHTML = filtered.map(item => `
         <div class="bg-[#101522] border border-gray-800/90 rounded-xl sm:rounded-2xl overflow-hidden flex flex-col justify-between shadow-sm relative">
           
-          <!-- Image Box (Aspect 4/5) -->
           <div class="relative w-full aspect-[4/5] bg-black cursor-pointer overflow-hidden" onclick="openProductModal('${item.id}')">
             <img src="${item.aiImage}" alt="${item.title}" class="w-full h-full object-cover object-top">
             <div class="absolute inset-0 bg-gradient-to-t from-[#101522] via-transparent to-transparent"></div>
             
-            <!-- Badge -->
-            <span class="absolute top-1.5 left-1.5 text-[8px] sm:text-[9px] font-black uppercase px-1.5 py-0.5 rounded border ${item.badgeColor} backdrop-blur-md">
+            <span class="absolute top-1.5 left-1.5 text-[8px] sm:text-[9px] font-black uppercase px-1.5 py-0.5 rounded border ${item.badgeColor || 'bg-amber-900 text-amber-300 border-amber-700'} backdrop-blur-md">
               ${item.badge}
             </span>
           </div>
 
-          <!-- Card Content -->
           <div class="p-2 sm:p-3 flex-1 flex flex-col justify-between space-y-1.5">
             <div>
-              <span class="text-[9px] font-bold uppercase tracking-wider text-amber-400 block truncate">${item.categoryLabel}</span>
+              <span class="text-[9px] font-bold uppercase tracking-wider text-amber-400 block truncate">${item.categoryLabel || item.category}</span>
               <h3 onclick="openProductModal('${item.id}')" class="font-bold text-[11px] sm:text-sm text-white line-clamp-1 leading-snug cursor-pointer mt-0.5">
                 ${item.title}
               </h3>
               <p class="text-[9px] sm:text-[11px] text-gray-400 line-clamp-1 mt-0.5">${item.fabric}</p>
             </div>
 
-            <!-- Price & Button -->
             <div class="pt-1.5 border-t border-gray-800/80 space-y-1.5">
               <div class="flex items-baseline justify-between">
                 <span class="text-xs sm:text-base font-black text-amber-300 font-mono">Rs. ${item.price.toLocaleString()}</span>
-                <span class="text-[9px] text-gray-500 line-through">Rs. ${item.originalPrice.toLocaleString()}</span>
+                <span class="text-[9px] text-gray-500 line-through">Rs. ${item.originalPrice ? item.originalPrice.toLocaleString() : ''}</span>
               </div>
 
-              <!-- Action Button -->
               <button onclick="quickOrderWhatsApp('${item.id}')" class="w-full py-1.5 rounded-lg bg-emerald-600 active:bg-emerald-700 text-white font-black text-[10px] sm:text-xs uppercase flex items-center justify-center gap-1 shadow tap-active">
                 <i class="fa-brands fa-whatsapp text-xs"></i> Order
               </button>
@@ -965,7 +682,7 @@
       renderCatalog();
     }
 
-    // Modal Handlers
+    // Modal Details
     let activeModalItem = null;
     let selectedColor = "";
     let selectedSize = "";
@@ -975,8 +692,8 @@
       if (!item) return;
 
       activeModalItem = item;
-      selectedColor = item.colors[0];
-      selectedSize = item.sizes[0].name;
+      selectedColor = item.colors && item.colors.length ? item.colors[0] : "Standard";
+      selectedSize = item.sizes && item.sizes.length ? item.sizes[0].name : "Standard";
 
       const modalContent = document.getElementById("modalProductContent");
       modalContent.innerHTML = `
@@ -985,16 +702,15 @@
             <img id="modalMainImg" src="${item.aiImage}" alt="${item.title}" class="w-full h-full object-contain">
           </div>
 
-          <!-- Thumbnails -->
           <div class="grid grid-cols-3 gap-1.5">
             <button onclick="switchModalImage('${item.aiImage}', this)" class="modal-thumb-btn border border-brand-gold rounded-lg overflow-hidden h-12 bg-black p-0.5">
               <img src="${item.aiImage}" class="w-full h-full object-cover">
             </button>
-            <button onclick="switchModalImage('${item.colorsImage}', this)" class="modal-thumb-btn border border-gray-800 rounded-lg overflow-hidden h-12 bg-black p-0.5">
-              <img src="${item.colorsImage}" class="w-full h-full object-cover">
+            <button onclick="switchModalImage('${item.colorsImage || item.aiImage}', this)" class="modal-thumb-btn border border-gray-800 rounded-lg overflow-hidden h-12 bg-black p-0.5">
+              <img src="${item.colorsImage || item.aiImage}" class="w-full h-full object-cover">
             </button>
-            <button onclick="switchModalImage('${item.flyerImage}', this)" class="modal-thumb-btn border border-gray-800 rounded-lg overflow-hidden h-12 bg-black p-0.5 flex items-center justify-center text-center">
-              <span class="text-[8px] text-amber-300 font-bold">Poster</span>
+            <button onclick="switchModalImage('${item.flyerImage || item.aiImage}', this)" class="modal-thumb-btn border border-gray-800 rounded-lg overflow-hidden h-12 bg-black p-0.5 flex items-center justify-center text-center">
+              <span class="text-[8px] text-amber-300 font-bold">Catalog</span>
             </button>
           </div>
         </div>
@@ -1006,7 +722,7 @@
               <h2 class="text-sm sm:text-lg font-serif font-bold text-white leading-tight">${item.title}</h2>
               <div class="flex items-baseline gap-2 mt-0.5">
                 <span class="text-base sm:text-xl font-black text-amber-300 font-mono">Rs. ${item.price.toLocaleString()}</span>
-                <span class="text-[10px] text-gray-500 line-through">Rs. ${item.originalPrice.toLocaleString()}</span>
+                <span class="text-[10px] text-gray-500 line-through">Rs. ${item.originalPrice ? item.originalPrice.toLocaleString() : ''}</span>
               </div>
             </div>
 
@@ -1014,13 +730,12 @@
               ⚠️ <strong>Advance Payment Required:</strong> Dispatch after Meezan, Easypaisa, or OPay transfer.
             </div>
 
-            <!-- Colors -->
             <div>
               <label class="block text-[10px] font-bold text-gray-300 mb-1">
-                Color: <span id="selectedColorLabel" class="text-amber-300">${item.colors[0]}</span>
+                Color: <span id="selectedColorLabel" class="text-amber-300">${selectedColor}</span>
               </label>
               <div class="flex flex-wrap gap-1">
-                ${item.colors.map((c, i) => `
+                ${(item.colors || []).map((c, i) => `
                   <button onclick="selectColor('${c}', this)" class="color-pill text-[10px] px-2 py-0.5 rounded border transition ${i === 0 ? 'border-brand-gold bg-amber-500/20 text-white font-bold' : 'border-gray-800 bg-[#080b11] text-gray-400'}">
                     ${c}
                   </button>
@@ -1028,13 +743,12 @@
               </div>
             </div>
 
-            <!-- Sizes -->
             <div>
               <label class="block text-[10px] font-bold text-gray-300 mb-1">
-                Size: <span id="selectedSizeLabel" class="text-amber-300">${item.sizes[0].name}</span>
+                Size: <span id="selectedSizeLabel" class="text-amber-300">${selectedSize}</span>
               </label>
               <div class="flex flex-wrap gap-1">
-                ${item.sizes.map((s, i) => `
+                ${(item.sizes || [{name: 'Standard'}]).map((s, i) => `
                   <button onclick="selectSize('${s.name}', this)" class="size-pill text-[10px] px-2 py-0.5 rounded border transition ${i === 0 ? 'border-brand-gold bg-amber-500/20 text-white font-bold' : 'border-gray-800 bg-[#080b11] text-gray-400'}">
                     ${s.name}
                   </button>
@@ -1097,15 +811,17 @@
 
     function orderCurrentModalWhatsApp() {
       if (!activeModalItem) return;
+      const waNumber = storeSettings.whatsappNumber || '03302043491';
       const msg = `Assalam o Alaikum Lakhani Collection!%0A%0AMujhe yeh order place karna hai:%0A🛍️ Product: ${encodeURIComponent(activeModalItem.title)}%0A🎨 Color: ${encodeURIComponent(selectedColor)}%0A📏 Size: ${encodeURIComponent(selectedSize)}%0A💰 Price: Rs. ${activeModalItem.price}%0A%0AAdvance Payment (Meezan / Easypaisa / OPay) transfer ke baad screenshot send kar raha/rahi hoon.`;
-      window.open(`https://wa.me/923302043491?text=${msg}`, '_blank');
+      window.open(`https://wa.me/92${waNumber.replace(/^0/, '')}?text=${msg}`, '_blank');
     }
 
     function quickOrderWhatsApp(id) {
       const item = products.find(p => p.id === id);
       if (!item) return;
+      const waNumber = storeSettings.whatsappNumber || '03302043491';
       const msg = `Assalam o Alaikum Lakhani Collection!%0A%0AMujhe yeh order place karna hai:%0A🛍️ Product: ${encodeURIComponent(item.title)}%0A💰 Price: Rs. ${item.price}%0A%0APlease advance payment details aur booking confirm karein.`;
-      window.open(`https://wa.me/923302043491?text=${msg}`, '_blank');
+      window.open(`https://wa.me/92${waNumber.replace(/^0/, '')}?text=${msg}`, '_blank');
     }
 
     // Cart Operations
@@ -1119,8 +835,8 @@
           title: product.title,
           price: product.price,
           image: product.aiImage,
-          color: color || product.colors[0],
-          size: size || product.sizes[0].name,
+          color: color || (product.colors ? product.colors[0] : 'Standard'),
+          size: size || (product.sizes ? product.sizes[0].name : 'Standard'),
           quantity: 1
         });
       }
@@ -1139,7 +855,9 @@
 
       const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
       const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      const deliveryFee = (subtotal >= 4000 || totalItems === 0) ? 0 : 250;
+      const threshold = storeSettings.freeShippingThreshold || 4000;
+      const standardFee = storeSettings.standardDeliveryFee || 250;
+      const deliveryFee = (subtotal >= threshold || totalItems === 0) ? 0 : standardFee;
       const grandTotal = subtotal + deliveryFee;
 
       if (totalItems > 0) {
@@ -1226,7 +944,9 @@
       if (cart.length === 0) return;
       toggleCartDrawer(false);
       const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      const deliveryFee = (subtotal >= 4000) ? 0 : 250;
+      const threshold = storeSettings.freeShippingThreshold || 4000;
+      const standardFee = storeSettings.standardDeliveryFee || 250;
+      const deliveryFee = (subtotal >= threshold) ? 0 : standardFee;
       document.getElementById("checkoutAmountTotal").innerText = `Rs. ${(subtotal + deliveryFee).toLocaleString()}`;
       document.getElementById("checkoutModal").classList.remove("hidden");
     }
@@ -1235,7 +955,8 @@
       document.getElementById("checkoutModal").classList.add("hidden");
     }
 
-    function handleOrderSubmit(e) {
+    // Handle Order Submit (Sends to Backend API & Opens WhatsApp)
+    async function handleOrderSubmit(e) {
       e.preventDefault();
       const name = document.getElementById("custName").value.trim();
       const phone = document.getElementById("custPhone").value.trim();
@@ -1244,15 +965,46 @@
       const paymentMethod = document.getElementById("custPaymentMethod").value;
 
       const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-      const deliveryFee = (subtotal >= 4000) ? 0 : 250;
+      const threshold = storeSettings.freeShippingThreshold || 4000;
+      const standardFee = storeSettings.standardDeliveryFee || 250;
+      const deliveryFee = (subtotal >= threshold) ? 0 : standardFee;
       const total = subtotal + deliveryFee;
-      const orderNumber = "LC-" + Math.floor(100000 + Math.random() * 900000);
 
-      document.getElementById("invNumber").innerText = `#${orderNumber}`;
-      let accTitle = paymentMethod === "Meezan Bank" ? "Meezan Bank (Fahad)" : (paymentMethod === "Easypaisa" ? "Easypaisa (Fahad Fahad)" : "OPay (Fahad)");
-      let accDetails = paymentMethod === "Meezan Bank" ? "A/C: 1036 0113829648" : "No: 03302043491";
+      const orderPayload = {
+        customerName: name,
+        customerPhone: phone,
+        customerCity: city,
+        customerAddress: address,
+        paymentMethod,
+        items: cart,
+        subtotal,
+        deliveryFee,
+        grandTotal: total
+      };
 
-      document.getElementById("invPaymentAccountTitle").innerText = accTitle;
+      let bookedOrderId = "LC-" + Math.floor(100000 + Math.random() * 900000);
+
+      // Save order to Backend Database
+      try {
+        const res = await fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderPayload)
+        });
+        const json = await res.json();
+        if (json.success && json.data) {
+          bookedOrderId = json.data.id;
+        }
+      } catch (err) {
+        console.error('API order booking error:', err);
+      }
+
+      // Populate Digital Invoice Modal
+      document.getElementById("invNumber").innerText = `#${bookedOrderId}`;
+      let accTitle = paymentMethod === "Meezan Bank" ? (storeSettings.meezanBankTitle || "Fahad") : (paymentMethod === "Easypaisa" ? (storeSettings.easypaisaTitle || "Fahad Fahad") : (storeSettings.opayTitle || "Fahad"));
+      let accDetails = paymentMethod === "Meezan Bank" ? ("A/C: " + (storeSettings.meezanBankNo || "1036 0113829648")) : ("No: " + (storeSettings.easypaisaNo || "03302043491"));
+
+      document.getElementById("invPaymentAccountTitle").innerText = `${paymentMethod} (${accTitle})`;
       document.getElementById("invPaymentAccountDetails").innerText = accDetails;
 
       document.getElementById("invItemsBody").innerHTML = cart.map(i => `
@@ -1270,10 +1022,11 @@
         itemsStr += `%0A${idx + 1}. *${encodeURIComponent(i.title)}* (${encodeURIComponent(i.color)} - ${encodeURIComponent(i.size)}) x${i.quantity} = Rs. ${i.price * i.quantity}`;
       });
 
-      const waMsg = `*--- LAKHANI COLLECTION ORDER ---*%0A*Order ID:* ${orderNumber}%0A👤 Name: ${encodeURIComponent(name)}%0A📞 Phone: ${encodeURIComponent(phone)}%0A📍 Address: ${encodeURIComponent(address)}, ${encodeURIComponent(city)}%0A*Items:*${itemsStr}%0A*💰 Total Payable:* Rs. ${total}%0A*💳 Advance Transfer via:* ${encodeURIComponent(paymentMethod)}%0A%0A*Payment screenshot sath bhej raha/rahi hoon.*`;
+      const waNumber = storeSettings.whatsappNumber || '03302043491';
+      const waMsg = `*--- LAKHANI COLLECTION ORDER BOOKED ---*%0A*Order ID:* ${bookedOrderId}%0A👤 Name: ${encodeURIComponent(name)}%0A📞 Phone: ${encodeURIComponent(phone)}%0A📍 Address: ${encodeURIComponent(address)}, ${encodeURIComponent(city)}%0A*Items:*${itemsStr}%0A*💰 Total Payable:* Rs. ${total}%0A*💳 Advance Transfer via:* ${encodeURIComponent(paymentMethod)}%0A%0A*Main payment transfer ka screenshot sath attach kar raha/rahi hoon. Please booking verify karein!*`;
 
       document.getElementById("sendInvoiceWhatsAppBtn").onclick = () => {
-        window.open(`https://wa.me/923302043491?text=${waMsg}`, '_blank');
+        window.open(`https://wa.me/92${waNumber.replace(/^0/, '')}?text=${waMsg}`, '_blank');
       };
 
       closeCheckoutModal();
