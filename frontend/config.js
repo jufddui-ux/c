@@ -4,28 +4,28 @@
  */
 
 (function () {
-  // If running locally, default to http://localhost:5000 or same host
-  const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+  const hostname = window.location.hostname || '';
+  const protocol = window.location.protocol || '';
+  const isLocal = !hostname || hostname === 'localhost' || hostname === '127.0.0.1' || hostname.startsWith('192.168.') || hostname.startsWith('10.') || protocol === 'file:';
 
   // Saved custom backend URL (from Admin Settings or LocalStorage)
   const savedBackend = localStorage.getItem('LAKHANI_BACKEND_URL');
-
-  // Default Render URL placeholder (Change this to your Render service URL e.g. https://lakhani-backend.onrender.com)
-  const DEFAULT_RENDER_URL = 'https://c-backend-render.onrender.com';
 
   // Determine active API base
   if (savedBackend) {
     window.API_BASE = savedBackend.replace(/\/+$/, '');
   } else if (isLocal) {
-    window.API_BASE = 'http://localhost:3000';
+    window.API_BASE = protocol === 'file:' ? 'http://localhost:3000' : '';
   } else {
-    window.API_BASE = DEFAULT_RENDER_URL;
+    // Cloud / Vercel default (empty relative or fallback)
+    window.API_BASE = '';
   }
 
   // Helper function to build full API endpoints
   window.apiUrl = function (endpoint) {
     if (!endpoint) return window.API_BASE;
     const cleanEndpoint = endpoint.startsWith('/') ? endpoint : '/' + endpoint;
+    if (!window.API_BASE) return cleanEndpoint;
     return window.API_BASE + cleanEndpoint;
   };
 
@@ -36,10 +36,10 @@
       return path;
     }
     if (path.startsWith('/uploads/')) {
-      return window.API_BASE + path;
+      return (window.API_BASE ? window.API_BASE : '') + path;
     }
     if (path.startsWith('uploads/')) {
-      return window.API_BASE + '/' + path;
+      return (window.API_BASE ? window.API_BASE : '') + '/' + path;
     }
     return path;
   };
@@ -57,5 +57,5 @@
     window.location.reload();
   };
 
-  console.log('🌐 Connected Backend API URL:', window.API_BASE);
+  console.log('🌐 Connected Backend API URL:', window.API_BASE || '(Same Origin / Local)');
 })();

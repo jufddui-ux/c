@@ -371,3 +371,4 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Lakhani Collection Backend running on port ${PORT}`);
   console.log(`📡 Ready for Render / Vercel integration`);
 });
+

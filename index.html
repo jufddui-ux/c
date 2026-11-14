@@ -70,6 +70,8 @@
       }
     }
   </style>
+  <script src="config.js"></script>
+  <script src="products-data.js"></script>
 </head>
 <body class="bg-[#080b11] text-gray-100 font-sans antialiased min-h-screen flex flex-col selection:bg-brand-gold selection:text-black pb-20 md:pb-0">
 
@@ -467,29 +469,43 @@
 
   <!-- Complete Storefront Dynamic Logic with Backend API Integration -->
   <script>
-    let products = [];
-    let storeSettings = {};
+    let products = window.INITIAL_PRODUCTS || [];
+    let storeSettings = window.INITIAL_SETTINGS || {};
     let currentCategory = 'all';
     let searchQuery = '';
     let currentSort = 'featured';
     let cart = [];
 
-    document.addEventListener("DOMContentLoaded", async () => {
+    document.addEventListener("DOMContentLoaded", () => {
       loadCartFromStorage();
-      await fetchStoreSettings();
-      await loadProducts();
+      
+      // 1. Instant Render from preloaded catalog (Zero wait time)
+      if (window.INITIAL_SETTINGS) {
+        storeSettings = window.INITIAL_SETTINGS;
+        renderPaymentAccounts();
+      }
+      if (window.INITIAL_PRODUCTS && window.INITIAL_PRODUCTS.length > 0) {
+        products = window.INITIAL_PRODUCTS;
+        renderCatalog();
+      }
       setupSearch();
+
+      // 2. Fetch latest live updates from Backend API (Render / Local) in background
+      fetchStoreSettings();
+      loadProducts();
     });
 
     async function fetchStoreSettings() {
       try {
-        const res = await fetch('/api/settings');
+        const res = await fetch(apiUrl('/api/settings'));
         const json = await res.json();
         if (json.success && json.data) {
           storeSettings = json.data;
           renderPaymentAccounts();
         }
-      } catch (e) { console.error('Settings load error:', e); }
+      } catch (e) {
+        console.warn('Backend settings fetch fallback:', e);
+      }
     }
 
     function renderPaymentAccounts() {
@@ -560,14 +576,18 @@
 
     async function loadProducts() {
       try {
-        const res = await fetch('/api/products');
+        const res = await fetch(apiUrl('/api/products'));
         const json = await res.json();
-        if (json.success) {
+        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
           products = json.data;
           renderCatalog();
         }
       } catch (e) {
-        console.error('Failed to load products from API:', e);
+        console.warn('Backend API fetch error, fallback active:', e);
+        if (products.length === 0 && window.INITIAL_PRODUCTS) {
+          products = window.INITIAL_PRODUCTS;
+          renderCatalog();
+        }
       }
     }
 
@@ -603,7 +623,7 @@
         <div class="bg-[#101522] border border-gray-800/90 rounded-xl sm:rounded-2xl overflow-hidden flex flex-col justify-between shadow-sm relative">
           
           <div class="relative w-full aspect-[4/5] bg-black cursor-pointer overflow-hidden" onclick="openProductModal('${item.id}')">
-            <img src="${item.aiImage}" alt="${item.title}" class="w-full h-full object-cover object-top">
+            <img src="${formatImgUrl(item.aiImage)}" alt="${item.title}" class="w-full h-full object-cover object-top">
             <div class="absolute inset-0 bg-gradient-to-t from-[#101522] via-transparent to-transparent"></div>
             
             <span class="absolute top-1.5 left-1.5 text-[8px] sm:text-[9px] font-black uppercase px-1.5 py-0.5 rounded border ${item.badgeColor || 'bg-amber-900 text-amber-300 border-amber-700'} backdrop-blur-md">
@@ -699,17 +719,17 @@
       modalContent.innerHTML = `
         <div class="space-y-2">
           <div class="relative w-full h-56 sm:h-72 rounded-xl overflow-hidden bg-black flex items-center justify-center">
-            <img id="modalMainImg" src="${item.aiImage}" alt="${item.title}" class="w-full h-full object-contain">
+            <img id="modalMainImg" src="${formatImgUrl(item.aiImage)}" alt="${item.title}" class="w-full h-full object-contain">
           </div>
 
           <div class="grid grid-cols-3 gap-1.5">
-            <button onclick="switchModalImage('${item.aiImage}', this)" class="modal-thumb-btn border border-brand-gold rounded-lg overflow-hidden h-12 bg-black p-0.5">
-              <img src="${item.aiImage}" class="w-full h-full object-cover">
+            <button onclick="switchModalImage(formatImgUrl('${item.aiImage}'), this)" class="modal-thumb-btn border border-brand-gold rounded-lg overflow-hidden h-12 bg-black p-0.5">
+              <img src="${formatImgUrl(item.aiImage)}" class="w-full h-full object-cover">
             </button>
-            <button onclick="switchModalImage('${item.colorsImage || item.aiImage}', this)" class="modal-thumb-btn border border-gray-800 rounded-lg overflow-hidden h-12 bg-black p-0.5">
-              <img src="${item.colorsImage || item.aiImage}" class="w-full h-full object-cover">
+            <button onclick="switchModalImage(formatImgUrl('${item.colorsImage || item.aiImage}'), this)" class="modal-thumb-btn border border-gray-800 rounded-lg overflow-hidden h-12 bg-black p-0.5">
+              <img src="${formatImgUrl(item.colorsImage || item.aiImage)}" class="w-full h-full object-cover">
             </button>
-            <button onclick="switchModalImage('${item.flyerImage || item.aiImage}', this)" class="modal-thumb-btn border border-gray-800 rounded-lg overflow-hidden h-12 bg-black p-0.5 flex items-center justify-center text-center">
+            <button onclick="switchModalImage(formatImgUrl('${item.flyerImage || item.aiImage}'), this)" class="modal-thumb-btn border border-gray-800 rounded-lg overflow-hidden h-12 bg-black p-0.5 flex items-center justify-center text-center">
               <span class="text-[8px] text-amber-300 font-bold">Catalog</span>
             </button>
           </div>
@@ -834,7 +854,7 @@
           id: product.id,
           title: product.title,
           price: product.price,
-          image: product.aiImage,
+          image: formatImgUrl(product.aiImage),
           color: color || (product.colors ? product.colors[0] : 'Standard'),
           size: size || (product.sizes ? product.sizes[0].name : 'Standard'),
           quantity: 1
@@ -986,7 +1006,7 @@
 
       // Save order to Backend Database
       try {
-        const res = await fetch('/api/orders', {
+        const res = await fetch(apiUrl('/api/orders'), {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(orderPayload)
