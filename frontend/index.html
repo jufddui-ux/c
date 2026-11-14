@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="ur-PK" dir="ltr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Lakhani Collection | Luxury Pakistani Fashion</title>
+  <meta name="description" content="Shop luxury men's and women's fashion, winter fleece tracksuits, pashmina shawls, designer lawn, handbags, jewelry and footwear. Advance payment nationwide delivery in Pakistan.">
+  <meta name="theme-color" content="#080b11">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              gold: '#D4AF37',
+              goldLight: '#F5E7B2',
+              dark: '#080b11',
+              card: '#101522',
+              emerald: '#059669',
+              accent: '#800020'
+            }
+          },
+          fontFamily: {
+            serif: ['Cinzel', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            urdu: ['"Noto Nastaliq Urdu"', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+    body { overflow-x: hidden; width: 100%; touch-action: manipulation; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .gold-gradient-text {
+      background: linear-gradient(135deg, #FFF3BF 0%, #D4AF37 50%, #AA7C11 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .tap-active:active { transform: scale(0.96); transition: transform 0.1s ease; }
+    @media (max-width: 640px) {
+      .mobile-sheet {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        max-height: 88vh;
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      @keyframes slideUp {
+        from { transform: translateY(100%); }
+        to { transform: translateY(0); }
+      }
+    }
+  </style>
+  <script src="config.js"></script>
+</head>
+<body class="bg-[#080b11] text-gray-100 font-sans antialiased min-h-screen flex flex-col selection:bg-brand-gold selection:text-black pb-20 md:pb-0">
+
+  <!-- Top Announcement Bar (House of Melone Style Ticker) -->
+  <div class="bg-gradient-to-r from-red-950 via-red-900 to-red-950 text-white text-[10px] sm:text-xs py-1.5 px-3 border-b border-red-700/40 text-center font-bold tracking-wide flex items-center justify-between sm:justify-center gap-2">
+    <div class="flex items-center gap-1.5 truncate">
+      <span class="inline-block w-2 h-2 rounded-full bg-amber-400 animate-ping shrink-0"></span>
+      <span id="topNoticeText" class="text-amber-300 uppercase truncate">⚠️ ONLY ADVANCE PAYMENT ACCEPTED</span>
+      <span class="text-gray-300 font-normal hidden sm:inline">| Meezan Bank, Easypaisa & OPay</span>
+    </div>
+    <div class="flex items-center gap-2 shrink-0">
+      <button onclick="openPaymentModal()" class="text-amber-300 underline font-bold text-[10px]">Bank Accounts</button>
+      <span class="text-gray-600 hidden sm:inline">•</span>
+      <a href="/admin" target="_blank" class="hidden sm:inline text-gray-400 hover:text-white text-[10px]">Admin Login</a>
+    </div>
+  </div>
+
+  <!-- Header / Navbar (House of Melone Luxury Aesthetic) -->
+  <header class="sticky top-0 z-40 bg-[#0a0e17]/95 backdrop-blur-md border-b border-gray-800">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 h-14 sm:h-20 flex items-center justify-between gap-3">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-2 group shrink-0">
+        <div class="w-8 h-8 sm:w-11 sm:h-11 rounded-full border border-brand-gold/70 flex items-center justify-center bg-black text-brand-gold font-serif font-black text-sm sm:text-lg shadow">
+          LC
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-1">
+            <span class="font-serif font-bold text-base sm:text-2xl tracking-wider text-white uppercase">Lakhani</span>
+            <span class="font-serif font-light text-base sm:text-2xl text-brand-gold">Collection</span>
+          </div>
+          <span class="text-[8px] sm:text-[10px] tracking-widest text-gray-400 uppercase -mt-1 font-semibold">House of Fashion</span>
+        </div>
+      </a>
+
+      <!-- Desktop Search Bar -->
+      <div class="hidden md:flex flex-1 max-w-sm mx-6">
+        <div class="relative w-full">
+          <input type="text" id="searchInput" placeholder="Search tracksuits, pashmina, lawn, bags..." 
+            class="w-full bg-[#121724] border border-gray-800 focus:border-brand-gold rounded-full py-2 pl-9 pr-4 text-xs text-gray-200 placeholder-gray-500 focus:outline-none">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-500 text-xs"></i>
+        </div>
+      </div>
+
+      <!-- Quick Action Icons -->
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <button onclick="toggleMobileSearch()" class="md:hidden p-2 text-gray-300 hover:text-white tap-active">
+          <i class="fa-solid fa-magnifying-glass text-base"></i>
+        </button>
+
+        <button onclick="openPaymentModal()" class="flex items-center gap-1 px-2.5 py-1.5 rounded-full border border-amber-500/50 bg-amber-500/10 text-amber-300 text-[11px] font-bold tap-active">
+          <i class="fa-solid fa-building-columns text-amber-400 text-xs"></i>
+          <span>Accounts</span>
+        </button>
+
+        <button onclick="toggleCartDrawer(true)" class="relative p-2 rounded-full bg-[#121724] border border-gray-800 text-gray-200 tap-active">
+          <i class="fa-solid fa-bag-shopping text-base"></i>
+          <span id="cartCountBadge" class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-500 text-black font-black text-[9px] flex items-center justify-center hidden">0</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Search Dropdown -->
+    <div id="mobileSearchBox" class="hidden md:hidden px-3 pb-2.5 bg-[#0a0e17] border-t border-gray-800/60 pt-2">
+      <div class="relative w-full">
+        <input type="text" id="mobileSearchInput" placeholder="Search clothes, bags, jewelry..." 
+          class="w-full bg-[#121724] border border-gray-700 focus:border-brand-gold rounded-xl py-2 pl-9 pr-8 text-xs text-gray-200 placeholder-gray-500 focus:outline-none">
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-500 text-xs"></i>
+        <button onclick="clearSearchInput()" class="absolute right-3 top-2 text-gray-400 text-xs">✕</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Banner (Clean Minimalist Editorial Look) -->
+  <section class="relative bg-[#080b11] border-b border-gray-800/80">
+    <div class="max-w-7xl mx-auto px-2.5 sm:px-6 py-2.5 sm:py-6">
+      
+      <div class="relative rounded-2xl overflow-hidden border border-amber-500/30 h-44 sm:h-72 shadow-lg flex items-center">
+        <img src="assets/hero_banner.jpg" alt="Lakhani Collection" class="absolute inset-0 w-full h-full object-cover object-center filter brightness-90">
+        
+        <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/75 to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+
+        <div class="relative z-10 p-4 sm:p-8 max-w-lg space-y-1.5 sm:space-y-3">
+          <div class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[9px] sm:text-xs font-bold uppercase">
+            <i class="fa-solid fa-crown text-amber-400"></i> New 2026 Collection
+          </div>
+
+          <h1 class="text-xl sm:text-4xl font-serif font-black tracking-tight text-white leading-tight">
+            Exclusive <span class="gold-gradient-text">Men & Women</span> Fashion
+          </h1>
+
+          <p class="text-gray-300 text-[10px] sm:text-xs line-clamp-2 leading-relaxed">
+            Direct wholesale prices. Fleece tracksuits, luxury pashmina, lawn suits, bags & accessories.
+          </p>
+
+          <div class="pt-0.5 flex items-center gap-2">
+            <span class="text-[9px] sm:text-[11px] font-bold text-amber-300 bg-black/80 px-2 py-0.5 rounded border border-amber-500/30">
+              ⚡ Advance Payment Dispatch
+            </span>
+            <span class="text-[9px] sm:text-[11px] font-bold text-emerald-300 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-700/40">
+              🚚 Nationwide Courier
+            </span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Horizontal Scrollable Category Pills -->
+  <section class="sticky top-14 sm:top-20 z-30 bg-[#0a0e17]/95 backdrop-blur-md border-b border-gray-800 py-2">
+    <div class="max-w-7xl mx-auto px-2.5 sm:px-6">
+      <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+        <button onclick="filterCategory('all', this)" class="cat-pill active shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold transition bg-brand-gold text-black shadow tap-active">
+          ✨ All Products
+        </button>
+        <button onclick="filterCategory('men', this)" class="cat-pill shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold transition bg-[#121724] text-gray-300 border border-gray-800 tap-active">
+          👔 Men's Tracksuits
+        </button>
+        <button onclick="filterCategory('women', this)" class="cat-pill shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold transition bg-[#121724] text-gray-300 border border-gray-800 tap-active">
+          👗 Women's Suits
+        </button>
+        <button onclick="filterCategory('bags', this)" class="cat-pill shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold transition bg-[#121724] text-gray-300 border border-gray-800 tap-active">
+          👜 Handbags & Wallets
+        </button>
+        <button onclick="filterCategory('accessories', this)" class="cat-pill shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold transition bg-[#121724] text-gray-300 border border-gray-800 tap-active">
+          💎 Jewelry & Slippers
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Product Catalog Grid -->
+  <main class="flex-1 max-w-7xl mx-auto px-2.5 sm:px-6 py-3 sm:py-8 w-full">
+    
+    <div class="flex items-center justify-between text-xs pb-2.5 border-b border-gray-800/80 mb-3">
+      <span class="text-gray-400 font-semibold text-[11px]">Live Catalog: <strong id="itemCount" class="text-amber-300">Loading...</strong></span>
+      
+      <div class="flex items-center gap-1">
+        <label for="sortSelect" class="text-gray-500 text-[10px]">Sort:</label>
+        <select id="sortSelect" onchange="applySort(this.value)" class="bg-[#121724] border border-gray-800 text-[10px] text-gray-200 rounded-lg px-2 py-1 focus:border-brand-gold focus:outline-none">
+          <option value="featured">Featured</option>
+          <option value="price-low">Price: Low-High</option>
+          <option value="price-high">Price: High-Low</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Product Grid (2 columns on mobile, 3 on tablet, 4 on desktop) -->
+    <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-5">
+      <!-- Injected from backend API -->
+    </div>
+
+    <div id="noProductsFound" class="hidden text-center py-12 space-y-3">
+      <i class="fa-solid fa-magnifying-glass text-gray-600 text-3xl"></i>
+      <h3 class="text-sm font-bold text-white">Koi Product Nahi Mila</h3>
+      <button onclick="filterCategory('all', null)" class="px-4 py-1.5 rounded-full bg-brand-gold text-black font-bold text-xs">
+        Reset Filter
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Product Details Modal (Mobile Bottom-Sheet) -->
+  <div id="productModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-black/80 backdrop-blur-sm hidden">
+    <div class="mobile-sheet bg-[#0f141f] border border-gray-800 rounded-t-3xl sm:rounded-3xl max-w-3xl w-full p-4 sm:p-6 shadow-2xl relative max-h-[88vh] overflow-y-auto no-scrollbar">
+      <div class="sm:hidden w-10 h-1 rounded-full bg-gray-700 mx-auto mb-2.5"></div>
+      <button onclick="closeProductModal()" class="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-white text-base z-20 bg-black/80 p-2 rounded-full tap-active">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="modalProductContent"></div>
+    </div>
+  </div>
+
+  <!-- Advance Payment Modal -->
+  <div id="paymentModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-black/80 backdrop-blur-sm hidden">
+    <div class="mobile-sheet bg-[#0f141f] border border-amber-500/40 rounded-t-3xl sm:rounded-3xl max-w-md w-full p-4 sm:p-6 shadow-2xl relative max-h-[88vh] overflow-y-auto no-scrollbar">
+      <div class="sm:hidden w-10 h-1 rounded-full bg-gray-700 mx-auto mb-2.5"></div>
+      <button onclick="closePaymentModal()" class="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-white text-base tap-active">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="text-center space-y-1 mb-4">
+        <div class="w-10 h-10 mx-auto rounded-full bg-amber-500/20 text-brand-gold flex items-center justify-center text-lg border border-amber-500/40">
+          <i class="fa-solid fa-building-columns"></i>
+        </div>
+        <h3 class="text-base sm:text-lg font-serif font-bold text-white">Payment Accounts</h3>
+        <p class="text-[10px] text-amber-300 font-extrabold uppercase">⚠️ ONLY ADVANCE PAYMENT ACCEPTED</p>
+        <p class="text-[10px] text-gray-400">Account copy karein aur transfer ke baad WhatsApp par slip send karein.</p>
+      </div>
+
+      <div class="space-y-2.5" id="paymentAccountsContainer">
+        <!-- Rendered dynamically from backend settings -->
+      </div>
+
+      <div class="mt-3 pt-2 border-t border-gray-800">
+        <a id="shareSlipWaBtn" href="https://wa.me/923302043491?text=Assalam%20o%20Alaikum!%20Maine%20Advance%20Payment%20kar%20di%20hai,%20screenshot%20share%20kar%20raha%20hoon" target="_blank"
+           class="w-full py-2.5 rounded-xl bg-emerald-600 text-white font-bold text-xs uppercase flex items-center justify-center gap-1.5 tap-active shadow">
+          <i class="fa-brands fa-whatsapp text-sm"></i> Share Receipt on WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cart Slide-Over Drawer -->
+  <div id="cartDrawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="toggleCartDrawer(false)"></div>
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-4 sm:pl-10">
+      <div class="w-screen max-w-sm sm:max-w-md bg-[#0b0f17] border-l border-gray-800 flex flex-col shadow-2xl">
+        
+        <div class="p-3.5 sm:p-5 border-b border-gray-800 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-bag-shopping text-brand-gold text-base"></i>
+            <h3 class="font-serif font-bold text-base text-white">Shopping Bag</h3>
+            <span id="drawerItemCount" class="text-[10px] bg-amber-500/20 text-amber-300 px-2 py-0.5 rounded-full font-bold">0</span>
+          </div>
+          <button onclick="toggleCartDrawer(false)" class="text-gray-400 hover:text-white p-1 tap-active">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+
+        <div id="cartItemsList" class="flex-1 overflow-y-auto p-3 space-y-2.5 no-scrollbar"></div>
+
+        <div class="p-3.5 sm:p-5 border-t border-gray-800 bg-[#0e131d] space-y-2.5">
+          <div class="space-y-1 text-xs text-gray-300">
+            <div class="flex justify-between">
+              <span>Items Total:</span>
+              <span id="cartSubtotal" class="font-bold text-white">Rs. 0</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Delivery Fee (Advance):</span>
+              <span id="cartDeliveryFee" class="font-bold text-emerald-400">Rs. 250</span>
+            </div>
+            <div class="flex justify-between border-t border-gray-800 pt-1 text-sm font-bold text-white">
+              <span>Payable Total:</span>
+              <span id="cartGrandTotal" class="text-brand-gold font-mono text-base font-black">Rs. 0</span>
+            </div>
+          </div>
+
+          <button onclick="openCheckoutModal()" id="checkoutButton" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 text-black font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow tap-active">
+            <i class="fa-solid fa-file-invoice-dollar"></i> Book Advance Order
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div id="checkoutModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-black/85 backdrop-blur-md hidden">
+    <div class="mobile-sheet bg-[#0f141f] border border-amber-500/30 rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-4 sm:p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto no-scrollbar">
+      <div class="sm:hidden w-10 h-1 rounded-full bg-gray-700 mx-auto mb-2.5"></div>
+      <button onclick="closeCheckoutModal()" class="absolute top-3 right-3 sm:top-4 sm:right-4 text-gray-400 hover:text-white text-base tap-active">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="border-b border-gray-800 pb-2 mb-3">
+        <h3 class="text-base sm:text-lg font-serif font-bold text-white">Delivery & Order Booking</h3>
+        <p class="text-[10px] text-gray-400">Order confirm karne ke liye apni delivery details enter karein.</p>
+      </div>
+
+      <form id="orderForm" onsubmit="handleOrderSubmit(event)" class="space-y-2.5">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[10px] font-semibold text-gray-300 mb-0.5">Naam *</label>
+            <input type="text" id="custName" required placeholder="Full Name" 
+              class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2 text-xs text-white focus:border-brand-gold focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-[10px] font-semibold text-gray-300 mb-0.5">WhatsApp / Phone *</label>
+            <input type="tel" id="custPhone" required placeholder="03XXXXXXXXX" 
+              class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2 text-xs text-white focus:border-brand-gold focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block text-[10px] font-semibold text-gray-300 mb-0.5">City / Sheher *</label>
+            <input type="text" id="custCity" required placeholder="City name" 
+              class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2 text-xs text-white focus:border-brand-gold focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-[10px] font-semibold text-gray-300 mb-0.5">Payment Via *</label>
+            <select id="custPaymentMethod" required class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2 text-xs text-white focus:border-brand-gold focus:outline-none">
+              <option value="Meezan Bank">Meezan Bank (Fahad)</option>
+              <option value="Easypaisa">Easypaisa (Fahad)</option>
+              <option value="OPay">OPay (Fahad)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[10px] font-semibold text-gray-300 mb-0.5">Complete Address *</label>
+          <textarea id="custAddress" required rows="2" placeholder="House/Flat No, Street, Landmark..." 
+            class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2 text-xs text-white focus:border-brand-gold focus:outline-none"></textarea>
+        </div>
+
+        <div class="p-2.5 rounded-xl bg-[#080b11] border border-gray-800 flex justify-between items-center text-xs">
+          <span class="text-gray-400">Total Payable:</span>
+          <span id="checkoutAmountTotal" class="font-black text-amber-300 font-mono text-sm">Rs. 0</span>
+        </div>
+
+        <button type="submit" class="w-full py-2.5 rounded-xl bg-emerald-600 text-white font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow tap-active">
+          <i class="fa-solid fa-file-invoice"></i> Confirm Booking & Open WhatsApp
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Digital Invoice Modal -->
+  <div id="invoiceModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-black/90 backdrop-blur-md hidden">
+    <div class="mobile-sheet bg-[#0f141f] border border-amber-500/50 rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-4 shadow-2xl relative max-h-[92vh] overflow-y-auto no-scrollbar">
+      <div class="sm:hidden w-10 h-1 rounded-full bg-gray-700 mx-auto mb-2"></div>
+      <button onclick="closeInvoiceModal()" class="absolute top-3 right-3 text-gray-400 hover:text-white text-base tap-active">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="bg-gray-950 p-3.5 rounded-xl border border-gray-800 space-y-3">
+        <div class="flex justify-between items-center border-b border-gray-800 pb-2">
+          <div>
+            <h2 class="font-serif font-black text-sm text-white">LAKHANI COLLECTION</h2>
+            <p class="text-[9px] text-gray-400">Order Booking Confirmed</p>
+          </div>
+          <div class="text-right">
+            <span class="text-[9px] bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded font-bold">INVOICE</span>
+            <p id="invNumber" class="text-[10px] font-mono font-bold text-white mt-0.5"></p>
+          </div>
+        </div>
+
+        <div class="p-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-[10px] space-y-0.5">
+          <span class="text-amber-300 font-bold block uppercase">Advance Payment Transfer To:</span>
+          <p id="invPaymentAccountTitle" class="font-bold text-white"></p>
+          <p id="invPaymentAccountDetails" class="font-mono text-amber-300 font-bold"></p>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-[10px] border border-gray-800 rounded">
+            <thead class="bg-[#121724] text-gray-400 uppercase text-[9px]">
+              <tr>
+                <th class="p-1.5">Item</th>
+                <th class="p-1.5 text-center">Qty</th>
+                <th class="p-1.5 text-right">Total</th>
+              </tr>
+            </thead>
+            <tbody id="invItemsBody" class="divide-y divide-gray-800 text-gray-200"></tbody>
+          </table>
+        </div>
+
+        <div class="flex justify-between items-center text-xs font-bold pt-1 border-t border-gray-800">
+          <span class="text-gray-400">Grand Total:</span>
+          <span id="invGrandTotal" class="text-amber-300 font-mono text-sm"></span>
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <button id="sendInvoiceWhatsAppBtn" class="w-full py-2.5 rounded-xl bg-emerald-600 text-white font-black text-xs uppercase flex items-center justify-center gap-1.5 shadow tap-active">
+          <i class="fa-brands fa-whatsapp text-sm"></i> Send Slip on WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toastNotification" class="fixed bottom-20 right-4 z-50 bg-[#0f141f] border border-brand-gold text-white px-3.5 py-2 rounded-xl shadow-2xl flex items-center gap-2 transform translate-y-28 opacity-0 transition duration-300 pointer-events-none text-xs font-bold">
+    <i class="fa-solid fa-circle-check text-brand-gold"></i>
+    <span id="toastMessage">Item added</span>
+  </div>
+
+  <!-- Mobile Bottom App Bar -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0a0e17]/95 border-t border-gray-800 backdrop-blur-lg px-2 py-1.5 flex items-center justify-around text-center shadow-2xl">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="flex flex-col items-center text-brand-gold w-14 tap-active">
+      <i class="fa-solid fa-store text-base"></i>
+      <span class="text-[9px] font-bold mt-0.5">Shop</span>
+    </button>
+
+    <button onclick="openPaymentModal()" class="flex flex-col items-center text-amber-300 w-14 tap-active">
+      <i class="fa-solid fa-building-columns text-base"></i>
+      <span class="text-[9px] font-bold mt-0.5">Accounts</span>
+    </button>
+
+    <button onclick="toggleCartDrawer(true)" class="relative flex flex-col items-center text-gray-300 w-14 tap-active">
+      <i class="fa-solid fa-bag-shopping text-base"></i>
+      <span id="mobileCartBadge" class="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-amber-500 text-black font-black text-[8px] flex items-center justify-center hidden">0</span>
+      <span class="text-[9px] font-bold mt-0.5">Cart</span>
+    </button>
+
+    <a id="mobileWaLink" href="https://wa.me/923302043491?text=Assalam%20o%20Alaikum!%20Lakhani%20Collection%20se%20order%20karna%20hai" target="_blank" class="flex flex-col items-center text-emerald-400 w-14 tap-active">
+      <i class="fa-brands fa-whatsapp text-lg"></i>
+      <span class="text-[9px] font-bold mt-0.5">WhatsApp</span>
+    </a>
+  </nav>
+
+  <!-- Complete Storefront Dynamic Logic with Backend API Integration -->
+  <script>
+    let products = [];
+    let storeSettings = {};
+    let currentCategory = 'all';
+    let searchQuery = '';
+    let currentSort = 'featured';
+    let cart = [];
+
+    document.addEventListener("DOMContentLoaded", async () => {
+      loadCartFromStorage();
+      await fetchStoreSettings();
+      await loadProducts();
+      setupSearch();
+    });
+
+    async function fetchStoreSettings() {
+      try {
+        const res = await fetch(apiUrl('/api/settings'));
+        const json = await res.json();
+        if (json.success && json.data) {
+          storeSettings = json.data;
+          renderPaymentAccounts();
+        }
+      } catch (e) { console.error('Settings load error:', e); }
+    }
+
+    function renderPaymentAccounts() {
+      const container = document.getElementById('paymentAccountsContainer');
+      const s = storeSettings;
+      container.innerHTML = `
+        <div class="p-3 rounded-xl bg-[#080b11] border border-gray-800 space-y-0.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold text-amber-400 flex items-center gap-1">
+              <i class="fa-solid fa-building-columns"></i> Meezan Bank
+            </span>
+            <span class="text-[9px] bg-emerald-950 text-emerald-300 px-1.5 py-0.5 rounded font-bold uppercase">Bank</span>
+          </div>
+          <div class="flex justify-between text-[11px]">
+            <span class="text-gray-400">Title:</span>
+            <span class="font-bold text-white">${s.meezanBankTitle || 'Fahad'}</span>
+          </div>
+          <div class="flex justify-between text-[11px]">
+            <span class="text-gray-400">A/C No:</span>
+            <span class="font-mono font-bold text-amber-300 text-xs">${s.meezanBankNo || '1036 0113829648'}</span>
+          </div>
+          <button onclick="copyToClipboard('${(s.meezanBankNo || '10360113829648').replace(/\s+/g, '')}', this)" class="mt-1.5 w-full py-1.5 rounded-lg bg-[#141b29] text-[10px] font-bold text-gray-200 flex items-center justify-center gap-1 tap-active">
+            <i class="fa-regular fa-copy"></i> Copy Bank Account
+          </button>
+        </div>
+
+        <div class="p-3 rounded-xl bg-[#080b11] border border-gray-800 space-y-0.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold text-emerald-400 flex items-center gap-1">
+              <i class="fa-solid fa-mobile-screen-button"></i> Easypaisa Wallet
+            </span>
+            <span class="text-[9px] bg-emerald-950 text-emerald-300 px-1.5 py-0.5 rounded font-bold uppercase">Instant</span>
+          </div>
+          <div class="flex justify-between text-[11px]">
+            <span class="text-gray-400">Title:</span>
+            <span class="font-bold text-white">${s.easypaisaTitle || 'Fahad Fahad'}</span>
+          </div>
+          <div class="flex justify-between text-[11px]">
+            <span class="text-gray-400">Number:</span>
+            <span class="font-mono font-bold text-emerald-300 text-xs">${s.easypaisaNo || '03302043491'}</span>
+          </div>
+          <button onclick="copyToClipboard('${s.easypaisaNo || '03302043491'}', this)" class="mt-1.5 w-full py-1.5 rounded-lg bg-[#141b29] text-[10px] font-bold text-gray-200 flex items-center justify-center gap-1 tap-active">
+            <i class="fa-regular fa-copy"></i> Copy Easypaisa Number
+          </button>
+        </div>
+
+        <div class="p-3 rounded-xl bg-[#080b11] border border-gray-800 space-y-0.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] font-bold text-blue-400 flex items-center gap-1">
+              <i class="fa-solid fa-wallet"></i> OPay Wallet
+            </span>
+            <span class="text-[9px] bg-blue-950 text-blue-300 px-1.5 py-0.5 rounded font-bold uppercase">Wallet</span>
+          </div>
+          <div class="flex justify-between text-[11px]">
+            <span class="text-gray-400">Title:</span>
+            <span class="font-bold text-white">${s.opayTitle || 'Fahad'}</span>
+          </div>
+          <div class="flex justify-between text-[11px]">
+            <span class="text-gray-400">Number:</span>
+            <span class="font-mono font-bold text-blue-300 text-xs">${s.opayNo || '03302043491'}</span>
+          </div>
+          <button onclick="copyToClipboard('${s.opayNo || '03302043491'}', this)" class="mt-1.5 w-full py-1.5 rounded-lg bg-[#141b29] text-[10px] font-bold text-gray-200 flex items-center justify-center gap-1 tap-active">
+            <i class="fa-regular fa-copy"></i> Copy OPay Number
+          </button>
+        </div>
+      `;
+    }
+
+    async function loadProducts() {
+      try {
+        const res = await fetch(apiUrl('/api/products'));
+        const json = await res.json();
+        if (json.success) {
+          products = json.data;
+          renderCatalog();
+        }
+      } catch (e) {
+        console.error('Failed to load products from API:', e);
+      }
+    }
+
+    function renderCatalog() {
+      const grid = document.getElementById("productGrid");
+      const noFound = document.getElementById("noProductsFound");
+      const itemCountSpan = document.getElementById("itemCount");
+
+      let filtered = products.filter(item => {
+        const matchesCategory = (currentCategory === 'all') || (item.category === currentCategory);
+        const q = searchQuery.toLowerCase().trim();
+        const matchesSearch = !q || 
+          item.title.toLowerCase().includes(q) ||
+          (item.categoryLabel && item.categoryLabel.toLowerCase().includes(q)) ||
+          (item.fabric && item.fabric.toLowerCase().includes(q)) ||
+          (item.colors && item.colors.some(c => c.toLowerCase().includes(q)));
+        return matchesCategory && matchesSearch;
+      });
+
+      if (currentSort === 'price-low') filtered.sort((a, b) => a.price - b.price);
+      else if (currentSort === 'price-high') filtered.sort((a, b) => b.price - a.price);
+
+      itemCountSpan.innerText = `${filtered.length} Products`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = "";
+        noFound.classList.remove("hidden");
+        return;
+      }
+      noFound.classList.add("hidden");
+
+      grid.innerHTML = filtered.map(item => `
+        <div class="bg-[#101522] border border-gray-800/90 rounded-xl sm:rounded-2xl overflow-hidden flex flex-col justify-between shadow-sm relative">
+          
+          <div class="relative w-full aspect-[4/5] bg-black cursor-pointer overflow-hidden" onclick="openProductModal('${item.id}')">
+            <img src="${formatImgUrl(item.aiImage)}" alt="${item.title}" class="w-full h-full object-cover object-top">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#101522] via-transparent to-transparent"></div>
+            
+            <span class="absolute top-1.5 left-1.5 text-[8px] sm:text-[9px] font-black uppercase px-1.5 py-0.5 rounded border ${item.badgeColor || 'bg-amber-900 text-amber-300 border-amber-700'} backdrop-blur-md">
+              ${item.badge}
+            </span>
+          </div>
+
+          <div class="p-2 sm:p-3 flex-1 flex flex-col justify-between space-y-1.5">
+            <div>
+              <span class="text-[9px] font-bold uppercase tracking-wider text-amber-400 block truncate">${item.categoryLabel || item.category}</span>
+              <h3 onclick="openProductModal('${item.id}')" class="font-bold text-[11px] sm:text-sm text-white line-clamp-1 leading-snug cursor-pointer mt-0.5">
+                ${item.title}
+              </h3>
+              <p class="text-[9px] sm:text-[11px] text-gray-400 line-clamp-1 mt-0.5">${item.fabric}</p>
+            </div>
+
+            <div class="pt-1.5 border-t border-gray-800/80 space-y-1.5">
+              <div class="flex items-baseline justify-between">
+                <span class="text-xs sm:text-base font-black text-amber-300 font-mono">Rs. ${item.price.toLocaleString()}</span>
+                <span class="text-[9px] text-gray-500 line-through">Rs. ${item.originalPrice ? item.originalPrice.toLocaleString() : ''}</span>
+              </div>
+
+              <button onclick="quickOrderWhatsApp('${item.id}')" class="w-full py-1.5 rounded-lg bg-emerald-600 active:bg-emerald-700 text-white font-black text-[10px] sm:text-xs uppercase flex items-center justify-center gap-1 shadow tap-active">
+                <i class="fa-brands fa-whatsapp text-xs"></i> Order
+              </button>
+            </div>
+          </div>
+
+        </div>
+      `).join("");
+    }
+
+    function filterCategory(cat, btn) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-pill').forEach(b => {
+        b.className = 'cat-pill shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold transition bg-[#121724] text-gray-300 border border-gray-800 tap-active';
+      });
+      if (btn) {
+        btn.className = 'cat-pill active shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold transition bg-brand-gold text-black shadow tap-active';
+      }
+      renderCatalog();
+    }
+
+    function setupSearch() {
+      const deskInput = document.getElementById("searchInput");
+      const mobInput = document.getElementById("mobileSearchInput");
+
+      const onSearch = (val) => {
+        searchQuery = val;
+        if (deskInput) deskInput.value = val;
+        if (mobInput) mobInput.value = val;
+        renderCatalog();
+      };
+
+      if (deskInput) deskInput.addEventListener("input", (e) => onSearch(e.target.value));
+      if (mobInput) mobInput.addEventListener("input", (e) => onSearch(e.target.value));
+    }
+
+    function toggleMobileSearch() {
+      const box = document.getElementById("mobileSearchBox");
+      box.classList.toggle("hidden");
+      if (!box.classList.contains("hidden")) {
+        document.getElementById("mobileSearchInput").focus();
+      }
+    }
+
+    function clearSearchInput() {
+      document.getElementById("mobileSearchInput").value = "";
+      searchQuery = "";
+      renderCatalog();
+      toggleMobileSearch();
+    }
+
+    function applySort(val) {
+      currentSort = val;
+      renderCatalog();
+    }
+
+    // Modal Details
+    let activeModalItem = null;
+    let selectedColor = "";
+    let selectedSize = "";
+
+    function openProductModal(id) {
+      const item = products.find(p => p.id === id);
+      if (!item) return;
+
+      activeModalItem = item;
+      selectedColor = item.colors && item.colors.length ? item.colors[0] : "Standard";
+      selectedSize = item.sizes && item.sizes.length ? item.sizes[0].name : "Standard";
+
+      const modalContent = document.getElementById("modalProductContent");
+      modalContent.innerHTML = `
+        <div class="space-y-2">
+          <div class="relative w-full h-56 sm:h-72 rounded-xl overflow-hidden bg-black flex items-center justify-center">
+            <img id="modalMainImg" src="${formatImgUrl(item.aiImage)}" alt="${item.title}" class="w-full h-full object-contain">
+          </div>
+
+          <div class="grid grid-cols-3 gap-1.5">
+            <button onclick="switchModalImage(formatImgUrl('${item.aiImage}'), this)" class="modal-thumb-btn border border-brand-gold rounded-lg overflow-hidden h-12 bg-black p-0.5">
+              <img src="${formatImgUrl(item.aiImage)}" class="w-full h-full object-cover">
+            </button>
+            <button onclick="switchModalImage(formatImgUrl('${item.colorsImage || item.aiImage}'), this)" class="modal-thumb-btn border border-gray-800 rounded-lg overflow-hidden h-12 bg-black p-0.5">
+              <img src="${formatImgUrl(item.colorsImage || item.aiImage)}" class="w-full h-full object-cover">
+            </button>
+            <button onclick="switchModalImage(formatImgUrl('${item.flyerImage || item.aiImage}'), this)" class="modal-thumb-btn border border-gray-800 rounded-lg overflow-hidden h-12 bg-black p-0.5 flex items-center justify-center text-center">
+              <span class="text-[8px] text-amber-300 font-bold">Catalog</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="space-y-2.5 flex flex-col justify-between">
+          <div class="space-y-1.5">
+            <div>
+              <span class="text-[9px] font-bold text-amber-400 uppercase tracking-widest">${item.badge}</span>
+              <h2 class="text-sm sm:text-lg font-serif font-bold text-white leading-tight">${item.title}</h2>
+              <div class="flex items-baseline gap-2 mt-0.5">
+                <span class="text-base sm:text-xl font-black text-amber-300 font-mono">Rs. ${item.price.toLocaleString()}</span>
+                <span class="text-[10px] text-gray-500 line-through">Rs. ${item.originalPrice ? item.originalPrice.toLocaleString() : ''}</span>
+              </div>
+            </div>
+
+            <div class="p-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-[10px] text-amber-200">
+              ⚠️ <strong>Advance Payment Required:</strong> Dispatch after Meezan, Easypaisa, or OPay transfer.
+            </div>
+
+            <div>
+              <label class="block text-[10px] font-bold text-gray-300 mb-1">
+                Color: <span id="selectedColorLabel" class="text-amber-300">${selectedColor}</span>
+              </label>
+              <div class="flex flex-wrap gap-1">
+                ${(item.colors || []).map((c, i) => `
+                  <button onclick="selectColor('${c}', this)" class="color-pill text-[10px] px-2 py-0.5 rounded border transition ${i === 0 ? 'border-brand-gold bg-amber-500/20 text-white font-bold' : 'border-gray-800 bg-[#080b11] text-gray-400'}">
+                    ${c}
+                  </button>
+                `).join("")}
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-[10px] font-bold text-gray-300 mb-1">
+                Size: <span id="selectedSizeLabel" class="text-amber-300">${selectedSize}</span>
+              </label>
+              <div class="flex flex-wrap gap-1">
+                ${(item.sizes || [{name: 'Standard'}]).map((s, i) => `
+                  <button onclick="selectSize('${s.name}', this)" class="size-pill text-[10px] px-2 py-0.5 rounded border transition ${i === 0 ? 'border-brand-gold bg-amber-500/20 text-white font-bold' : 'border-gray-800 bg-[#080b11] text-gray-400'}">
+                    ${s.name}
+                  </button>
+                `).join("")}
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-gray-800 grid grid-cols-2 gap-2">
+            <button onclick="addToCartCurrentModal()" class="py-2 rounded-lg bg-gray-800 text-[11px] font-bold text-white uppercase tap-active">
+              Add To Bag
+            </button>
+            <button onclick="orderCurrentModalWhatsApp()" class="py-2 rounded-lg bg-emerald-600 text-[11px] font-black text-white uppercase tap-active shadow">
+              Order WhatsApp
+            </button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("productModal").classList.remove("hidden");
+    }
+
+    function switchModalImage(src, btn) {
+      document.getElementById("modalMainImg").src = src;
+      document.querySelectorAll('.modal-thumb-btn').forEach(b => {
+        b.classList.remove('border-brand-gold');
+        b.classList.add('border-gray-800');
+      });
+      btn.classList.add('border-brand-gold');
+      btn.classList.remove('border-gray-800');
+    }
+
+    function selectColor(color, btn) {
+      selectedColor = color;
+      document.getElementById("selectedColorLabel").innerText = color;
+      document.querySelectorAll('.color-pill').forEach(b => {
+        b.className = 'color-pill text-[10px] px-2 py-0.5 rounded border border-gray-800 bg-[#080b11] text-gray-400';
+      });
+      btn.className = 'color-pill text-[10px] px-2 py-0.5 rounded border border-brand-gold bg-amber-500/20 text-white font-bold';
+    }
+
+    function selectSize(sizeName, btn) {
+      selectedSize = sizeName;
+      document.getElementById("selectedSizeLabel").innerText = sizeName;
+      document.querySelectorAll('.size-pill').forEach(b => {
+        b.className = 'size-pill text-[10px] px-2 py-0.5 rounded border border-gray-800 bg-[#080b11] text-gray-400';
+      });
+      btn.className = 'size-pill text-[10px] px-2 py-0.5 rounded border border-brand-gold bg-amber-500/20 text-white font-bold';
+    }
+
+    function closeProductModal() {
+      document.getElementById("productModal").classList.add("hidden");
+    }
+
+    function addToCartCurrentModal() {
+      if (!activeModalItem) return;
+      addToCart(activeModalItem, selectedColor, selectedSize);
+      closeProductModal();
+    }
+
+    function orderCurrentModalWhatsApp() {
+      if (!activeModalItem) return;
+      const waNumber = storeSettings.whatsappNumber || '03302043491';
+      const msg = `Assalam o Alaikum Lakhani Collection!%0A%0AMujhe yeh order place karna hai:%0A🛍️ Product: ${encodeURIComponent(activeModalItem.title)}%0A🎨 Color: ${encodeURIComponent(selectedColor)}%0A📏 Size: ${encodeURIComponent(selectedSize)}%0A💰 Price: Rs. ${activeModalItem.price}%0A%0AAdvance Payment (Meezan / Easypaisa / OPay) transfer ke baad screenshot send kar raha/rahi hoon.`;
+      window.open(`https://wa.me/92${waNumber.replace(/^0/, '')}?text=${msg}`, '_blank');
+    }
+
+    function quickOrderWhatsApp(id) {
+      const item = products.find(p => p.id === id);
+      if (!item) return;
+      const waNumber = storeSettings.whatsappNumber || '03302043491';
+      const msg = `Assalam o Alaikum Lakhani Collection!%0A%0AMujhe yeh order place karna hai:%0A🛍️ Product: ${encodeURIComponent(item.title)}%0A💰 Price: Rs. ${item.price}%0A%0APlease advance payment details aur booking confirm karein.`;
+      window.open(`https://wa.me/92${waNumber.replace(/^0/, '')}?text=${msg}`, '_blank');
+    }
+
+    // Cart Operations
+    function addToCart(product, color, size) {
+      const existing = cart.find(i => i.id === product.id && i.color === color && i.size === size);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        cart.push({
+          id: product.id,
+          title: product.title,
+          price: product.price,
+          image: formatImgUrl(product.aiImage),
+          color: color || (product.colors ? product.colors[0] : 'Standard'),
+          size: size || (product.sizes ? product.sizes[0].name : 'Standard'),
+          quantity: 1
+        });
+      }
+      saveCartToStorage();
+      updateCartUI();
+      showToast("Added to bag!");
+    }
+
+    function updateCartUI() {
+      const badge = document.getElementById("cartCountBadge");
+      const mobBadge = document.getElementById("mobileCartBadge");
+      const drawerCount = document.getElementById("drawerItemCount");
+      const list = document.getElementById("cartItemsList");
+      const subtotalEl = document.getElementById("cartSubtotal");
+      const grandTotalEl = document.getElementById("cartGrandTotal");
+
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const threshold = storeSettings.freeShippingThreshold || 4000;
+      const standardFee = storeSettings.standardDeliveryFee || 250;
+      const deliveryFee = (subtotal >= threshold || totalItems === 0) ? 0 : standardFee;
+      const grandTotal = subtotal + deliveryFee;
+
+      if (totalItems > 0) {
+        badge.innerText = totalItems;
+        badge.classList.remove("hidden");
+        mobBadge.innerText = totalItems;
+        mobBadge.classList.remove("hidden");
+      } else {
+        badge.classList.add("hidden");
+        mobBadge.classList.add("hidden");
+      }
+      drawerCount.innerText = totalItems;
+
+      subtotalEl.innerText = `Rs. ${subtotal.toLocaleString()}`;
+      grandTotalEl.innerText = `Rs. ${grandTotal.toLocaleString()}`;
+
+      if (cart.length === 0) {
+        list.innerHTML = `
+          <div class="text-center py-8 space-y-1.5 text-gray-400">
+            <i class="fa-solid fa-basket-shopping text-2xl"></i>
+            <p class="text-xs">Aapka cart khali hai</p>
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = cart.map((item, idx) => `
+        <div class="flex items-center gap-2 p-2 rounded-xl bg-[#121724] border border-gray-800">
+          <img src="${item.image}" alt="${item.title}" class="w-12 h-12 rounded-lg object-cover bg-black shrink-0">
+          <div class="flex-1 min-w-0">
+            <h4 class="text-[10px] font-bold text-white truncate">${item.title}</h4>
+            <p class="text-[9px] text-gray-400">${item.color}</p>
+            <p class="text-[11px] font-mono font-bold text-amber-300">Rs. ${item.price.toLocaleString()}</p>
+          </div>
+          <div class="flex items-center gap-1">
+            <button onclick="changeQty(${idx}, -1)" class="w-5 h-5 rounded bg-gray-800 text-xs">-</button>
+            <span class="text-xs font-bold">${item.quantity}</span>
+            <button onclick="changeQty(${idx}, 1)" class="w-5 h-5 rounded bg-gray-800 text-xs">+</button>
+            <button onclick="removeFromCart(${idx})" class="text-gray-500 hover:text-red-400 text-xs ml-1">
+              <i class="fa-solid fa-trash-can"></i>
+            </button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function changeQty(idx, delta) {
+      cart[idx].quantity += delta;
+      if (cart[idx].quantity <= 0) cart.splice(idx, 1);
+      saveCartToStorage();
+      updateCartUI();
+    }
+
+    function removeFromCart(idx) {
+      cart.splice(idx, 1);
+      saveCartToStorage();
+      updateCartUI();
+    }
+
+    function clearCart() {
+      cart = [];
+      saveCartToStorage();
+      updateCartUI();
+    }
+
+    function toggleCartDrawer(open) {
+      const drawer = document.getElementById("cartDrawer");
+      drawer.classList.toggle("hidden", !open);
+    }
+
+    function saveCartToStorage() {
+      try { localStorage.setItem("lc_cart", JSON.stringify(cart)); } catch (e) {}
+    }
+
+    function loadCartFromStorage() {
+      try {
+        const stored = localStorage.getItem("lc_cart");
+        if (stored) cart = JSON.parse(stored);
+      } catch (e) {}
+      updateCartUI();
+    }
+
+    function openCheckoutModal() {
+      if (cart.length === 0) return;
+      toggleCartDrawer(false);
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const threshold = storeSettings.freeShippingThreshold || 4000;
+      const standardFee = storeSettings.standardDeliveryFee || 250;
+      const deliveryFee = (subtotal >= threshold) ? 0 : standardFee;
+      document.getElementById("checkoutAmountTotal").innerText = `Rs. ${(subtotal + deliveryFee).toLocaleString()}`;
+      document.getElementById("checkoutModal").classList.remove("hidden");
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById("checkoutModal").classList.add("hidden");
+    }
+
+    // Handle Order Submit (Sends to Backend API & Opens WhatsApp)
+    async function handleOrderSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById("custName").value.trim();
+      const phone = document.getElementById("custPhone").value.trim();
+      const city = document.getElementById("custCity").value.trim();
+      const address = document.getElementById("custAddress").value.trim();
+      const paymentMethod = document.getElementById("custPaymentMethod").value;
+
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const threshold = storeSettings.freeShippingThreshold || 4000;
+      const standardFee = storeSettings.standardDeliveryFee || 250;
+      const deliveryFee = (subtotal >= threshold) ? 0 : standardFee;
+      const total = subtotal + deliveryFee;
+
+      const orderPayload = {
+        customerName: name,
+        customerPhone: phone,
+        customerCity: city,
+        customerAddress: address,
+        paymentMethod,
+        items: cart,
+        subtotal,
+        deliveryFee,
+        grandTotal: total
+      };
+
+      let bookedOrderId = "LC-" + Math.floor(100000 + Math.random() * 900000);
+
+      // Save order to Backend Database
+      try {
+        const res = await fetch(apiUrl('/api/orders'), {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderPayload)
+        });
+        const json = await res.json();
+        if (json.success && json.data) {
+          bookedOrderId = json.data.id;
+        }
+      } catch (err) {
+        console.error('API order booking error:', err);
+      }
+
+      // Populate Digital Invoice Modal
+      document.getElementById("invNumber").innerText = `#${bookedOrderId}`;
+      let accTitle = paymentMethod === "Meezan Bank" ? (storeSettings.meezanBankTitle || "Fahad") : (paymentMethod === "Easypaisa" ? (storeSettings.easypaisaTitle || "Fahad Fahad") : (storeSettings.opayTitle || "Fahad"));
+      let accDetails = paymentMethod === "Meezan Bank" ? ("A/C: " + (storeSettings.meezanBankNo || "1036 0113829648")) : ("No: " + (storeSettings.easypaisaNo || "03302043491"));
+
+      document.getElementById("invPaymentAccountTitle").innerText = `${paymentMethod} (${accTitle})`;
+      document.getElementById("invPaymentAccountDetails").innerText = accDetails;
+
+      document.getElementById("invItemsBody").innerHTML = cart.map(i => `
+        <tr>
+          <td class="p-1 font-bold text-white">${i.title} (${i.color})</td>
+          <td class="p-1 text-center font-bold">${i.quantity}</td>
+          <td class="p-1 text-right font-mono text-amber-300">Rs. ${(i.price * i.quantity).toLocaleString()}</td>
+        </tr>
+      `).join("");
+
+      document.getElementById("invGrandTotal").innerText = `Rs. ${total.toLocaleString()}`;
+
+      let itemsStr = "";
+      cart.forEach((i, idx) => {
+        itemsStr += `%0A${idx + 1}. *${encodeURIComponent(i.title)}* (${encodeURIComponent(i.color)} - ${encodeURIComponent(i.size)}) x${i.quantity} = Rs. ${i.price * i.quantity}`;
+      });
+
+      const waNumber = storeSettings.whatsappNumber || '03302043491';
+      const waMsg = `*--- LAKHANI COLLECTION ORDER BOOKED ---*%0A*Order ID:* ${bookedOrderId}%0A👤 Name: ${encodeURIComponent(name)}%0A📞 Phone: ${encodeURIComponent(phone)}%0A📍 Address: ${encodeURIComponent(address)}, ${encodeURIComponent(city)}%0A*Items:*${itemsStr}%0A*💰 Total Payable:* Rs. ${total}%0A*💳 Advance Transfer via:* ${encodeURIComponent(paymentMethod)}%0A%0A*Main payment transfer ka screenshot sath attach kar raha/rahi hoon. Please booking verify karein!*`;
+
+      document.getElementById("sendInvoiceWhatsAppBtn").onclick = () => {
+        window.open(`https://wa.me/92${waNumber.replace(/^0/, '')}?text=${waMsg}`, '_blank');
+      };
+
+      closeCheckoutModal();
+      document.getElementById("invoiceModal").classList.remove("hidden");
+      clearCart();
+    }
+
+    function closeInvoiceModal() {
+      document.getElementById("invoiceModal").classList.add("hidden");
+    }
+
+    function openPaymentModal() {
+      document.getElementById("paymentModal").classList.remove("hidden");
+    }
+    function closePaymentModal() {
+      document.getElementById("paymentModal").classList.add("hidden");
+    }
+
+    function copyToClipboard(text, btn) {
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.innerHTML;
+        btn.innerHTML = `<i class="fa-solid fa-check text-emerald-400"></i> Copied!`;
+        setTimeout(() => { btn.innerHTML = orig; }, 2000);
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toastNotification");
+      document.getElementById("toastMessage").innerText = msg;
+      toast.classList.remove("translate-y-28", "opacity-0");
+      setTimeout(() => { toast.classList.add("translate-y-28", "opacity-0"); }, 2000);
+    }
+  </script>
+
+</body>
+</html>

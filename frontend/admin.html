@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal | Lakhani Collection</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              gold: '#D4AF37',
+              dark: '#080b11',
+              card: '#101522',
+              border: '#1f293d'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            serif: ['Cinzel', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    * { -webkit-tap-highlight-color: transparent; }
+    .custom-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #374151; border-radius: 9999px; }
+    .custom-scroll::-webkit-scrollbar-track { background: #0b0f17; }
+  </style>
+  <script src="config.js"></script>
+</head>
+<body class="bg-[#080b11] text-gray-100 font-sans antialiased min-h-screen flex flex-col custom-scroll">
+
+  <!-- Top Navbar -->
+  <header class="sticky top-0 z-40 bg-[#0a0e17]/95 backdrop-blur-md border-b border-gray-800 px-4 sm:px-8 h-16 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 rounded-full border border-brand-gold flex items-center justify-center bg-black text-brand-gold font-serif font-black text-sm">
+        LC
+      </div>
+      <div>
+        <h1 class="font-serif font-bold text-base sm:text-lg text-white">Lakhani Collection</h1>
+        <p class="text-[10px] text-amber-300 font-mono -mt-1">Merchant Admin Portal • Fahad</p>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <a href="/" target="_blank" class="px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-700 hover:border-brand-gold text-xs font-semibold text-gray-300 flex items-center gap-1.5 transition">
+        <i class="fa-solid fa-store text-brand-gold"></i> <span class="hidden sm:inline">View Storefront</span>
+      </a>
+      <button onclick="refreshData()" class="p-2 rounded-lg bg-gray-900 border border-gray-700 text-gray-300 hover:text-white text-xs">
+        <i class="fa-solid fa-rotate"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
+    
+    <!-- Tab Navigation -->
+    <div class="flex items-center gap-2 border-b border-gray-800 pb-3 overflow-x-auto custom-scroll">
+      <button onclick="switchTab('overview', this)" class="admin-tab active px-4 py-2 rounded-xl text-xs font-bold bg-brand-gold text-black transition">
+        <i class="fa-solid fa-chart-pie mr-1.5"></i> Dashboard Overview
+      </button>
+      <button onclick="switchTab('orders', this)" class="admin-tab px-4 py-2 rounded-xl text-xs font-bold bg-gray-900 text-gray-300 hover:text-white border border-gray-800 transition">
+        <i class="fa-solid fa-bag-shopping mr-1.5"></i> Customer Orders (<span id="ordersCountBadge">0</span>)
+      </button>
+      <button onclick="switchTab('products', this)" class="admin-tab px-4 py-2 rounded-xl text-xs font-bold bg-gray-900 text-gray-300 hover:text-white border border-gray-800 transition">
+        <i class="fa-solid fa-shirt mr-1.5"></i> Products & Prices (<span id="productsCountBadge">0</span>)
+      </button>
+      <button onclick="switchTab('settings', this)" class="admin-tab px-4 py-2 rounded-xl text-xs font-bold bg-gray-900 text-gray-300 hover:text-white border border-gray-800 transition">
+        <i class="fa-solid fa-building-columns mr-1.5"></i> Payment Accounts & Settings
+      </button>
+    </div>
+
+    <!-- 1. OVERVIEW TAB -->
+    <div id="tabOverview" class="space-y-6">
+      <!-- Summary Cards -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        
+        <div class="p-5 rounded-2xl bg-[#101522] border border-gray-800 space-y-1">
+          <div class="flex items-center justify-between text-xs text-gray-400">
+            <span>Total Sales Revenue</span>
+            <i class="fa-solid fa-sack-dollar text-emerald-400 text-base"></i>
+          </div>
+          <p id="statRevenue" class="text-xl sm:text-2xl font-mono font-black text-emerald-400">Rs. 0</p>
+          <span class="text-[10px] text-gray-500">Excluding cancelled orders</span>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-[#101522] border border-gray-800 space-y-1">
+          <div class="flex items-center justify-between text-xs text-gray-400">
+            <span>Total Orders Booked</span>
+            <i class="fa-solid fa-cart-shopping text-blue-400 text-base"></i>
+          </div>
+          <p id="statOrders" class="text-xl sm:text-2xl font-mono font-black text-white">0</p>
+          <span class="text-[10px] text-gray-500">Recorded bookings</span>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-[#101522] border border-gray-800 space-y-1">
+          <div class="flex items-center justify-between text-xs text-gray-400">
+            <span>Pending Advance Verifications</span>
+            <i class="fa-solid fa-clock text-amber-400 text-base"></i>
+          </div>
+          <p id="statPending" class="text-xl sm:text-2xl font-mono font-black text-amber-300">0</p>
+          <span class="text-[10px] text-amber-400/80">Action required (Slips check)</span>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-[#101522] border border-gray-800 space-y-1">
+          <div class="flex items-center justify-between text-xs text-gray-400">
+            <span>Active Products</span>
+            <i class="fa-solid fa-boxes-stacked text-purple-400 text-base"></i>
+          </div>
+          <p id="statProducts" class="text-xl sm:text-2xl font-mono font-black text-purple-300">0</p>
+          <span class="text-[10px] text-gray-500">Live in catalog</span>
+        </div>
+
+      </div>
+
+      <!-- Quick Actions Banner -->
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-amber-950/40 via-[#101522] to-[#101522] border border-amber-500/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div class="space-y-1 text-center sm:text-left">
+          <h3 class="font-serif font-bold text-white text-base">Naya Product Add Karein Ya Rate Update Karein</h3>
+          <p class="text-xs text-gray-400">Aap kisi bhi product ki wholesale/retail price change kar sakte hain jo live store par foran update hogi.</p>
+        </div>
+        <div class="flex gap-2.5">
+          <button onclick="openAddProductModal()" class="px-4 py-2.5 rounded-xl bg-brand-gold text-black font-extrabold text-xs uppercase flex items-center gap-1.5 shadow">
+            <i class="fa-solid fa-plus"></i> Add Product
+          </button>
+          <button onclick="switchTab('orders', document.querySelectorAll('.admin-tab')[1])" class="px-4 py-2.5 rounded-xl bg-gray-800 hover:bg-gray-700 text-white font-bold text-xs">
+            View Orders
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. ORDERS MANAGEMENT TAB -->
+    <div id="tabOrders" class="hidden space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-lg font-serif font-bold text-white">Customer Orders & Bookings</h2>
+          <p class="text-xs text-gray-400">Order verification, advance payment slip check, and courier dispatch tracking.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <select id="orderStatusFilter" onchange="filterOrders(this.value)" class="bg-[#101522] border border-gray-800 text-xs text-gray-200 rounded-lg p-2 focus:outline-none">
+            <option value="all">All Orders</option>
+            <option value="Pending Verification">Pending Verification</option>
+            <option value="Payment Verified">Payment Verified</option>
+            <option value="Dispatched">Dispatched</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Orders Table -->
+      <div class="bg-[#101522] border border-gray-800 rounded-2xl overflow-hidden shadow">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-[#0b0f17] text-gray-400 uppercase text-[10px] border-b border-gray-800">
+              <tr>
+                <th class="p-3.5">Order ID / Date</th>
+                <th class="p-3.5">Customer</th>
+                <th class="p-3.5">City & Address</th>
+                <th class="p-3.5">Items Ordered</th>
+                <th class="p-3.5">Payment</th>
+                <th class="p-3.5 text-right">Total</th>
+                <th class="p-3.5">Status</th>
+                <th class="p-3.5 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTableBody" class="divide-y divide-gray-800/80 text-gray-200">
+              <!-- Injected via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. PRODUCTS MANAGEMENT TAB -->
+    <div id="tabProducts" class="hidden space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="text-lg font-serif font-bold text-white">Product Catalog & Price Manager</h2>
+          <p class="text-xs text-gray-400">Edit prices, manage inventory stock, or add new clothing and accessories.</p>
+        </div>
+        <button onclick="openAddProductModal()" class="px-4 py-2 rounded-xl bg-brand-gold text-black font-extrabold text-xs uppercase flex items-center gap-1.5 shadow shrink-0">
+          <i class="fa-solid fa-plus"></i> Add New Product
+        </button>
+      </div>
+
+      <!-- Products Table -->
+      <div class="bg-[#101522] border border-gray-800 rounded-2xl overflow-hidden shadow">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-[#0b0f17] text-gray-400 uppercase text-[10px] border-b border-gray-800">
+              <tr>
+                <th class="p-3.5">Image</th>
+                <th class="p-3.5">Product Title</th>
+                <th class="p-3.5">Category</th>
+                <th class="p-3.5">Current Price</th>
+                <th class="p-3.5">Original Price</th>
+                <th class="p-3.5">Stock</th>
+                <th class="p-3.5 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="productsTableBody" class="divide-y divide-gray-800/80 text-gray-200">
+              <!-- Injected via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. SETTINGS TAB -->
+    <div id="tabSettings" class="hidden space-y-6">
+      <div>
+        <h2 class="text-lg font-serif font-bold text-white">Store Settings & Bank Accounts</h2>
+        <p class="text-xs text-gray-400">Aapke bank account numbers ya WhatsApp number tabdeel karne par website par foran update ho jayenge.</p>
+      </div>
+
+      <!-- Render Backend Server Connection Card -->
+      <div class="bg-[#101522] border border-blue-900/60 rounded-2xl p-5 space-y-3 max-w-2xl shadow">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-blue-300">Backend Server (Render Deployment)</h3>
+          </div>
+          <span id="backendStatusBadge" class="text-[10px] font-mono bg-blue-950 text-blue-300 px-2 py-0.5 rounded border border-blue-800">Checking...</span>
+        </div>
+        <p class="text-[11px] text-gray-400">Jab aap Render par backend deploy kar dein, toh uska live URL yahan paste karein taake Vercel frontend live Render backend se connect ho sake:</p>
+        <div class="flex flex-col sm:flex-row gap-2">
+          <input type="text" id="renderBackendInput" placeholder="https://your-backend.onrender.com" 
+            class="flex-1 bg-[#080b11] border border-gray-700 rounded-lg p-2.5 text-xs text-white font-mono focus:border-brand-gold focus:outline-none">
+          <button type="button" onclick="saveBackendConnectionUrl()" class="px-4 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs uppercase shadow transition shrink-0">
+            <i class="fa-solid fa-link mr-1"></i> Save URL
+          </button>
+        </div>
+      </div>
+
+      <form id="settingsForm" onsubmit="saveSettings(event)" class="bg-[#101522] border border-gray-800 rounded-2xl p-6 space-y-5 max-w-2xl">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 mb-1">Store Name</label>
+            <input type="text" id="setStoreName" class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 mb-1">Proprietor Name</label>
+            <input type="text" id="setProprietor" class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white">
+          </div>
+        </div>
+
+        <div class="border-t border-gray-800 pt-4 space-y-4">
+          <h3 class="text-xs font-bold text-amber-300 uppercase tracking-wider">Meezan Bank Account</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-gray-400 mb-1">Account Title</label>
+              <input type="text" id="setMeezanTitle" class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-400 mb-1">Account Number</label>
+              <input type="text" id="setMeezanNo" class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white font-mono">
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t border-gray-800 pt-4 space-y-4">
+          <h3 class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Easypaisa Account</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-gray-400 mb-1">Account Title</label>
+              <input type="text" id="setEasypaisaTitle" class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-400 mb-1">Mobile Number</label>
+              <input type="text" id="setEasypaisaNo" class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white font-mono">
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t border-gray-800 pt-4 space-y-4">
+          <h3 class="text-xs font-bold text-blue-400 uppercase tracking-wider">OPay Account</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-gray-400 mb-1">Account Title</label>
+              <input type="text" id="setOpayTitle" class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-400 mb-1">Mobile Number</label>
+              <input type="text" id="setOpayNo" class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white font-mono">
+            </div>
+          </div>
+        </div>
+
+        <div class="border-t border-gray-800 pt-4 space-y-4">
+          <h3 class="text-xs font-bold text-gray-300 uppercase tracking-wider">WhatsApp & Shipping</h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-gray-400 mb-1">WhatsApp Order Number</label>
+              <input type="text" id="setWhatsappNo" class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white font-mono">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-400 mb-1">Standard Delivery Fee (PKR)</label>
+              <input type="number" id="setDeliveryFee" class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white font-mono">
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="py-3 px-6 rounded-xl bg-brand-gold text-black font-extrabold text-xs uppercase shadow transition">
+          <i class="fa-solid fa-floppy-disk mr-1"></i> Save Store Settings
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- Add / Edit Product Modal -->
+  <div id="productModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md hidden">
+    <div class="bg-[#101522] border border-gray-800 rounded-3xl max-w-lg w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto custom-scroll">
+      <button onclick="closeProductModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <h3 id="productModalTitle" class="text-base font-serif font-bold text-white mb-4">Add New Product</h3>
+
+      <form id="productForm" onsubmit="handleProductSubmit(event)" class="space-y-3.5">
+        <input type="hidden" id="prodEditId">
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">Product Title *</label>
+          <input type="text" id="prodTitle" required placeholder="e.g. Luxury Linen Shalwar Kameez" 
+            class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white focus:border-brand-gold focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 mb-1">Category *</label>
+            <select id="prodCategory" required class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white">
+              <option value="men">Men's Fashion</option>
+              <option value="women">Women's Fashion</option>
+              <option value="bags">Bags & Wallets</option>
+              <option value="accessories">Jewelry & Footwear</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 mb-1">Badge</label>
+            <input type="text" id="prodBadge" placeholder="e.g. Bestseller, New Arrival" 
+              class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 mb-1">Sale Price (PKR) *</label>
+            <input type="number" id="prodPrice" required placeholder="2500" 
+              class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white font-mono">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 mb-1">Original Price (PKR)</label>
+            <input type="number" id="prodOriginalPrice" placeholder="3200" 
+              class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white font-mono">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 mb-1">Stock Quantity</label>
+            <input type="number" id="prodStock" placeholder="50" 
+              class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white font-mono">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-gray-300 mb-1">Fabric Quality</label>
+            <input type="text" id="prodFabric" placeholder="e.g. Pure Cotton Lawn 90/70" 
+              class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">Colors (Comma separated)</label>
+          <input type="text" id="prodColors" placeholder="Black, Navy Blue, Maroon, Beige" 
+            class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-gray-300 mb-1">Product Description</label>
+          <textarea id="prodDesc" rows="2" placeholder="Detailed product specifications..." 
+            class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white"></textarea>
+        </div>
+
+        <!-- Product Image Upload Section -->
+        <div class="space-y-2 pt-1 border-t border-gray-800/80">
+          <label class="block text-xs font-bold text-amber-300 uppercase tracking-wider flex items-center justify-between">
+            <span><i class="fa-solid fa-camera mr-1"></i> Product Photo *</span>
+            <span id="uploadStatusText" class="text-[10px] font-normal text-gray-400">Upload from device or enter URL</span>
+          </label>
+
+          <!-- Upload Dropzone / File Picker -->
+          <div id="dropzoneContainer" onclick="document.getElementById('prodImageFile').click()" 
+            class="border-2 border-dashed border-gray-700 hover:border-brand-gold/80 rounded-2xl p-4 text-center cursor-pointer bg-[#080b11]/80 hover:bg-[#121724] transition group">
+            <input type="file" id="prodImageFile" accept="image/*" class="hidden" onchange="handleImageFileSelected(this)">
+            
+            <div id="uploadPrompt" class="flex flex-col items-center justify-center py-2">
+              <div class="w-12 h-12 rounded-full bg-brand-gold/10 text-brand-gold flex items-center justify-center mb-2 group-hover:scale-110 transition">
+                <i class="fa-solid fa-cloud-arrow-up text-xl"></i>
+              </div>
+              <p class="text-xs font-semibold text-gray-200">Click / Tap to choose picture from your device or mobile</p>
+              <p class="text-[10px] text-gray-500 mt-0.5">Supports JPG, PNG, WEBP (Instant Auto-Upload)</p>
+            </div>
+
+            <!-- Upload Progress / Preview Card -->
+            <div id="uploadPreviewCard" class="hidden flex items-center gap-3 bg-[#101522] border border-gray-700 p-2.5 rounded-xl text-left">
+              <img id="imagePreviewThumb" src="" alt="Preview" class="w-14 h-16 rounded-lg object-cover bg-black border border-gray-700 shrink-0">
+              <div class="flex-1 min-w-0">
+                <p id="imagePreviewFilename" class="text-xs font-bold text-white truncate">product_image.jpg</p>
+                <p id="imagePreviewSubtext" class="text-[10px] text-emerald-400 font-semibold flex items-center gap-1 mt-0.5">
+                  <i class="fa-solid fa-circle-check"></i> Ready to save
+                </p>
+              </div>
+              <button type="button" onclick="event.stopPropagation(); clearUploadedImage()" class="px-2.5 py-1.5 rounded-lg bg-red-950/80 hover:bg-red-900 text-red-300 text-[11px] font-semibold shrink-0">
+                <i class="fa-solid fa-trash mr-1"></i> Remove
+              </button>
+            </div>
+          </div>
+
+          <!-- Direct URL / Path Option -->
+          <div class="mt-2">
+            <details class="text-[11px] text-gray-400">
+              <summary class="cursor-pointer text-gray-400 hover:text-brand-gold select-none flex items-center gap-1">
+                <i class="fa-solid fa-link text-[10px]"></i> Or use custom image path / URL
+              </summary>
+              <div class="mt-2">
+                <input type="text" id="prodImage" placeholder="assets/products/... or /uploads/..." 
+                  oninput="handleManualImageUrl(this.value)"
+                  class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2 text-xs text-white focus:border-brand-gold focus:outline-none">
+              </div>
+            </details>
+          </div>
+        </div>
+
+        <button type="submit" class="w-full py-3 rounded-xl bg-brand-gold text-black font-extrabold text-xs uppercase shadow transition mt-2">
+          Save Product
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastNotification" class="fixed bottom-6 right-6 z-50 bg-[#101522] border border-brand-gold text-white px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-2 transform translate-y-24 opacity-0 transition duration-300 pointer-events-none text-xs font-bold">
+    <i class="fa-solid fa-circle-check text-brand-gold"></i>
+    <span id="toastMsg">Operation successful</span>
+  </div>
+
+  <!-- Scripts -->
+  <script>
+    let allOrders = [];
+    let allProducts = [];
+
+    document.addEventListener("DOMContentLoaded", () => {
+      refreshData();
+    });
+
+    async function refreshData() {
+      initBackendInput();
+      await Promise.all([fetchStats(), fetchOrders(), fetchProducts(), fetchSettings()]);
+    }
+
+    function initBackendInput() {
+      const input = document.getElementById('renderBackendInput');
+      if (input) {
+        input.value = window.API_BASE || '';
+      }
+      const badge = document.getElementById('backendStatusBadge');
+      if (badge) {
+        badge.innerText = window.API_BASE ? (window.API_BASE.includes('localhost') ? 'Local Server' : 'Render Live') : 'Default';
+      }
+    }
+
+    function saveBackendConnectionUrl() {
+      const input = document.getElementById('renderBackendInput');
+      const val = input.value.trim();
+      setBackendUrl(val);
+      showToast('Render backend connection saved! Reloading...');
+    }
+
+    async function fetchStats() {
+      try {
+        const res = await fetch(apiUrl('/api/stats'));
+        const json = await res.json();
+        if (json.success) {
+          document.getElementById('statRevenue').innerText = `Rs. ${json.data.totalRevenue.toLocaleString()}`;
+          document.getElementById('statOrders').innerText = json.data.totalOrders;
+          document.getElementById('statPending').innerText = json.data.pendingPayments;
+          document.getElementById('statProducts').innerText = json.data.activeProducts;
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    async function fetchOrders() {
+      try {
+        const res = await fetch(apiUrl('/api/orders'));
+        const json = await res.json();
+        if (json.success) {
+          allOrders = json.data;
+          document.getElementById('ordersCountBadge').innerText = allOrders.length;
+          renderOrdersTable(allOrders);
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    function renderOrdersTable(orders) {
+      const tbody = document.getElementById('ordersTableBody');
+      if (orders.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-gray-500">No orders recorded yet.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = orders.map(o => `
+        <tr class="hover:bg-gray-900/60 transition">
+          <td class="p-3.5">
+            <span class="font-mono font-bold text-amber-300">${o.id}</span>
+            <span class="text-[10px] text-gray-500 block">${o.date || ''}</span>
+          </td>
+          <td class="p-3.5">
+            <span class="font-bold text-white block">${o.customerName}</span>
+            <span class="text-[11px] text-gray-400 font-mono">${o.customerPhone}</span>
+          </td>
+          <td class="p-3.5">
+            <span class="font-semibold text-gray-300 block">${o.customerCity}</span>
+            <span class="text-[10px] text-gray-500 line-clamp-1">${o.customerAddress}</span>
+          </td>
+          <td class="p-3.5">
+            ${(o.items || []).map(i => `<div class="text-[11px] text-gray-300">• ${i.title} (${i.color || ''}) x${i.quantity}</div>`).join("")}
+          </td>
+          <td class="p-3.5">
+            <span class="text-xs font-bold text-emerald-400">${o.paymentMethod}</span>
+            <span class="text-[10px] text-amber-300/80 block">Advance Required</span>
+          </td>
+          <td class="p-3.5 text-right font-mono font-bold text-amber-300 text-sm">
+            Rs. ${o.grandTotal ? o.grandTotal.toLocaleString() : 0}
+          </td>
+          <td class="p-3.5">
+            <select onchange="updateOrderStatus('${o.id}', this.value)" class="bg-[#080b11] border border-gray-700 text-[11px] rounded-lg px-2 py-1 font-bold ${
+              o.status === 'Delivered' ? 'text-emerald-400' : (o.status === 'Dispatched' ? 'text-blue-400' : 'text-amber-300')
+            }">
+              <option value="Pending Verification" ${o.status === 'Pending Verification' ? 'selected' : ''}>Pending Verification</option>
+              <option value="Payment Verified" ${o.status === 'Payment Verified' ? 'selected' : ''}>Payment Verified</option>
+              <option value="Dispatched" ${o.status === 'Dispatched' ? 'selected' : ''}>Dispatched</option>
+              <option value="Delivered" ${o.status === 'Delivered' ? 'selected' : ''}>Delivered</option>
+              <option value="Cancelled" ${o.status === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+            </select>
+          </td>
+          <td class="p-3.5 text-center">
+            <div class="flex items-center justify-center gap-2">
+              <a href="https://wa.me/92${(o.customerPhone || '').replace(/^0/, '')}?text=Assalam%20o%20Alaikum%20${encodeURIComponent(o.customerName)}!%20Lakhani%20Collection%20se%20aapke%20order%20(${o.id})%20ke%20hawale%20se%20rabta%20kar%20rahe%20hain." target="_blank" class="p-1.5 rounded-lg bg-emerald-950 text-emerald-300 hover:bg-emerald-900 border border-emerald-800" title="WhatsApp Customer">
+                <i class="fa-brands fa-whatsapp text-sm"></i>
+              </a>
+              <button onclick="deleteOrder('${o.id}')" class="p-1.5 rounded-lg bg-red-950 text-red-400 hover:bg-red-900 border border-red-800" title="Delete">
+                <i class="fa-solid fa-trash text-xs"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    async function updateOrderStatus(orderId, newStatus) {
+      try {
+        const res = await fetch(apiUrl(`/api/orders/${orderId}/status`), {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus })
+        });
+        const json = await res.json();
+        if (json.success) {
+          showToast(`Order ${orderId} marked as ${newStatus}`);
+          fetchStats();
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    async function deleteOrder(orderId) {
+      if (!confirm(`Delete order ${orderId}?`)) return;
+      try {
+        const res = await fetch(apiUrl(`/api/orders/${orderId}`), { method: 'DELETE' });
+        const json = await res.json();
+        if (json.success) {
+          showToast('Order removed');
+          fetchOrders();
+          fetchStats();
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    function filterOrders(status) {
+      if (status === 'all') renderOrdersTable(allOrders);
+      else renderOrdersTable(allOrders.filter(o => o.status === status));
+    }
+
+    async function fetchProducts() {
+      try {
+        const res = await fetch(apiUrl('/api/products'));
+        const json = await res.json();
+        if (json.success) {
+          allProducts = json.data;
+          document.getElementById('productsCountBadge').innerText = allProducts.length;
+          renderProductsTable(allProducts);
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    function renderProductsTable(products) {
+      const tbody = document.getElementById('productsTableBody');
+      tbody.innerHTML = products.map(p => `
+        <tr class="hover:bg-gray-900/60 transition">
+          <td class="p-3.5">
+            <img src="${formatImgUrl(p.aiImage)}" alt="${p.title}" class="w-12 h-14 rounded-lg object-cover bg-black">
+          </td>
+          <td class="p-3.5 font-bold text-white max-w-xs truncate">
+            ${p.title}
+            <span class="text-[10px] text-gray-500 block truncate">${p.fabric}</span>
+          </td>
+          <td class="p-3.5">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">
+              ${p.categoryLabel || p.category}
+            </span>
+          </td>
+          <td class="p-3.5">
+            <div class="flex items-center gap-1.5">
+              <span class="font-mono font-bold text-amber-300 text-sm">Rs. ${p.price.toLocaleString()}</span>
+              <button onclick="quickEditPrice('${p.id}', ${p.price})" class="text-gray-500 hover:text-brand-gold text-xs" title="Edit Price">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+            </div>
+          </td>
+          <td class="p-3.5 font-mono text-gray-400">Rs. ${p.originalPrice ? p.originalPrice.toLocaleString() : ''}</td>
+          <td class="p-3.5 font-mono font-bold ${p.stock < 10 ? 'text-red-400' : 'text-emerald-400'}">${p.stock || 25} pcs</td>
+          <td class="p-3.5 text-right">
+            <div class="flex items-center justify-end gap-2">
+              <button onclick="editProduct('${p.id}')" class="px-2.5 py-1 rounded bg-gray-800 hover:bg-gray-700 text-xs font-semibold text-gray-200">Edit</button>
+              <button onclick="deleteProduct('${p.id}')" class="p-1.5 rounded bg-red-950 text-red-400 hover:bg-red-900 text-xs">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    async function quickEditPrice(id, currentPrice) {
+      const newPrice = prompt(`Enter new price in PKR:`, currentPrice);
+      if (!newPrice || isNaN(newPrice) || Number(newPrice) <= 0) return;
+
+      try {
+        const res = await fetch(apiUrl(`/api/products/${id}`), {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ price: Number(newPrice) })
+        });
+        const json = await res.json();
+        if (json.success) {
+          showToast(`Price updated to Rs. ${Number(newPrice).toLocaleString()}`);
+          fetchProducts();
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    function handleImageFileSelected(input) {
+      const file = input.files && input.files[0];
+      if (!file) return;
+
+      const prompt = document.getElementById('uploadPrompt');
+      const card = document.getElementById('uploadPreviewCard');
+      const thumb = document.getElementById('imagePreviewThumb');
+      const fname = document.getElementById('imagePreviewFilename');
+      const subtext = document.getElementById('imagePreviewSubtext');
+      const status = document.getElementById('uploadStatusText');
+
+      // Local preview immediately
+      const objectUrl = URL.createObjectURL(file);
+      thumb.src = objectUrl;
+      fname.innerText = file.name;
+      subtext.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-amber-300"></i> Uploading to server...';
+      status.innerText = 'Uploading photo...';
+      prompt.classList.add('hidden');
+      card.classList.remove('hidden');
+
+      // Upload to backend via FormData
+      const formData = new FormData();
+      formData.append('image', file);
+
+      fetch(apiUrl('/api/upload'), {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById('prodImage').value = data.url;
+          subtext.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i> Uploaded & ready!';
+          status.innerText = 'Uploaded: ' + data.filename;
+          showToast('Image uploaded successfully!');
+        } else {
+          subtext.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-red-400"></i> Upload failed: ' + (data.message || 'Error');
+          status.innerText = 'Upload failed';
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        subtext.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-red-400"></i> Server error';
+        status.innerText = 'Connection error';
+      });
+    }
+
+    function handleManualImageUrl(url) {
+      if (!url) {
+        clearUploadedImage();
+        return;
+      }
+      const prompt = document.getElementById('uploadPrompt');
+      const card = document.getElementById('uploadPreviewCard');
+      const thumb = document.getElementById('imagePreviewThumb');
+      const fname = document.getElementById('imagePreviewFilename');
+      const subtext = document.getElementById('imagePreviewSubtext');
+
+      thumb.src = url;
+      fname.innerText = 'Custom Image Path';
+      subtext.innerHTML = '<i class="fa-solid fa-link text-blue-400"></i> Linked URL';
+      prompt.classList.add('hidden');
+      card.classList.remove('hidden');
+    }
+
+    function clearUploadedImage() {
+      document.getElementById('prodImageFile').value = '';
+      document.getElementById('prodImage').value = '';
+      document.getElementById('uploadPrompt').classList.remove('hidden');
+      document.getElementById('uploadPreviewCard').classList.add('hidden');
+      document.getElementById('uploadStatusText').innerText = 'Upload from device or enter URL';
+    }
+
+    function openAddProductModal() {
+      document.getElementById('productModalTitle').innerText = 'Add New Product';
+      document.getElementById('prodEditId').value = '';
+      document.getElementById('productForm').reset();
+      clearUploadedImage();
+      document.getElementById('productModal').classList.remove('hidden');
+    }
+
+    function editProduct(id) {
+      const p = allProducts.find(item => item.id === id);
+      if (!p) return;
+
+      document.getElementById('productModalTitle').innerText = 'Edit Product & Price';
+      document.getElementById('prodEditId').value = p.id;
+      document.getElementById('prodTitle').value = p.title;
+      document.getElementById('prodCategory').value = p.category;
+      document.getElementById('prodBadge').value = p.badge || '';
+      document.getElementById('prodPrice').value = p.price;
+      document.getElementById('prodOriginalPrice').value = p.originalPrice || '';
+      document.getElementById('prodStock').value = p.stock || '';
+      document.getElementById('prodFabric').value = p.fabric || '';
+      document.getElementById('prodColors').value = (p.colors || []).join(', ');
+      document.getElementById('prodDesc').value = p.description || '';
+      document.getElementById('prodImage').value = p.aiImage || '';
+
+      if (p.aiImage) {
+        handleManualImageUrl(p.aiImage);
+        document.getElementById('imagePreviewFilename').innerText = p.title;
+        document.getElementById('imagePreviewSubtext').innerHTML = '<i class="fa-solid fa-image text-amber-300"></i> Current Image (Tap to change)';
+      } else {
+        clearUploadedImage();
+      }
+
+      document.getElementById('productModal').classList.remove('hidden');
+    }
+
+    function closeProductModal() {
+      document.getElementById('productModal').classList.add('hidden');
+    }
+
+    async function handleProductSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('prodEditId').value;
+      const title = document.getElementById('prodTitle').value.trim();
+      const category = document.getElementById('prodCategory').value;
+      const badge = document.getElementById('prodBadge').value.trim() || 'New';
+      const price = Number(document.getElementById('prodPrice').value);
+      const originalPrice = Number(document.getElementById('prodOriginalPrice').value) || (price + 500);
+      const stock = Number(document.getElementById('prodStock').value) || 25;
+      const fabric = document.getElementById('prodFabric').value.trim() || 'High Quality';
+      const colorsStr = document.getElementById('prodColors').value.trim();
+      const colors = colorsStr ? colorsStr.split(',').map(c => c.trim()) : ['Standard'];
+      const description = document.getElementById('prodDesc').value.trim();
+      let aiImage = document.getElementById('prodImage').value.trim();
+      const fileInput = document.getElementById('prodImageFile');
+
+      // If user selected file and upload is still pending, upload immediately
+      if (!aiImage && fileInput.files && fileInput.files[0]) {
+        try {
+          const formData = new FormData();
+          formData.append('image', fileInput.files[0]);
+          const upRes = await fetch(apiUrl('/api/upload'), { method: 'POST', body: formData });
+          const upData = await upRes.json();
+          if (upData.success) {
+            aiImage = upData.url;
+          }
+        } catch (err) {
+          console.error('File upload error during submit', err);
+        }
+      }
+
+      if (!aiImage) {
+        aiImage = 'assets/hero_banner.jpg';
+      }
+
+      const payload = {
+        title,
+        category,
+        categoryLabel: category === 'men' ? "Men's Wear" : (category === 'bags' ? 'Handbags' : 'Women\'s Wear'),
+        badge,
+        price,
+        originalPrice,
+        stock,
+        fabric,
+        colors,
+        description,
+        aiImage
+      };
+
+      try {
+        const url = id ? apiUrl(`/api/products/${id}`) : apiUrl('/api/products');
+        const method = id ? 'PUT' : 'POST';
+        const res = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (json.success) {
+          showToast(id ? 'Product updated!' : 'Product added successfully!');
+          closeProductModal();
+          fetchProducts();
+          fetchStats();
+        }
+      } catch (err) { console.error(err); }
+    }
+
+    async function deleteProduct(id) {
+      if (!confirm('Are you sure you want to delete this product?')) return;
+      try {
+        const res = await fetch(apiUrl(`/api/products/${id}`), { method: 'DELETE' });
+        const json = await res.json();
+        if (json.success) {
+          showToast('Product deleted');
+          fetchProducts();
+          fetchStats();
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    async function fetchSettings() {
+      try {
+        const res = await fetch(apiUrl('/api/settings'));
+        const json = await res.json();
+        if (json.success && json.data) {
+          const s = json.data;
+          document.getElementById('setStoreName').value = s.storeName || '';
+          document.getElementById('setProprietor').value = s.proprietor || '';
+          document.getElementById('setMeezanTitle').value = s.meezanBankTitle || '';
+          document.getElementById('setMeezanNo').value = s.meezanBankNo || '';
+          document.getElementById('setEasypaisaTitle').value = s.easypaisaTitle || '';
+          document.getElementById('setEasypaisaNo').value = s.easypaisaNo || '';
+          document.getElementById('setOpayTitle').value = s.opayTitle || '';
+          document.getElementById('setOpayNo').value = s.opayNo || '';
+          document.getElementById('setWhatsappNo').value = s.whatsappNumber || '';
+          document.getElementById('setDeliveryFee').value = s.standardDeliveryFee || 250;
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    async function saveSettings(e) {
+      e.preventDefault();
+      const payload = {
+        storeName: document.getElementById('setStoreName').value.trim(),
+        proprietor: document.getElementById('setProprietor').value.trim(),
+        meezanBankTitle: document.getElementById('setMeezanTitle').value.trim(),
+        meezanBankNo: document.getElementById('setMeezanNo').value.trim(),
+        easypaisaTitle: document.getElementById('setEasypaisaTitle').value.trim(),
+        easypaisaNo: document.getElementById('setEasypaisaNo').value.trim(),
+        opayTitle: document.getElementById('setOpayTitle').value.trim(),
+        opayNo: document.getElementById('setOpayNo').value.trim(),
+        whatsappNumber: document.getElementById('setWhatsappNo').value.trim(),
+        standardDeliveryFee: Number(document.getElementById('setDeliveryFee').value) || 250
+      };
+
+      try {
+        const res = await fetch(apiUrl('/api/settings'), {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (json.success) {
+          showToast('Store settings & accounts updated successfully!');
+        }
+      } catch (err) { console.error(err); }
+    }
+
+    function switchTab(tabName, btn) {
+      document.querySelectorAll('.admin-tab').forEach(b => {
+        b.className = 'admin-tab px-4 py-2 rounded-xl text-xs font-bold bg-gray-900 text-gray-300 hover:text-white border border-gray-800 transition';
+      });
+      btn.className = 'admin-tab active px-4 py-2 rounded-xl text-xs font-bold bg-brand-gold text-black transition';
+
+      document.getElementById('tabOverview').classList.add('hidden');
+      document.getElementById('tabOrders').classList.add('hidden');
+      document.getElementById('tabProducts').classList.add('hidden');
+      document.getElementById('tabSettings').classList.add('hidden');
+
+      if (tabName === 'overview') document.getElementById('tabOverview').classList.remove('hidden');
+      else if (tabName === 'orders') document.getElementById('tabOrders').classList.remove('hidden');
+      else if (tabName === 'products') document.getElementById('tabProducts').classList.remove('hidden');
+      else if (tabName === 'settings') document.getElementById('tabSettings').classList.remove('hidden');
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toastNotification');
+      document.getElementById('toastMsg').innerText = msg;
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      setTimeout(() => { toast.classList.add('translate-y-24', 'opacity-0'); }, 2500);
+    }
+  </script>
+
+</body>
+</html>
+

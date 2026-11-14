@@ -1,0 +1,15 @@
+{
+  "name": "lakhani-frontend",
+  "version": "1.0.0",
+  "description": "Lakhani Collection Luxury Storefront & Admin Portal for Vercel",
+  "scripts": {
+    "start": "npx serve ."
+  },
+  "keywords": [
+    "vercel",
+    "frontend",
+    "ecommerce"
+  ],
+  "author": "Lakhani Collection",
+  "license": "ISC"
+}
