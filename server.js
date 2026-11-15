@@ -4,6 +4,7 @@ const compression = require('compression');
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
+const mongoose = require('mongoose');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -26,7 +27,6 @@ app.use((req, res, next) => {
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin) return callback(null, true);
-    // Allow localhost, 127.0.0.1, Vercel apps, Render apps, Cloudflare tunnels, and configured domains
     const allowed = [
       'localhost',
       '127.0.0.1',
@@ -39,15 +39,15 @@ app.use(cors({
     if (isAllowed || process.env.NODE_ENV !== 'production') {
       callback(null, true);
     } else {
-      callback(null, true); // Fallback to permissive for smooth customer experience
+      callback(null, true);
     }
   },
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key']
 }));
 
-app.use(express.json({ limit: '10mb' }));
-app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+app.use(express.json({ limit: '15mb' }));
+app.use(express.urlencoded({ extended: true, limit: '15mb' }));
 
 // Persistent Storage Detection (Render Persistent Disk /var/data or custom DATA_DIR)
 const PERSISTENT_MOUNT = process.env.DATA_DIR || (fs.existsSync('/var/data') ? '/var/data' : null);
@@ -58,7 +58,7 @@ const UPLOADS_DIR = PERSISTENT_MOUNT ? path.join(PERSISTENT_MOUNT, 'uploads') : 
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
-// Database File Paths (Centralized database on Persistent Storage)
+// Database File Paths (Fallback local storage)
 const PRODUCTS_FILE = path.join(DATA_DIR, 'products.json');
 const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
 const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');
@@ -79,7 +79,6 @@ if (PERSISTENT_MOUNT) {
   if (!fs.existsSync(SETTINGS_FILE) && fs.existsSync(bundledSettings)) {
     try {
       fs.copyFileSync(bundledSettings, SETTINGS_FILE);
-      console.log('✅ Auto-seeded persistent disk with initial settings.json');
     } catch (e) {}
   }
 
@@ -91,7 +90,7 @@ if (PERSISTENT_MOUNT) {
   }
 }
 
-// Multer Storage Configuration for Render (Supports Images & Videos up to 50MB)
+// Multer Storage Configuration
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, UPLOADS_DIR);
@@ -105,8 +104,65 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 50 * 1024 * 1024 } // 50MB for videos & HD images
+  limits: { fileSize: 50 * 1024 * 1024 } // 50MB for video & HD images
 });
+
+// ==========================================
+// MONGODB CLOUD PERSISTENCE (Free Lifetime Storage)
+// ==========================================
+let isMongoConnected = false;
+const MONGODB_URI = process.env.MONGODB_URI;
+
+const ProductSchema = new mongoose.Schema({
+  id: { type: String, required: true, unique: true },
+  title: { type: String, required: true },
+  category: { type: String, default: 'women' },
+  categoryLabel: { type: String, default: 'Collection' },
+  badge: { type: String, default: 'New Arrival' },
+  badgeColor: { type: String, default: 'bg-amber-900/90 text-amber-300 border-amber-700' },
+  originalPrice: { type: Number, default: 0 },
+  price: { type: Number, required: true },
+  aiImage: { type: String, default: 'assets/hero_banner.webp' },
+  gallery: { type: [String], default: [] },
+  video: { type: String, default: '' },
+  colorsImage: { type: String, default: '' },
+  flyerImage: { type: String, default: '' },
+  fabric: { type: String, default: 'Premium Pakistani Fabric' },
+  description: { type: String, default: '' },
+  specs: { type: Array, default: [] },
+  sizes: { type: Array, default: [] },
+  colors: { type: [String], default: [] },
+  stock: { type: Number, default: 25 },
+  createdAt: { type: String, default: () => new Date().toISOString() },
+  updatedAt: { type: String, default: () => new Date().toISOString() }
+}, { strict: false });
+
+const OrderSchema = new mongoose.Schema({
+  id: { type: String, required: true, unique: true },
+  date: String,
+  createdAt: String,
+  customerName: String,
+  customerPhone: String,
+  customerCity: String,
+  customerAddress: String,
+  paymentMethod: String,
+  paymentStatus: String,
+  items: Array,
+  subtotal: Number,
+  deliveryFee: Number,
+  grandTotal: Number,
+  status: String,
+  updatedAt: String
+}, { strict: false });
+
+const SettingSchema = new mongoose.Schema({
+  key: { type: String, unique: true, default: 'store_settings' },
+  data: { type: Object, default: {} }
+}, { strict: false });
+
+const MongoProduct = mongoose.models.Product || mongoose.model('Product', ProductSchema);
+const MongoOrder = mongoose.models.Order || mongoose.model('Order', OrderSchema);
+const MongoSetting = mongoose.models.Setting || mongoose.model('Setting', SettingSchema);
 
 function readData(filePath, fallback = []) {
   try {
@@ -125,13 +181,11 @@ function readData(filePath, fallback = []) {
 function writeData(filePath, data) {
   try {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
-    // Also sync to root ../data if writing to backend/data/
     if (filePath.includes('products.json')) {
       const rootFile = path.join(__dirname, '..', 'data', 'products.json');
       if (fs.existsSync(path.dirname(rootFile))) {
         try { fs.writeFileSync(rootFile, JSON.stringify(data, null, 2), 'utf-8'); } catch(e) {}
       }
-      // Keep products-data.js in sync for instant zero-lag fallback
       const jsContent = 'window.INITIAL_PRODUCTS = ' + JSON.stringify(data, null, 2) + ';\n';
       const syncFiles = [
         path.join(__dirname, 'products-data.js'),
@@ -151,7 +205,33 @@ function writeData(filePath, data) {
   }
 }
 
-// In-Memory Rate Limiter for Write Operations (30 writes / minute per IP)
+if (MONGODB_URI) {
+  mongoose.connect(MONGODB_URI, {
+    serverSelectionTimeoutMS: 5000
+  }).then(async () => {
+    isMongoConnected = true;
+    console.log('🍃 Connected to MongoDB Atlas Cloud Database (Lifetime Persistent Storage Active)');
+    try {
+      const count = await MongoProduct.countDocuments();
+      if (count === 0) {
+        const bundled = readData(PRODUCTS_FILE, []);
+        if (bundled.length > 0) {
+          await MongoProduct.insertMany(bundled);
+          console.log(`✅ Seeded MongoDB with ${bundled.length} initial products`);
+        }
+      }
+    } catch(err) {
+      console.error('MongoDB initial seed error:', err.message);
+    }
+  }).catch(err => {
+    console.error('🍃 MongoDB Connection Error (Falling back to local storage):', err.message);
+    isMongoConnected = false;
+  });
+} else {
+  console.log('📁 Running on Local Storage (Set MONGODB_URI on Render for permanent zero-cost cloud storage)');
+}
+
+// In-Memory Rate Limiter for Write Operations
 const writeLimitMap = new Map();
 function rateLimitWrites(req, res, next) {
   const ip = req.ip || req.connection.remoteAddress || 'unknown';
@@ -185,7 +265,6 @@ const staticCacheOptions = {
 // Serve Uploaded Media & Static Assets
 app.use('/uploads', express.static(UPLOADS_DIR, staticCacheOptions));
 if (PERSISTENT_MOUNT) {
-  // Fallback to local uploads if file was uploaded prior to mounting disk
   app.use('/uploads', express.static(path.join(__dirname, 'uploads'), staticCacheOptions));
 }
 app.use('/assets', express.static(path.join(__dirname, 'assets'), staticCacheOptions));
@@ -195,7 +274,6 @@ app.use(express.static(__dirname, { maxAge: '1h', etag: true }));
 // Admin Panel & Diagnostic Endpoints (For Render)
 // ==========================================
 
-// Route for Admin Dashboard (Both '/' and '/admin' serve admin.html on Render)
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'admin.html'));
 });
@@ -208,14 +286,15 @@ app.get('/api', (req, res) => {
   res.json({
     status: 'online',
     service: 'Lakhani Collection Backend API',
-    persistentStorage: Boolean(PERSISTENT_MOUNT)
+    database: isMongoConnected ? 'MongoDB Atlas (Cloud Persistent)' : (PERSISTENT_MOUNT ? 'Render Persistent Disk' : 'Local File Storage')
   });
 });
 
 app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'healthy',
-    persistentStorage: Boolean(PERSISTENT_MOUNT),
+    database: isMongoConnected ? 'MongoDB Atlas (Cloud Persistent)' : (PERSISTENT_MOUNT ? 'Render Persistent Disk' : 'Local File Storage'),
+    persistentStorage: isMongoConnected || Boolean(PERSISTENT_MOUNT),
     timestamp: new Date().toISOString()
   });
 });
@@ -225,44 +304,74 @@ app.get('/health', (req, res) => {
 // ==========================================
 
 // Get all products (Public - no key required)
-app.get('/api/products', (req, res) => {
+app.get('/api/products', async (req, res) => {
   const { category, search, sort } = req.query;
-  let products = readData(PRODUCTS_FILE, []);
 
-  if (category && category !== 'all') {
-    products = products.filter(p => p.category === category);
+  try {
+    let products = [];
+    if (isMongoConnected) {
+      let query = {};
+      if (category && category !== 'all') {
+        query.category = category;
+      }
+      if (search) {
+        const q = search.trim();
+        query.$or = [
+          { title: { $regex: q, $options: 'i' } },
+          { fabric: { $regex: q, $options: 'i' } },
+          { categoryLabel: { $regex: q, $options: 'i' } }
+        ];
+      }
+      let cursor = MongoProduct.find(query).lean();
+      if (sort === 'price-low') cursor = cursor.sort({ price: 1 });
+      else if (sort === 'price-high') cursor = cursor.sort({ price: -1 });
+      else cursor = cursor.sort({ createdAt: -1 });
+
+      products = await cursor.exec();
+    } else {
+      products = readData(PRODUCTS_FILE, []);
+      if (category && category !== 'all') {
+        products = products.filter(p => p.category === category);
+      }
+      if (search) {
+        const q = search.toLowerCase().trim();
+        products = products.filter(p =>
+          p.title.toLowerCase().includes(q) ||
+          (p.fabric && p.fabric.toLowerCase().includes(q)) ||
+          (p.categoryLabel && p.categoryLabel.toLowerCase().includes(q))
+        );
+      }
+      if (sort === 'price-low') products.sort((a, b) => a.price - b.price);
+      else if (sort === 'price-high') products.sort((a, b) => b.price - a.price);
+    }
+
+    res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+    res.json({ success: true, count: products.length, data: products });
+  } catch(err) {
+    console.error('Error fetching products:', err);
+    res.status(500).json({ success: false, message: 'Database fetch error' });
   }
-
-  if (search) {
-    const q = search.toLowerCase().trim();
-    products = products.filter(p =>
-      p.title.toLowerCase().includes(q) ||
-      (p.fabric && p.fabric.toLowerCase().includes(q)) ||
-      (p.categoryLabel && p.categoryLabel.toLowerCase().includes(q))
-    );
-  }
-
-  if (sort === 'price-low') {
-    products.sort((a, b) => a.price - b.price);
-  } else if (sort === 'price-high') {
-    products.sort((a, b) => b.price - a.price);
-  }
-
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
-  res.json({ success: true, count: products.length, data: products });
 });
 
 // Get single product
-app.get('/api/products/:id', (req, res) => {
-  const products = readData(PRODUCTS_FILE, []);
-  const product = products.find(p => p.id === req.params.id);
-  if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
-  res.json({ success: true, data: product });
+app.get('/api/products/:id', async (req, res) => {
+  try {
+    let product = null;
+    if (isMongoConnected) {
+      product = await MongoProduct.findOne({ id: req.params.id }).lean();
+    } else {
+      const products = readData(PRODUCTS_FILE, []);
+      product = products.find(p => p.id === req.params.id);
+    }
+    if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
+    res.json({ success: true, data: product });
+  } catch(err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
 });
 
 // Add new product (Admin)
-app.post('/api/products', rateLimitWrites, (req, res) => {
-  const products = readData(PRODUCTS_FILE, []);
+app.post('/api/products', rateLimitWrites, async (req, res) => {
   const {
     title,
     category,
@@ -314,48 +423,83 @@ app.post('/api/products', rateLimitWrites, (req, res) => {
     createdAt: new Date().toISOString()
   };
 
-  products.unshift(newProduct);
-  writeData(PRODUCTS_FILE, products);
-  res.status(201).json({ success: true, message: 'Product added successfully', data: newProduct });
+  try {
+    if (isMongoConnected) {
+      await MongoProduct.create(newProduct);
+    }
+    // Also save to local file as backup
+    const products = readData(PRODUCTS_FILE, []);
+    products.unshift(newProduct);
+    writeData(PRODUCTS_FILE, products);
+
+    res.status(201).json({ success: true, message: 'Product added successfully', data: newProduct });
+  } catch(err) {
+    console.error('Error adding product:', err);
+    res.status(500).json({ success: false, message: 'Failed to save product: ' + err.message });
+  }
 });
 
 // Edit existing product (Admin)
-app.put('/api/products/:id', rateLimitWrites, (req, res) => {
-  const products = readData(PRODUCTS_FILE, []);
-  const index = products.findIndex(p => p.id === req.params.id);
-  if (index === -1) return res.status(404).json({ success: false, message: 'Product not found' });
+app.put('/api/products/:id', rateLimitWrites, async (req, res) => {
+  try {
+    let existing = null;
+    if (isMongoConnected) {
+      existing = await MongoProduct.findOne({ id: req.params.id }).lean();
+    }
+    if (!existing) {
+      const products = readData(PRODUCTS_FILE, []);
+      existing = products.find(p => p.id === req.params.id);
+    }
+    if (!existing) return res.status(404).json({ success: false, message: 'Product not found' });
 
-  const galleryList = req.body.gallery !== undefined ? req.body.gallery : products[index].gallery;
-  const primaryImg = req.body.aiImage || (Array.isArray(galleryList) && galleryList.length ? galleryList[0] : products[index].aiImage);
+    const galleryList = req.body.gallery !== undefined ? req.body.gallery : existing.gallery;
+    const primaryImg = req.body.aiImage || (Array.isArray(galleryList) && galleryList.length ? galleryList[0] : existing.aiImage);
 
-  const updated = {
-    ...products[index],
-    ...req.body,
-    aiImage: primaryImg,
-    gallery: galleryList || [primaryImg],
-    video: req.body.video !== undefined ? req.body.video : (products[index].video || ''),
-    price: req.body.price ? Number(req.body.price) : products[index].price,
-    originalPrice: req.body.originalPrice ? Number(req.body.originalPrice) : products[index].originalPrice,
-    stock: req.body.stock !== undefined ? Number(req.body.stock) : products[index].stock,
-    updatedAt: new Date().toISOString()
-  };
+    const updated = {
+      ...existing,
+      ...req.body,
+      aiImage: primaryImg,
+      gallery: galleryList || [primaryImg],
+      video: req.body.video !== undefined ? req.body.video : (existing.video || ''),
+      price: req.body.price ? Number(req.body.price) : existing.price,
+      originalPrice: req.body.originalPrice ? Number(req.body.originalPrice) : existing.originalPrice,
+      stock: req.body.stock !== undefined ? Number(req.body.stock) : existing.stock,
+      updatedAt: new Date().toISOString()
+    };
 
-  products[index] = updated;
-  writeData(PRODUCTS_FILE, products);
-  res.json({ success: true, message: 'Product updated successfully', data: updated });
+    if (isMongoConnected) {
+      await MongoProduct.findOneAndUpdate({ id: req.params.id }, updated, { new: true });
+    }
+
+    // Also update local file
+    const products = readData(PRODUCTS_FILE, []);
+    const idx = products.findIndex(p => p.id === req.params.id);
+    if (idx !== -1) {
+      products[idx] = updated;
+      writeData(PRODUCTS_FILE, products);
+    }
+
+    res.json({ success: true, message: 'Product updated successfully', data: updated });
+  } catch(err) {
+    console.error('Error updating product:', err);
+    res.status(500).json({ success: false, message: 'Update failed: ' + err.message });
+  }
 });
 
 // Delete product (Admin)
-app.delete('/api/products/:id', rateLimitWrites, (req, res) => {
-  let products = readData(PRODUCTS_FILE, []);
-  const initialLength = products.length;
-  products = products.filter(p => p.id !== req.params.id);
-  if (products.length === initialLength) {
-    return res.status(404).json({ success: false, message: 'Product not found' });
-  }
+app.delete('/api/products/:id', rateLimitWrites, async (req, res) => {
+  try {
+    if (isMongoConnected) {
+      await MongoProduct.deleteOne({ id: req.params.id });
+    }
+    let products = readData(PRODUCTS_FILE, []);
+    products = products.filter(p => p.id !== req.params.id);
+    writeData(PRODUCTS_FILE, products);
 
-  writeData(PRODUCTS_FILE, products);
-  res.json({ success: true, message: 'Product deleted successfully' });
+    res.json({ success: true, message: 'Product deleted successfully' });
+  } catch(err) {
+    res.status(500).json({ success: false, message: 'Delete error: ' + err.message });
+  }
 });
 
 // ==========================================
@@ -363,14 +507,22 @@ app.delete('/api/products/:id', rateLimitWrites, (req, res) => {
 // ==========================================
 
 // Get all orders (Admin)
-app.get('/api/orders', (req, res) => {
-  const orders = readData(ORDERS_FILE, []);
-  res.json({ success: true, count: orders.length, data: orders });
+app.get('/api/orders', async (req, res) => {
+  try {
+    let orders = [];
+    if (isMongoConnected) {
+      orders = await MongoOrder.find().sort({ createdAt: -1 }).lean();
+    } else {
+      orders = readData(ORDERS_FILE, []);
+    }
+    res.json({ success: true, count: orders.length, data: orders });
+  } catch(err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
 });
 
 // Book new customer order (Public)
-app.post('/api/orders', rateLimitWrites, (req, res) => {
-  const orders = readData(ORDERS_FILE, []);
+app.post('/api/orders', rateLimitWrites, async (req, res) => {
   const {
     customerName,
     customerPhone,
@@ -408,37 +560,65 @@ app.post('/api/orders', rateLimitWrites, (req, res) => {
     status: 'Pending Verification'
   };
 
-  orders.unshift(newOrder);
-  writeData(ORDERS_FILE, orders);
+  try {
+    if (isMongoConnected) {
+      await MongoOrder.create(newOrder);
+    }
+    const orders = readData(ORDERS_FILE, []);
+    orders.unshift(newOrder);
+    writeData(ORDERS_FILE, orders);
 
-  res.status(201).json({
-    success: true,
-    message: 'Order placed successfully. Awaiting advance payment verification.',
-    data: newOrder
-  });
+    res.status(201).json({
+      success: true,
+      message: 'Order placed successfully. Awaiting advance payment verification.',
+      data: newOrder
+    });
+  } catch(err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
 });
 
 // Update order status (Admin)
-app.put('/api/orders/:id/status', rateLimitWrites, (req, res) => {
-  const orders = readData(ORDERS_FILE, []);
-  const order = orders.find(o => o.id === req.params.id);
-  if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
-
-  const { status, paymentStatus } = req.body;
-  if (status) order.status = status;
-  if (paymentStatus) order.paymentStatus = paymentStatus;
-  order.updatedAt = new Date().toISOString();
-
-  writeData(ORDERS_FILE, orders);
-  res.json({ success: true, message: 'Order status updated', data: order });
+app.put('/api/orders/:id/status', rateLimitWrites, async (req, res) => {
+  try {
+    const { status, paymentStatus } = req.body;
+    let order = null;
+    if (isMongoConnected) {
+      order = await MongoOrder.findOneAndUpdate(
+        { id: req.params.id },
+        { ...(status && { status }), ...(paymentStatus && { paymentStatus }), updatedAt: new Date().toISOString() },
+        { new: true }
+      ).lean();
+    }
+    const orders = readData(ORDERS_FILE, []);
+    const o = orders.find(item => item.id === req.params.id);
+    if (o) {
+      if (status) o.status = status;
+      if (paymentStatus) o.paymentStatus = paymentStatus;
+      o.updatedAt = new Date().toISOString();
+      writeData(ORDERS_FILE, orders);
+      order = o;
+    }
+    if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
+    res.json({ success: true, message: 'Order status updated', data: order });
+  } catch(err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
 });
 
 // Delete order (Admin)
-app.delete('/api/orders/:id', rateLimitWrites, (req, res) => {
-  let orders = readData(ORDERS_FILE, []);
-  orders = orders.filter(o => o.id !== req.params.id);
-  writeData(ORDERS_FILE, orders);
-  res.json({ success: true, message: 'Order removed' });
+app.delete('/api/orders/:id', rateLimitWrites, async (req, res) => {
+  try {
+    if (isMongoConnected) {
+      await MongoOrder.deleteOne({ id: req.params.id });
+    }
+    let orders = readData(ORDERS_FILE, []);
+    orders = orders.filter(o => o.id !== req.params.id);
+    writeData(ORDERS_FILE, orders);
+    res.json({ success: true, message: 'Order removed' });
+  } catch(err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
 });
 
 // ==========================================
@@ -446,47 +626,81 @@ app.delete('/api/orders/:id', rateLimitWrites, (req, res) => {
 // ==========================================
 
 // Get Store Settings (Public)
-app.get('/api/settings', (req, res) => {
-  const settings = readData(SETTINGS_FILE, {});
-  res.json({ success: true, data: settings });
+app.get('/api/settings', async (req, res) => {
+  try {
+    let settings = {};
+    if (isMongoConnected) {
+      const doc = await MongoSetting.findOne({ key: 'store_settings' }).lean();
+      if (doc && doc.data) settings = doc.data;
+    }
+    if (Object.keys(settings).length === 0) {
+      settings = readData(SETTINGS_FILE, {});
+    }
+    res.json({ success: true, data: settings });
+  } catch(err) {
+    res.json({ success: true, data: readData(SETTINGS_FILE, {}) });
+  }
 });
 
 // Update Store Settings (Admin)
-app.put('/api/settings', rateLimitWrites, (req, res) => {
-  const current = readData(SETTINGS_FILE, {});
-  const updated = {
-    ...current,
-    ...req.body,
-    updatedAt: new Date().toISOString()
-  };
-  writeData(SETTINGS_FILE, updated);
-  res.json({ success: true, message: 'Store settings updated successfully', data: updated });
+app.put('/api/settings', rateLimitWrites, async (req, res) => {
+  try {
+    const current = readData(SETTINGS_FILE, {});
+    const updated = {
+      ...current,
+      ...req.body,
+      updatedAt: new Date().toISOString()
+    };
+    if (isMongoConnected) {
+      await MongoSetting.findOneAndUpdate(
+        { key: 'store_settings' },
+        { key: 'store_settings', data: updated },
+        { upsert: true }
+      );
+    }
+    writeData(SETTINGS_FILE, updated);
+    res.json({ success: true, message: 'Store settings updated successfully', data: updated });
+  } catch(err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
 });
 
 // ==========================================
 // 4. STATS & ANALYTICS API
 // ==========================================
-app.get('/api/stats', (req, res) => {
-  const orders = readData(ORDERS_FILE, []);
-  const products = readData(PRODUCTS_FILE, []);
-
-  const totalRevenue = orders
-    .filter(o => o.status !== 'Cancelled')
-    .reduce((sum, o) => sum + (o.grandTotal || 0), 0);
-
-  const pendingPayments = orders.filter(o => o.status === 'Pending Verification').length;
-  const dispatchedOrders = orders.filter(o => o.status === 'Dispatched').length;
-
-  res.json({
-    success: true,
-    data: {
-      totalRevenue,
-      totalOrders: orders.length,
-      activeProducts: products.length,
-      pendingPayments,
-      dispatchedOrders
+app.get('/api/stats', async (req, res) => {
+  try {
+    let orders = [];
+    let products = [];
+    if (isMongoConnected) {
+      orders = await MongoOrder.find().lean();
+      products = await MongoProduct.find().lean();
+    } else {
+      orders = readData(ORDERS_FILE, []);
+      products = readData(PRODUCTS_FILE, []);
     }
-  });
+
+    const totalRevenue = orders
+      .filter(o => o.status !== 'Cancelled')
+      .reduce((sum, o) => sum + (o.grandTotal || 0), 0);
+
+    const pendingPayments = orders.filter(o => o.status === 'Pending Verification').length;
+    const dispatchedOrders = orders.filter(o => o.status === 'Dispatched').length;
+
+    res.json({
+      success: true,
+      data: {
+        totalRevenue,
+        totalOrders: orders.length,
+        activeProducts: products.length,
+        pendingPayments,
+        dispatchedOrders,
+        database: isMongoConnected ? 'MongoDB Atlas' : 'Local Storage'
+      }
+    });
+  } catch(err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
 });
 
 // ==========================================
