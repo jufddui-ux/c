@@ -707,16 +707,44 @@
     document.addEventListener("DOMContentLoaded", () => {
       loadCartFromStorage();
       
-      // 1. Instant Render from preloaded catalog (Zero wait time)
+      // 1. Instant Render from custom cache or preloaded catalog (Zero wait time)
       if (window.INITIAL_SETTINGS) {
         storeSettings = window.INITIAL_SETTINGS;
         renderPaymentAccounts();
       }
-      if (window.INITIAL_PRODUCTS && window.INITIAL_PRODUCTS.length > 0) {
+
+      // Check if admin added any products on this device
+      let loadedFromCache = false;
+      try {
+        const cached = localStorage.getItem('LAKHANI_CUSTOM_PRODUCTS');
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            products = parsed;
+            loadedFromCache = true;
+            renderCatalog();
+          }
+        }
+      } catch(e) {}
+
+      if (!loadedFromCache && window.INITIAL_PRODUCTS && window.INITIAL_PRODUCTS.length > 0) {
         products = window.INITIAL_PRODUCTS;
         renderCatalog();
       }
       setupSearch();
+
+      // Real-time broadcast sync across tabs when admin adds/edits products
+      if (window.BroadcastChannel) {
+        try {
+          const bc = new BroadcastChannel('lakhani_catalog_channel');
+          bc.onmessage = (event) => {
+            if (event.data && event.data.type === 'PRODUCTS_UPDATED' && Array.isArray(event.data.products)) {
+              products = event.data.products;
+              renderCatalog();
+            }
+          };
+        } catch(e) {}
+      }
 
       // 2. Fetch latest live updates from Backend API (Render / Local) in background
       fetchStoreSettings();
@@ -808,14 +836,23 @@
         const json = await res.json();
         if (json.success && Array.isArray(json.data) && json.data.length > 0) {
           products = json.data;
+          try {
+            localStorage.setItem('LAKHANI_CUSTOM_PRODUCTS', JSON.stringify(products));
+          } catch(err) {}
           renderCatalog();
         }
       } catch (e) {
         console.warn('Backend API fetch error, fallback active:', e);
+        if (products.length === 0) {
+          try {
+            const cached = localStorage.getItem('LAKHANI_CUSTOM_PRODUCTS');
+            if (cached) products = JSON.parse(cached);
+          } catch(err) {}
+        }
         if (products.length === 0 && window.INITIAL_PRODUCTS) {
           products = window.INITIAL_PRODUCTS;
-          renderCatalog();
         }
+        renderCatalog();
       }
     }
 
@@ -875,15 +912,25 @@
             <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300"></div>
             
             <!-- Category & Badge -->
-            <span class="absolute top-2.5 left-2.5 text-[9px] font-black uppercase px-2 py-0.5 rounded-md bg-neutral-900 text-white border border-neutral-800 shadow-sm">
-              ${item.badge}
-            </span>
-
-            ${discountPkr > 0 ? `
-              <span class="absolute top-2.5 right-2.5 text-[9px] font-bold text-amber-900 bg-amber-100 px-2 py-0.5 rounded border border-amber-300/80 shadow-sm">
-                SAVE Rs. ${discountPkr.toLocaleString()}
+            <div class="absolute top-2.5 left-2.5 flex items-center gap-1">
+              <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded-md bg-neutral-900 text-white border border-neutral-800 shadow-sm">
+                ${item.badge}
               </span>
-            ` : ''}
+              ${item.video ? `<span class="text-[9px] font-bold text-amber-300 bg-black/85 px-1.5 py-0.5 rounded-md shadow flex items-center gap-1"><i class="fa-solid fa-play text-[7px]"></i> Video</span>` : ''}
+            </div>
+
+            <div class="absolute top-2.5 right-2.5 flex items-center gap-1">
+              ${discountPkr > 0 ? `
+                <span class="text-[9px] font-bold text-amber-900 bg-amber-100 px-2 py-0.5 rounded border border-amber-300/80 shadow-sm">
+                  SAVE Rs. ${discountPkr.toLocaleString()}
+                </span>
+              ` : ''}
+              ${item.gallery && item.gallery.length > 1 ? `
+                <span class="text-[9px] font-bold text-white bg-black/75 px-1.5 py-0.5 rounded shadow flex items-center gap-1">
+                  <i class="fa-solid fa-images text-[8px]"></i> ${item.gallery.length}
+                </span>
+              ` : ''}
+            </div>
 
             <!-- Quick Action Hover Pill (Desktop) -->
             <div class="absolute bottom-3 inset-x-3 hidden sm:flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
@@ -1009,23 +1056,35 @@
       selectedColor = item.colors && item.colors.length ? item.colors[0] : "Standard";
       selectedSize = item.sizes && item.sizes.length ? item.sizes[0].name : "Standard";
 
+      // Compile all gallery images
+      const allImgs = Array.isArray(item.gallery) && item.gallery.length > 0 ? [...item.gallery] : (item.aiImage ? [item.aiImage] : []);
+      if (item.colorsImage && !allImgs.includes(item.colorsImage)) allImgs.push(item.colorsImage);
+      if (item.flyerImage && !allImgs.includes(item.flyerImage)) allImgs.push(item.flyerImage);
+      const coverImg = allImgs[0] || 'assets/hero_banner.webp';
+
       const modalContent = document.getElementById("modalProductContent");
       modalContent.innerHTML = `
         <div class="space-y-3">
-          <div class="relative w-full h-64 sm:h-80 rounded-2xl overflow-hidden bg-neutral-100 flex items-center justify-center border border-neutral-200">
-            <img id="modalMainImg" src="${formatImgUrl(item.aiImage)}" alt="${item.title}" loading="lazy" decoding="async" class="w-full h-full object-contain">
+          <!-- Main Media Viewer (Supports Photos & Video Player) -->
+          <div id="modalMediaContainer" class="relative w-full h-64 sm:h-84 rounded-2xl overflow-hidden bg-neutral-100 flex items-center justify-center border border-neutral-200">
+            <img id="modalMainImg" src="${formatImgUrl(coverImg)}" alt="${item.title}" loading="lazy" decoding="async" class="w-full h-full object-contain">
+            <video id="modalMainVideo" controls playsinline class="hidden w-full h-full object-contain bg-black"></video>
           </div>
 
-          <div class="grid grid-cols-3 gap-2">
-            <button onclick="switchModalImage(formatImgUrl('${item.aiImage}'), this)" class="modal-thumb-btn border-2 border-black rounded-xl overflow-hidden h-14 bg-neutral-100 p-0.5 shadow-sm">
-              <img src="${formatImgUrl(item.aiImage)}" loading="lazy" decoding="async" class="w-full h-full object-cover rounded-lg">
-            </button>
-            <button onclick="switchModalImage(formatImgUrl('${item.colorsImage || item.aiImage}'), this)" class="modal-thumb-btn border border-neutral-300 rounded-xl overflow-hidden h-14 bg-neutral-100 p-0.5 hover:border-black transition">
-              <img src="${formatImgUrl(item.colorsImage || item.aiImage)}" loading="lazy" decoding="async" class="w-full h-full object-cover rounded-lg">
-            </button>
-            <button onclick="switchModalImage(formatImgUrl('${item.flyerImage || item.aiImage}'), this)" class="modal-thumb-btn border border-neutral-300 rounded-xl overflow-hidden h-14 bg-neutral-100 p-0.5 hover:border-black transition flex items-center justify-center text-center">
-              <span class="text-[9px] text-neutral-800 font-bold uppercase">Catalog</span>
-            </button>
+          <!-- Thumbnails Row (Images & Video Button) -->
+          <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
+            ${item.video ? `
+              <button type="button" onclick="switchModalVideo('${formatImgUrl(item.video)}', this)" class="modal-thumb-btn border border-amber-500 bg-amber-50 text-amber-900 rounded-xl overflow-hidden h-14 w-16 p-1 hover:border-black transition flex flex-col items-center justify-center shrink-0 shadow-sm">
+                <i class="fa-solid fa-circle-play text-amber-600 text-base mb-0.5"></i>
+                <span class="text-[9px] font-black uppercase tracking-wider">Video</span>
+              </button>
+            ` : ''}
+
+            ${allImgs.map((img, idx) => `
+              <button type="button" onclick="switchModalImage('${formatImgUrl(img)}', this)" class="modal-thumb-btn ${idx === 0 && !item.video ? 'border-2 border-black' : 'border border-neutral-300'} rounded-xl overflow-hidden h-14 w-14 bg-neutral-100 p-0.5 hover:border-black transition shrink-0">
+                <img src="${formatImgUrl(img)}" loading="lazy" decoding="async" class="w-full h-full object-cover rounded-lg">
+              </button>
+            `).join('')}
           </div>
         </div>
 
@@ -1093,11 +1152,46 @@
     }
 
     function switchModalImage(src, btn) {
-      document.getElementById("modalMainImg").src = src;
+      const vid = document.getElementById("modalMainVideo");
+      if (vid) {
+        vid.pause();
+        vid.classList.add("hidden");
+      }
+      const img = document.getElementById("modalMainImg");
+      if (img) {
+        img.src = src;
+        img.classList.remove("hidden");
+      }
+
       document.querySelectorAll(".modal-thumb-btn").forEach(b => {
-        b.className = "modal-thumb-btn border border-neutral-300 rounded-xl overflow-hidden h-14 bg-neutral-100 p-0.5 hover:border-black transition";
+        b.classList.remove("border-2", "border-black", "shadow-sm");
+        b.classList.add("border-neutral-300");
       });
-      btn.className = "modal-thumb-btn border-2 border-black rounded-xl overflow-hidden h-14 bg-neutral-100 p-0.5 shadow-sm";
+      if (btn) {
+        btn.classList.add("border-2", "border-black", "shadow-sm");
+        btn.classList.remove("border-neutral-300");
+      }
+    }
+
+    function switchModalVideo(src, btn) {
+      const img = document.getElementById("modalMainImg");
+      if (img) img.classList.add("hidden");
+
+      const vid = document.getElementById("modalMainVideo");
+      if (vid) {
+        vid.src = src;
+        vid.classList.remove("hidden");
+        vid.play().catch(() => {});
+      }
+
+      document.querySelectorAll(".modal-thumb-btn").forEach(b => {
+        b.classList.remove("border-2", "border-black", "shadow-sm");
+        b.classList.add("border-neutral-300");
+      });
+      if (btn) {
+        btn.classList.add("border-2", "border-black", "shadow-sm");
+        btn.classList.remove("border-neutral-300");
+      }
     }
 
     function selectColor(color, btn) {

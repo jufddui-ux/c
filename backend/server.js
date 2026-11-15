@@ -29,7 +29,7 @@ const DATA_DIR = path.join(__dirname, 'data');
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
 
-// Multer Storage Configuration for Render
+// Multer Storage Configuration for Render (Supports Images & Videos up to 50MB)
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, UPLOADS_DIR);
@@ -37,13 +37,13 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     const ext = path.extname(file.originalname).toLowerCase() || '.jpg';
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, 'img-' + uniqueSuffix + ext);
+    cb(null, 'media-' + uniqueSuffix + ext);
   }
 });
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 10 * 1024 * 1024 } // 10MB Max File Size
+  limits: { fileSize: 50 * 1024 * 1024 } // 50MB for videos & HD images
 });
 
 // Database File Paths
@@ -68,6 +68,13 @@ function readData(filePath, fallback = []) {
 function writeData(filePath, data) {
   try {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
+    // Also sync to root ../data if writing to backend/data/
+    if (filePath.includes(path.join('data', 'products.json'))) {
+      const rootFile = path.join(__dirname, '..', 'data', 'products.json');
+      if (fs.existsSync(path.dirname(rootFile))) {
+        fs.writeFileSync(rootFile, JSON.stringify(data, null, 2), 'utf-8');
+      }
+    }
     return true;
   } catch (err) {
     console.error('Error writing ' + filePath, err);
@@ -190,6 +197,8 @@ app.post('/api/products', (req, res) => {
     price,
     originalPrice,
     aiImage,
+    gallery,
+    video,
     colorsImage,
     flyerImage,
     fabric,
@@ -204,21 +213,26 @@ app.post('/api/products', (req, res) => {
   }
 
   const id = req.body.id || 'prod_' + Date.now();
+  const galleryList = Array.isArray(gallery) && gallery.length > 0 ? gallery : (aiImage ? [aiImage] : ['assets/hero_banner.webp']);
+  const primaryImg = aiImage || galleryList[0] || 'assets/hero_banner.webp';
+
   const newProduct = {
     id,
     title,
     category: category || 'women',
-    categoryLabel: categoryLabel || 'Collection',
+    categoryLabel: categoryLabel || (category === 'men' ? "Men's Wear" : (category === 'bags' ? "Handbags" : "Women's Luxury")),
     badge: badge || 'New Arrival',
     badgeColor: badgeColor || 'bg-amber-900/90 text-amber-300 border-amber-700',
     originalPrice: Number(originalPrice) || Number(price) + 500,
     price: Number(price),
-    aiImage: aiImage || 'assets/hero_banner.jpg',
-    colorsImage: colorsImage || aiImage || 'assets/hero_banner.jpg',
-    flyerImage: flyerImage || aiImage || 'assets/hero_banner.jpg',
-    fabric: fabric || 'Premium Cotton / Lawn',
+    aiImage: primaryImg,
+    gallery: galleryList,
+    video: video || '',
+    colorsImage: colorsImage || primaryImg,
+    flyerImage: flyerImage || primaryImg,
+    fabric: fabric || 'Premium Pakistani Fabric',
     description: description || 'High quality Pakistani luxury design.',
-    specs: req.body.specs || [{ label: 'Quality', val: 'Premium' }],
+    specs: req.body.specs || [{ label: 'Quality', val: 'Premium Authentic' }],
     sizes: sizes || [{ name: 'Standard Fit', desc: 'Universal' }],
     colors: colors || ['Standard'],
     stock: Number(stock) || 25,
@@ -236,9 +250,15 @@ app.put('/api/products/:id', (req, res) => {
   const index = products.findIndex(p => p.id === req.params.id);
   if (index === -1) return res.status(404).json({ success: false, message: 'Product not found' });
 
+  const galleryList = req.body.gallery !== undefined ? req.body.gallery : products[index].gallery;
+  const primaryImg = req.body.aiImage || (Array.isArray(galleryList) && galleryList.length ? galleryList[0] : products[index].aiImage);
+
   const updated = {
     ...products[index],
     ...req.body,
+    aiImage: primaryImg,
+    gallery: galleryList || [primaryImg],
+    video: req.body.video !== undefined ? req.body.video : (products[index].video || ''),
     price: req.body.price ? Number(req.body.price) : products[index].price,
     originalPrice: req.body.originalPrice ? Number(req.body.originalPrice) : products[index].originalPrice,
     stock: req.body.stock !== undefined ? Number(req.body.stock) : products[index].stock,
@@ -394,20 +414,48 @@ app.get('/api/stats', (req, res) => {
 });
 
 // ==========================================
-// 5. FILE UPLOAD ENDPOINT
+// 5. FILE UPLOAD ENDPOINTS (Images & Video)
 // ==========================================
+
+// Single Media Upload (Image or Video)
 app.post('/api/upload', (req, res) => {
-  upload.single('image')(req, res, function (err) {
+  upload.any()(req, res, function (err) {
     if (err instanceof multer.MulterError) {
       return res.status(400).json({ success: false, message: 'Upload limit exceeded: ' + err.message });
     } else if (err) {
       return res.status(500).json({ success: false, message: 'Upload error: ' + err.message });
     }
-    if (!req.file) {
+    const file = req.files && req.files[0];
+    if (!file) {
       return res.status(400).json({ success: false, message: 'No file uploaded or invalid format' });
     }
-    const fileUrl = '/uploads/' + req.file.filename;
-    res.json({ success: true, url: fileUrl, filename: req.file.filename });
+    const fileUrl = '/uploads/' + file.filename;
+    const isVideo = file.mimetype.startsWith('video/') || /\.(mp4|webm|mov|mkv)$/i.test(file.filename);
+    res.json({ success: true, url: fileUrl, filename: file.filename, isVideo, type: isVideo ? 'video' : 'image' });
+  });
+});
+
+// Multiple Media Upload (Batch of Images & Video)
+app.post('/api/upload-multiple', (req, res) => {
+  upload.array('files', 12)(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+      return res.status(400).json({ success: false, message: 'Upload error: ' + err.message });
+    } else if (err) {
+      return res.status(500).json({ success: false, message: 'Server upload error: ' + err.message });
+    }
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ success: false, message: 'No files uploaded' });
+    }
+    const files = req.files.map(f => {
+      const isVideo = f.mimetype.startsWith('video/') || /\.(mp4|webm|mov|mkv)$/i.test(f.filename);
+      return {
+        url: '/uploads/' + f.filename,
+        filename: f.filename,
+        isVideo,
+        type: isVideo ? 'video' : 'image'
+      };
+    });
+    res.json({ success: true, count: files.length, files });
   });
 });
 
