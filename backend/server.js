@@ -69,18 +69,49 @@ function writeData(filePath, data) {
   }
 }
 
-// Serve Uploaded Media
+// Serve Uploaded Media & Static Assets
 app.use('/uploads', express.static(UPLOADS_DIR));
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
+app.use(express.static(__dirname));
 
 // ==========================================
-// Health & Diagnostic Endpoints (For Render)
+// Admin Panel & Diagnostic Endpoints (For Render)
 // ==========================================
+
+// Route for Admin Dashboard
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
+// Root route: By default in browser, serve Admin Dashboard!
+// Only return JSON if explicitly requested by API client with Accept: application/json and not text/html
 app.get('/', (req, res) => {
+  const accept = req.headers.accept || '';
+  if (accept.includes('application/json') && !accept.includes('text/html')) {
+    return res.json({
+      status: 'online',
+      service: 'Lakhani Collection Backend API',
+      platform: 'Render.com',
+      adminPanel: '/admin',
+      endpoints: {
+        products: '/api/products',
+        orders: '/api/orders',
+        settings: '/api/settings',
+        stats: '/api/stats',
+        health: '/health'
+      }
+    });
+  }
+  res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
+app.get('/api', (req, res) => {
   res.json({
     status: 'online',
     service: 'Lakhani Collection Backend API',
     platform: 'Render.com',
     endpoints: {
+      admin: '/admin',
       products: '/api/products',
       orders: '/api/orders',
       settings: '/api/settings',
@@ -364,6 +395,14 @@ app.post('/api/upload', (req, res) => {
     const fileUrl = '/uploads/' + req.file.filename;
     res.json({ success: true, url: fileUrl, filename: req.file.filename });
   });
+});
+
+// Catch-all fallback: Serve Admin Dashboard for non-API web routes
+app.use((req, res) => {
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ success: false, message: 'API route not found' });
+  }
+  res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
 // Start Server
