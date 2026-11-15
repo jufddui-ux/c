@@ -593,7 +593,12 @@ app.delete('/api/products/:id', rateLimitWrites, async (req, res) => {
 app.get('/api/orders', async (req, res) => {
   try {
     let orders = [];
-    if (isMongoConnected) {
+    if (isSupabaseActive) {
+      try {
+        const { data, error } = await supabase.from('orders').select('*').order('createdAt', { ascending: false });
+        if (!error && data) orders = data;
+      } catch(e) {}
+    } else if (isMongoConnected) {
       orders = await MongoOrder.find().sort({ createdAt: -1 }).lean();
     } else {
       orders = readData(ORDERS_FILE, []);
@@ -644,6 +649,9 @@ app.post('/api/orders', rateLimitWrites, async (req, res) => {
   };
 
   try {
+    if (isSupabaseActive) {
+      try { await supabase.from('orders').insert([newOrder]); } catch(e) {}
+    }
     if (isMongoConnected) {
       await MongoOrder.create(newOrder);
     }
@@ -666,6 +674,13 @@ app.put('/api/orders/:id/status', rateLimitWrites, async (req, res) => {
   try {
     const { status, paymentStatus } = req.body;
     let order = null;
+    if (isSupabaseActive) {
+      try {
+        const updatePayload = { ...(status && { status }), ...(paymentStatus && { paymentStatus }), updatedAt: new Date().toISOString() };
+        const { data } = await supabase.from('orders').update(updatePayload).eq('id', req.params.id).select();
+        if (data && data[0]) order = data[0];
+      } catch(e) {}
+    }
     if (isMongoConnected) {
       order = await MongoOrder.findOneAndUpdate(
         { id: req.params.id },
@@ -692,6 +707,9 @@ app.put('/api/orders/:id/status', rateLimitWrites, async (req, res) => {
 // Delete order (Admin)
 app.delete('/api/orders/:id', rateLimitWrites, async (req, res) => {
   try {
+    if (isSupabaseActive) {
+      try { await supabase.from('orders').delete().eq('id', req.params.id); } catch(e) {}
+    }
     if (isMongoConnected) {
       await MongoOrder.deleteOne({ id: req.params.id });
     }
@@ -712,7 +730,12 @@ app.delete('/api/orders/:id', rateLimitWrites, async (req, res) => {
 app.get('/api/settings', async (req, res) => {
   try {
     let settings = {};
-    if (isMongoConnected) {
+    if (isSupabaseActive) {
+      try {
+        const { data } = await supabase.from('settings').select('*').eq('key', 'store_settings').single();
+        if (data && data.data) settings = data.data;
+      } catch(e) {}
+    } else if (isMongoConnected) {
       const doc = await MongoSetting.findOne({ key: 'store_settings' }).lean();
       if (doc && doc.data) settings = doc.data;
     }
@@ -734,6 +757,11 @@ app.put('/api/settings', rateLimitWrites, async (req, res) => {
       ...req.body,
       updatedAt: new Date().toISOString()
     };
+    if (isSupabaseActive) {
+      try {
+        await supabase.from('settings').upsert({ key: 'store_settings', data: updated });
+      } catch(e) {}
+    }
     if (isMongoConnected) {
       await MongoSetting.findOneAndUpdate(
         { key: 'store_settings' },
