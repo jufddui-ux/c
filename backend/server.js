@@ -207,7 +207,7 @@ function writeData(filePath, data) {
 
 if (MONGODB_URI) {
   mongoose.connect(MONGODB_URI, {
-    serverSelectionTimeoutMS: 5000
+    serverSelectionTimeoutMS: 15000, connectTimeoutMS: 20000
   }).then(async () => {
     isMongoConnected = true;
     console.log('🍃 Connected to MongoDB Atlas Cloud Database (Lifetime Persistent Storage Active)');
