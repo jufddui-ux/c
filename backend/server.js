@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 const mongoose = require('mongoose');
+const { createClient } = require('@supabase/supabase-js');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -106,6 +107,44 @@ const upload = multer({
   storage: storage,
   limits: { fileSize: 50 * 1024 * 1024 } // 50MB for video & HD images
 });
+
+
+// ==========================================
+// SUPABASE CLOUD PERSISTENCE (Free Lifetime PostgreSQL)
+// ==========================================
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY || process.env.SUPABASE_ANON_KEY;
+let supabase = null;
+let isSupabaseActive = false;
+
+if (SUPABASE_URL && SUPABASE_KEY) {
+  try {
+    supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
+      auth: { persistSession: false }
+    });
+    isSupabaseActive = true;
+    console.log('⚡ Supabase Cloud PostgreSQL Active (Zero Firewall Friction)');
+if (isSupabaseActive) {
+  (async () => {
+    try {
+      const { count, error } = await supabase.from('products').select('*', { count: 'exact', head: true });
+      if (!error && (count === 0 || count === null)) {
+        const bundled = readData(PRODUCTS_FILE, []);
+        if (bundled.length > 0) {
+          await supabase.from('products').insert(bundled);
+          console.log(`✅ Seeded Supabase with ${bundled.length} initial products`);
+        }
+      }
+    } catch (e) {
+      console.log('Supabase auto-seed note:', e.message);
+    }
+  })();
+}
+
+  } catch (err) {
+    console.error('Supabase Init Error:', err.message);
+  }
+}
 
 // ==========================================
 // MONGODB CLOUD PERSISTENCE (Free Lifetime Storage)
@@ -286,15 +325,15 @@ app.get('/api', (req, res) => {
   res.json({
     status: 'online',
     service: 'Lakhani Collection Backend API',
-    database: isMongoConnected ? 'MongoDB Atlas (Cloud Persistent)' : (PERSISTENT_MOUNT ? 'Render Persistent Disk' : 'Local File Storage')
+    database: isSupabaseActive ? 'Supabase PostgreSQL (Cloud Persistent)' : isMongoConnected ? 'MongoDB Atlas (Cloud Persistent)' : (PERSISTENT_MOUNT ? 'Render Persistent Disk' : 'Local File Storage')
   });
 });
 
 app.get('/health', (req, res) => {
   res.status(200).json({
     status: 'healthy',
-    database: isMongoConnected ? 'MongoDB Atlas (Cloud Persistent)' : (PERSISTENT_MOUNT ? 'Render Persistent Disk' : 'Local File Storage'),
-    persistentStorage: isMongoConnected || Boolean(PERSISTENT_MOUNT),
+    database: isSupabaseActive ? 'Supabase PostgreSQL (Cloud Persistent)' : (isMongoConnected ? 'MongoDB Atlas (Cloud Persistent)' : (PERSISTENT_MOUNT ? 'Render Persistent Disk' : 'Local File Storage')),
+    persistentStorage: isSupabaseActive || isMongoConnected || Boolean(PERSISTENT_MOUNT),
     timestamp: new Date().toISOString()
   });
 });
@@ -309,7 +348,30 @@ app.get('/api/products', async (req, res) => {
 
   try {
     let products = [];
-    if (isMongoConnected) {
+    if (isSupabaseActive) {
+      try {
+        let query = supabase.from('products').select('*');
+        if (category && category !== 'all') {
+          query = query.eq('category', category);
+        }
+        if (search) {
+          query = query.ilike('title', `%${search.trim()}%`);
+        }
+        if (sort === 'price-low') query = query.order('price', { ascending: true });
+        else if (sort === 'price-high') query = query.order('price', { ascending: false });
+        else query = query.order('createdAt', { ascending: false });
+        const { data, error } = await query;
+        if (!error && data && data.length > 0) {
+          products = data;
+        } else {
+          // If empty in Supabase, fallback to bundled file
+          products = readData(PRODUCTS_FILE, []);
+        }
+      } catch(err) {
+        console.error('Supabase fetch error, fallback to file:', err.message);
+        products = readData(PRODUCTS_FILE, []);
+      }
+    } else if (isMongoConnected) {
       let query = {};
       if (category && category !== 'all') {
         query.category = category;
@@ -424,6 +486,13 @@ app.post('/api/products', rateLimitWrites, async (req, res) => {
   };
 
   try {
+    if (isSupabaseActive) {
+      try {
+        await supabase.from('products').insert([newProduct]);
+      } catch(e) {
+        console.error('Supabase product insert error:', e.message);
+      }
+    }
     if (isMongoConnected) {
       await MongoProduct.create(newProduct);
     }
@@ -467,6 +536,13 @@ app.put('/api/products/:id', rateLimitWrites, async (req, res) => {
       updatedAt: new Date().toISOString()
     };
 
+    if (isSupabaseActive) {
+      try {
+        await supabase.from('products').update(updated).eq('id', req.params.id);
+      } catch(e) {
+        console.error('Supabase product update error:', e.message);
+      }
+    }
     if (isMongoConnected) {
       await MongoProduct.findOneAndUpdate({ id: req.params.id }, updated, { new: true });
     }
@@ -489,6 +565,13 @@ app.put('/api/products/:id', rateLimitWrites, async (req, res) => {
 // Delete product (Admin)
 app.delete('/api/products/:id', rateLimitWrites, async (req, res) => {
   try {
+    if (isSupabaseActive) {
+      try {
+        await supabase.from('products').delete().eq('id', req.params.id);
+      } catch(e) {
+        console.error('Supabase product delete error:', e.message);
+      }
+    }
     if (isMongoConnected) {
       await MongoProduct.deleteOne({ id: req.params.id });
     }
