@@ -16,6 +16,7 @@
   "author": "Lakhani Collection",
   "license": "ISC",
   "dependencies": {
+    "compression": "^1.8.2",
     "cors": "^2.8.5",
     "express": "^5.0.0",
     "multer": "^2.0.0"
@@ -24,4 +25,3 @@
     "node": ">=18.0.0"
   }
 }
-

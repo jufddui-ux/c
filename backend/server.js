@@ -1,11 +1,17 @@
 const express = require('express');
 const cors = require('cors');
+const compression = require('compression');
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// High-speed Gzip/Brotli compression for fast responses and high concurrent load
+app.use(compression({
+  threshold: 1024
+}));
 
 // Enable CORS for Vercel, localhost, and custom domains
 app.use(cors({
@@ -69,10 +75,18 @@ function writeData(filePath, data) {
   }
 }
 
+// Static Caching for lightning-fast delivery to multiple clients
+const staticCacheOptions = {
+  maxAge: '30d',
+  immutable: true,
+  etag: true,
+  lastModified: true
+};
+
 // Serve Uploaded Media & Static Assets
-app.use('/uploads', express.static(UPLOADS_DIR));
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
-app.use(express.static(__dirname));
+app.use('/uploads', express.static(UPLOADS_DIR, staticCacheOptions));
+app.use('/assets', express.static(path.join(__dirname, 'assets'), staticCacheOptions));
+app.use(express.static(__dirname, { maxAge: '1h', etag: true }));
 
 // ==========================================
 // Admin Panel & Diagnostic Endpoints (For Render)

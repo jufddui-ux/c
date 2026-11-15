@@ -1,11 +1,17 @@
 const express = require('express');
 const cors = require('cors');
+const compression = require('compression');
 const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// High-speed Gzip/Brotli compression for multiple concurrent clients
+app.use(compression({
+  threshold: 1024 // Compress all responses > 1KB
+}));
 
 // Middlewares
 app.use(cors());
@@ -56,10 +62,18 @@ function writeData(filePath, data) {
   }
 }
 
+// High-Performance Browser Caching for Media Assets (Fast loading for multiple clients)
+const staticCacheOptions = {
+  maxAge: '30d',
+  immutable: true,
+  etag: true,
+  lastModified: true
+};
+
 // Serve Static Frontends & Media
-app.use('/assets', express.static(path.join(__dirname, 'assets')));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-app.use(express.static(__dirname));
+app.use('/assets', express.static(path.join(__dirname, 'assets'), staticCacheOptions));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), staticCacheOptions));
+app.use(express.static(__dirname, { maxAge: '1h', etag: true }));
 
 // ==========================================
 // 1. PRODUCTS REST API

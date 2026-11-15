@@ -31,7 +31,7 @@
 
   // Helper function to format image paths (handles relative, absolute, and /uploads/ from Render)
   window.formatImgUrl = function (path) {
-    if (!path) return 'assets/hero_banner.jpg';
+    if (!path) return 'assets/hero_banner.webp';
     if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:')) {
       return path;
     }
