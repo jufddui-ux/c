@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const DEFAULT_RENDER_BACKEND = 'https://c-4wgk.onrender.com';
+
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -10,8 +12,8 @@ module.exports = async (req, res) => {
     return res.status(200).end();
   }
 
-  // 1. If Render backend URL is configured via environment variable, forward request
-  const renderUrl = process.env.RENDER_BACKEND_URL || process.env.BACKEND_URL;
+  // 1. Forward request to Render backend
+  const renderUrl = process.env.RENDER_BACKEND_URL || process.env.BACKEND_URL || DEFAULT_RENDER_BACKEND;
   if (renderUrl) {
     try {
       const cleanBase = renderUrl.replace(/\/+$/, '');

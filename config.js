@@ -4,6 +4,7 @@
  */
 
 (function () {
+  const DEFAULT_BACKEND_URL = 'https://c-4wgk.onrender.com';
   const hostname = window.location.hostname || '';
   const protocol = window.location.protocol || '';
 
@@ -13,7 +14,7 @@
   // 2. Check if running directly on Render or Cloudflare tunnel server
   const isBackendHost = hostname.includes('onrender.com') || hostname.includes('render.com') || hostname.includes('trycloudflare.com') || hostname.includes('railway.app');
 
-  // 3. Saved backend from localStorage (set by admin if needed)
+  // 3. Saved backend from localStorage (override if needed)
   const savedBackend = localStorage.getItem('LAKHANI_BACKEND_URL');
 
   // 4. Determine active API Base URL
@@ -23,10 +24,10 @@
   } else if (savedBackend) {
     window.API_BASE = savedBackend.replace(/\/+$/, '');
   } else if (isLocal) {
-    window.API_BASE = protocol === 'file:' ? 'http://localhost:3000' : '';
+    window.API_BASE = protocol === 'file:' ? 'http://localhost:5000' : '';
   } else {
-    // On Vercel / Cloud: use relative /api routes handled seamlessly by serverless proxies
-    window.API_BASE = '';
+    // On Vercel / Cloud: Direct seamless link to Render Backend
+    window.API_BASE = DEFAULT_BACKEND_URL;
   }
 
   // Helper function to build full API endpoints
@@ -47,11 +48,8 @@
     // Handle uploaded media from backend /uploads/ directory
     if (path.startsWith('/uploads/') || path.startsWith('uploads/')) {
       const clean = path.startsWith('/') ? path : '/' + path;
-      const base = window.API_BASE || localStorage.getItem('LAKHANI_BACKEND_URL') || '';
-      if (base) {
-        return base.replace(/\/+$/, '') + clean;
-      }
-      return clean;
+      const base = window.API_BASE || DEFAULT_BACKEND_URL;
+      return base.replace(/\/+$/, '') + clean;
     }
     return path;
   };

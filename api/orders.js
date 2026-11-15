@@ -1,6 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const DEFAULT_RENDER_BACKEND = 'https://c-4wgk.onrender.com';
+
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -8,7 +10,7 @@ module.exports = async (req, res) => {
 
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  const renderUrl = process.env.RENDER_BACKEND_URL || process.env.BACKEND_URL;
+  const renderUrl = process.env.RENDER_BACKEND_URL || process.env.BACKEND_URL || DEFAULT_RENDER_BACKEND;
   if (renderUrl) {
     try {
       const targetUrl = renderUrl.replace(/\/+$/, '') + '/api/orders' + (req.query && req.query.id ? '/' + req.query.id : '');
