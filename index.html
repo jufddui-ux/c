@@ -79,13 +79,13 @@
   <div class="bg-gradient-to-r from-red-950 via-red-900 to-red-950 text-white text-[10px] sm:text-xs py-1.5 px-3 border-b border-red-700/40 text-center font-bold tracking-wide flex items-center justify-between sm:justify-center gap-2">
     <div class="flex items-center gap-1.5 truncate">
       <span class="inline-block w-2 h-2 rounded-full bg-amber-400 animate-ping shrink-0"></span>
-      <span id="topNoticeText" class="text-amber-300 uppercase truncate">⚠️ ONLY ADVANCE PAYMENT ACCEPTED</span>
-      <span class="text-gray-300 font-normal hidden sm:inline">| Meezan Bank, Easypaisa & OPay</span>
+      <span id="topNoticeText" class="text-amber-300 uppercase truncate font-extrabold">⚠️ ONLY ADVANCE PAYMENT ACCEPTED</span>
+      <span class="text-gray-300 font-normal hidden sm:inline">• Free Nationwide Courier on Orders Above Rs. 4,000</span>
     </div>
     <div class="flex items-center gap-2 shrink-0">
-      <button onclick="openPaymentModal()" class="text-amber-300 underline font-bold text-[10px]">Bank Accounts</button>
-      <span class="text-gray-600 hidden sm:inline">•</span>
-      <a href="/admin" target="_blank" class="hidden sm:inline text-gray-400 hover:text-white text-[10px]">Admin Login</a>
+      <button onclick="openPaymentModal()" class="text-amber-300 hover:text-white font-bold text-[10px] flex items-center gap-1 px-2 py-0.5 rounded-full bg-black/40 border border-amber-500/30 tap-active">
+        <i class="fa-solid fa-building-columns text-[9px]"></i> Bank Accounts
+      </button>
     </div>
   </div>
 
@@ -107,12 +107,31 @@
         </div>
       </a>
 
+      <!-- Desktop Navigation Menu (House of Melone Style) -->
+      <nav class="hidden lg:flex items-center gap-5 xl:gap-7 text-[11px] uppercase tracking-widest font-bold text-gray-300">
+        <button onclick="filterCategory('all', null); document.getElementById('productCatalogAnchor').scrollIntoView({behavior: 'smooth'})" class="hover:text-amber-300 transition">
+          All Pieces
+        </button>
+        <button onclick="filterCategory('men', null); document.getElementById('productCatalogAnchor').scrollIntoView({behavior: 'smooth'})" class="hover:text-amber-300 transition">
+          Men's Tracksuits
+        </button>
+        <button onclick="filterCategory('women', null); document.getElementById('productCatalogAnchor').scrollIntoView({behavior: 'smooth'})" class="hover:text-amber-300 transition">
+          Women's Atelier
+        </button>
+        <button onclick="filterCategory('bags', null); document.getElementById('productCatalogAnchor').scrollIntoView({behavior: 'smooth'})" class="hover:text-amber-300 transition">
+          Handbags
+        </button>
+        <button onclick="filterCategory('accessories', null); document.getElementById('productCatalogAnchor').scrollIntoView({behavior: 'smooth'})" class="hover:text-amber-300 transition">
+          Jewelry & Chappals
+        </button>
+      </nav>
+
       <!-- Desktop Search Bar -->
-      <div class="hidden md:flex flex-1 max-w-sm mx-6">
+      <div class="hidden md:flex flex-1 max-w-xs mx-4">
         <div class="relative w-full">
-          <input type="text" id="searchInput" placeholder="Search tracksuits, pashmina, lawn, bags..." 
-            class="w-full bg-[#121724] border border-gray-800 focus:border-brand-gold rounded-full py-2 pl-9 pr-4 text-xs text-gray-200 placeholder-gray-500 focus:outline-none">
-          <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-500 text-xs"></i>
+          <input type="text" id="searchInput" placeholder="Search clothes, bags, jewelry..." 
+            class="w-full bg-[#121724] border border-gray-800 focus:border-brand-gold rounded-full py-1.5 pl-8 pr-3 text-xs text-gray-200 placeholder-gray-500 focus:outline-none">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-2 text-gray-500 text-xs"></i>
         </div>
       </div>
 
@@ -184,7 +203,7 @@
   </section>
 
   <!-- Horizontal Scrollable Category Pills -->
-  <section class="sticky top-14 sm:top-20 z-30 bg-[#0a0e17]/95 backdrop-blur-md border-b border-gray-800 py-2">
+  <section id="productCatalogAnchor" class="sticky top-14 sm:top-20 z-30 bg-[#0a0e17]/95 backdrop-blur-md border-b border-gray-800 py-2">
     <div class="max-w-7xl mx-auto px-2.5 sm:px-6">
       <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
         <button onclick="filterCategory('all', this)" class="cat-pill active shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold transition bg-brand-gold text-black shadow tap-active">
@@ -236,6 +255,213 @@
     </div>
 
   </main>
+
+  <!-- House of Melone Style Brand Highlights & Pillars -->
+  <section class="border-y border-gray-800 bg-[#0a0e17] py-10 sm:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="text-center max-w-2xl mx-auto space-y-2 mb-10">
+        <span class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-amber-400">The Lakhani Philosophy</span>
+        <h2 class="text-xl sm:text-3xl font-serif font-black text-white">Uncompromised Quality. Direct Privileges.</h2>
+        <p class="text-xs sm:text-sm text-gray-400">Pakistani fashion ko high-quality fabrics, exact stitching aur direct factory rates par deliver karna hamara mission hai.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        
+        <div class="p-5 rounded-2xl bg-[#0f1422] border border-gray-800 space-y-2.5 hover:border-amber-500/40 transition">
+          <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-lg">
+            <i class="fa-solid fa-gem"></i>
+          </div>
+          <h3 class="font-serif font-bold text-sm text-white">100% Authentic Fabrics</h3>
+          <p class="text-xs text-gray-400 leading-relaxed">Winter fleece heavy GSM, 72-grade pure pashmina shawls, aur 90/70 airjet pure lawn — har piece fabric guaranteed hota hai.</p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-[#0f1422] border border-gray-800 space-y-2.5 hover:border-amber-500/40 transition">
+          <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-lg">
+            <i class="fa-solid fa-tag"></i>
+          </div>
+          <h3 class="font-serif font-bold text-sm text-white">Direct Manufacturer Prices</h3>
+          <p class="text-xs text-gray-400 leading-relaxed">Bina kisi showroom ya middleman commission ke direct wholesale pricing ka faida seedha hamare customers ko milta hai.</p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-[#0f1422] border border-gray-800 space-y-2.5 hover:border-amber-500/40 transition">
+          <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-lg">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <h3 class="font-serif font-bold text-sm text-white">Strict Advance Verification</h3>
+          <p class="text-xs text-gray-400 leading-relaxed">Meezan Bank, Easypaisa aur OPay ke zariye safe advance payments. Payment slip aate hi parcel secure packing mein chala jata hai.</p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-[#0f1422] border border-gray-800 space-y-2.5 hover:border-amber-500/40 transition">
+          <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-lg">
+            <i class="fa-solid fa-truck-fast"></i>
+          </div>
+          <h3 class="font-serif font-bold text-sm text-white">Nationwide Express Courier</h3>
+          <p class="text-xs text-gray-400 leading-relaxed">Trax, TCS aur Leopard courier ke through 2 se 4 working days ke andar pure Pakistan mein doorstep tracking ke sath delivery.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 3-Step Advance Booking Guide -->
+  <section class="bg-[#080b11] py-10 sm:py-16 border-b border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="text-center max-w-xl mx-auto space-y-2 mb-10">
+        <span class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-amber-400">Order Process</span>
+        <h2 class="text-xl sm:text-3xl font-serif font-black text-white">Order Kaise Book Karein?</h2>
+        <p class="text-xs sm:text-sm text-gray-400">Aapka order 3 aasan steps mein direct hamari WhatsApp team ke sath confirm hota hai.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+        
+        <div class="p-6 rounded-2xl bg-[#0f1422] border border-gray-800 relative space-y-3">
+          <div class="w-8 h-8 rounded-full bg-amber-500 text-black font-black font-mono text-sm flex items-center justify-center">1</div>
+          <h3 class="font-serif font-bold text-base text-white">Product & Size Select Karein</h3>
+          <p class="text-xs text-gray-400 leading-relaxed">Website par apna pasandeeda tracksuit, pashmina suit ya handbag select karein, color & size choose karein aur <strong>"Order"</strong> button par click karein.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-[#0f1422] border border-gray-800 relative space-y-3">
+          <div class="w-8 h-8 rounded-full bg-amber-500 text-black font-black font-mono text-sm flex items-center justify-center">2</div>
+          <h3 class="font-serif font-bold text-base text-white">Advance Payment Transfer Karein</h3>
+          <p class="text-xs text-gray-400 leading-relaxed">Meezan Bank, Easypaisa ya OPay account par payment transfer karein. Hamare verified account details website par 1-click copy ke sath mojood hain.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-[#0f1422] border border-gray-800 relative space-y-3">
+          <div class="w-8 h-8 rounded-full bg-amber-500 text-black font-black font-mono text-sm flex items-center justify-center">3</div>
+          <h3 class="font-serif font-bold text-base text-white">WhatsApp Par Slip Send Karein</h3>
+          <p class="text-xs text-gray-400 leading-relaxed">Payment transfer ka screenshot WhatsApp number <strong>03302043491</strong> par share karein. Hamari team foran payment verify karke tracking slip generate kar degi.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Verified Pakistani Customer Reviews -->
+  <section class="bg-[#0a0e17] py-10 sm:py-16 border-b border-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+        <div>
+          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-amber-400">Verified Testimonials</span>
+          <h2 class="text-xl sm:text-3xl font-serif font-black text-white mt-1">Customer Reviews & Feedback</h2>
+        </div>
+        <div class="flex items-center gap-1 text-amber-400 text-sm">
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <i class="fa-solid fa-star"></i>
+          <span class="text-xs text-gray-400 ml-2 font-mono">4.9 / 5.0 (280+ Reviews)</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+        
+        <div class="p-5 rounded-2xl bg-[#0f1422] border border-gray-800 space-y-3">
+          <div class="flex items-center gap-1 text-amber-400 text-xs">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="text-xs text-gray-300 italic leading-relaxed">"Men's fleece tracksuit ka fabric bohot warm aur soft hai. Arabic print aur stitching bilkul picture jaisi thi. Advance payment ka pehle dar tha lekin 3 din me TCS parcel mil gaya!"</p>
+          <div class="flex items-center justify-between pt-2 border-t border-gray-800/80 text-[11px]">
+            <span class="font-bold text-white">Hamza Tariq</span>
+            <span class="text-gray-500">Lahore • Verified Buyer</span>
+          </div>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-[#0f1422] border border-gray-800 space-y-3">
+          <div class="flex items-center gap-1 text-amber-400 text-xs">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="text-xs text-gray-300 italic leading-relaxed">"Pashmina shawl ki quality 10/10 hai! Gala embroidery aur fabric ki softness original Kashmiri pashmina jaisi hai. Lakhani Collection ka response time WhatsApp par bohot quick tha."</p>
+          <div class="flex items-center justify-between pt-2 border-t border-gray-800/80 text-[11px]">
+            <span class="font-bold text-white">Dr. Ayesha Siddiqui</span>
+            <span class="text-gray-500">Karachi • Verified Buyer</span>
+          </div>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-[#0f1422] border border-gray-800 space-y-3">
+          <div class="flex items-center gap-1 text-amber-400 text-xs">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="text-xs text-gray-300 italic leading-relaxed">"Maine 2-piece handbag set order kiya tha matching wallet ke sath. Finishing aur zip hardware bohot high quality hai. Best experience for online shopping in Pakistan!"</p>
+          <div class="flex items-center justify-between pt-2 border-t border-gray-800/80 text-[11px]">
+            <span class="font-bold text-white">Zainab Khan</span>
+            <span class="text-gray-500">Islamabad • Verified Buyer</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Luxury Editorial Footer (Competitor Benchmark) -->
+  <footer class="bg-[#05080e] border-t border-gray-800 text-gray-400 text-xs pb-24 md:pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 space-y-12">
+      
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        
+        <!-- Brand Info -->
+        <div class="space-y-4 md:col-span-2">
+          <div class="flex items-center gap-2">
+            <div class="w-9 h-9 rounded-full border border-brand-gold flex items-center justify-center bg-black text-brand-gold font-serif font-black text-sm">LC</div>
+            <div>
+              <span class="font-serif font-bold text-lg text-white uppercase tracking-wider block">Lakhani Collection</span>
+              <span class="text-[9px] uppercase tracking-widest text-amber-400">House of Haute Couture & Ready-to-Wear</span>
+            </div>
+          </div>
+          <p class="text-gray-400 text-xs leading-relaxed max-w-sm">
+            Pakistan's emerging boutique fashion atelier delivering winter fleece tracksuits, luxury embroidered pashmina shawls, 90/70 summer lawns, handbags and chappals at genuine factory direct rates.
+          </p>
+          <div class="flex items-center gap-3 text-sm text-gray-400 pt-1">
+            <span class="text-[10px] font-bold text-amber-300 bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 rounded-full">
+              ⚡ Strict Advance Verification
+            </span>
+            <span class="text-[10px] font-bold text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-full">
+              🚚 Nationwide Delivery
+            </span>
+          </div>
+        </div>
+
+        <!-- Collections Links -->
+        <div class="space-y-3">
+          <h4 class="font-serif font-bold text-white text-xs uppercase tracking-wider text-amber-300">Catalog Collections</h4>
+          <ul class="space-y-2 text-xs">
+            <li><button onclick="filterCategory('men', null)" class="hover:text-amber-300 transition">Men's Winter Tracksuits</button></li>
+            <li><button onclick="filterCategory('women', null)" class="hover:text-amber-300 transition">Luxury Pashmina Shawls</button></li>
+            <li><button onclick="filterCategory('women', null)" class="hover:text-amber-300 transition">Summer Lawn & Cambric 3-Pc</button></li>
+            <li><button onclick="filterCategory('women', null)" class="hover:text-amber-300 transition">Imported Long Cardigan Sweaters</button></li>
+            <li><button onclick="filterCategory('bags', null)" class="hover:text-amber-300 transition">2-Pc Luxury Handbags & Wallets</button></li>
+            <li><button onclick="filterCategory('accessories', null)" class="hover:text-amber-300 transition">Zircon Jewelry & Flat Chappals</button></li>
+          </ul>
+        </div>
+
+        <!-- Customer Care & Bank Lookup -->
+        <div class="space-y-3">
+          <h4 class="font-serif font-bold text-white text-xs uppercase tracking-wider text-amber-300">Customer Concierge</h4>
+          <p class="text-xs text-gray-400">Kisi bhi sawal, sizing ya payment slip share karne ke liye hamari WhatsApp helpline par rabta karein:</p>
+          <div class="space-y-2 pt-1">
+            <a href="https://wa.me/923302043491" target="_blank" class="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-emerald-600/20 text-emerald-300 border border-emerald-600/40 text-xs font-bold hover:bg-emerald-600/30 transition">
+              <i class="fa-brands fa-whatsapp text-sm"></i> 0330 2043491 (Fahad)
+            </a>
+            <div class="text-[11px] text-gray-500">
+              Alternate: 0311 2227142
+            </div>
+            <button onclick="openPaymentModal()" class="w-full py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-xs font-bold transition flex items-center justify-center gap-1.5 mt-2">
+              <i class="fa-solid fa-building-columns"></i> View Verified Bank Accounts
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="border-t border-gray-800/80 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-gray-500">
+        <p>© 2026 Lakhani Collection. All rights reserved. Crafted for luxury lovers across Pakistan.</p>
+        <p class="flex items-center gap-2">
+          <span>Nationwide Logistics: TCS • Trax • Leopard Courier</span>
+        </p>
+      </div>
+
+    </div>
+  </footer>
 
   <!-- Product Details Modal (Mobile Bottom-Sheet) -->
   <div id="productModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-black/80 backdrop-blur-sm hidden">
@@ -619,41 +845,107 @@
       }
       noFound.classList.add("hidden");
 
-      grid.innerHTML = filtered.map(item => `
-        <div class="bg-[#101522] border border-gray-800/90 rounded-xl sm:rounded-2xl overflow-hidden flex flex-col justify-between shadow-sm relative">
+      const colorMap = {
+        'white': '#ffffff', 'black': '#111111', 'baby pink': '#fbcfe8', 'lavender': '#e9d5ff',
+        'maroon': '#800020', 'beige': '#f5f5dc', 'navy blue': '#1e3a8a', 'camel beige': '#d2b48c',
+        'royal maroon': '#58111a', 'midnight navy': '#0f172a', 'sky blue': '#7dd3fc',
+        'brown': '#78350f', 'mustard': '#ca8a04', 'mint green': '#86efac', 'peach pink': '#fecdd3',
+        'teal': '#0d9488', 'ruby red': '#991b1b', 'emerald green': '#065f46', 'dark brown': '#451a03',
+        'silver glitter': '#e2e8f0', 'black beaded': '#18181b', 'gold': '#eab308', 'pink bow': '#f472b6',
+        'leopard': '#b45309', 'grey': '#9ca3af', 'khaki': '#a3a380', 'taupe': '#8b8589',
+        'mint': '#6ee7b7', 'cream': '#fef3c7', 'dusty pink': '#db2777', 'light pink': '#fce7f3', 'tan': '#d97706'
+      };
+
+      grid.innerHTML = filtered.map(item => {
+        const discountPkr = (item.originalPrice && item.originalPrice > item.price) ? (item.originalPrice - item.price) : 0;
+        const colorDots = (item.colors && Array.isArray(item.colors)) ? item.colors.slice(0, 5).map(c => {
+          const bg = colorMap[c.toLowerCase()] || '#999999';
+          const isLight = c.toLowerCase() === 'white' || c.toLowerCase() === 'cream';
+          return `<span title="${c}" class="inline-block w-2.5 h-2.5 rounded-full border ${isLight ? 'border-gray-500' : 'border-gray-700/80'} shadow-sm shrink-0" style="background-color: ${bg};"></span>`;
+        }).join('') : '';
+
+        return `
+        <div class="group bg-[#0d121c] hover:bg-[#121824] border border-gray-800/80 hover:border-brand-gold/50 rounded-xl sm:rounded-2xl overflow-hidden flex flex-col justify-between shadow-md transition duration-300 relative">
           
+          <!-- Image Container with 4:5 fashion ratio & hover zoom -->
           <div class="relative w-full aspect-[4/5] bg-black cursor-pointer overflow-hidden" onclick="openProductModal('${item.id}')">
-            <img src="${formatImgUrl(item.aiImage)}" alt="${item.title}" class="w-full h-full object-cover object-top">
-            <div class="absolute inset-0 bg-gradient-to-t from-[#101522] via-transparent to-transparent"></div>
+            <img src="${formatImgUrl(item.aiImage)}" alt="${item.title}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500 filter brightness-95 group-hover:brightness-100">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0d121c] via-transparent to-transparent opacity-80"></div>
             
-            <span class="absolute top-1.5 left-1.5 text-[8px] sm:text-[9px] font-black uppercase px-1.5 py-0.5 rounded border ${item.badgeColor || 'bg-amber-900 text-amber-300 border-amber-700'} backdrop-blur-md">
+            <!-- Category & Badge -->
+            <span class="absolute top-2 left-2 text-[8px] sm:text-[9px] font-black uppercase px-2 py-0.5 rounded-md border ${item.badgeColor || 'bg-amber-950/90 text-amber-300 border-amber-700/60'} backdrop-blur-md shadow">
               ${item.badge}
             </span>
+
+            ${discountPkr > 0 ? `
+              <span class="absolute top-2 right-2 text-[8px] sm:text-[9px] font-bold text-amber-300 bg-black/80 px-1.5 py-0.5 rounded border border-amber-500/40 backdrop-blur-md">
+                SAVE Rs. ${discountPkr.toLocaleString()}
+              </span>
+            ` : ''}
+
+            <!-- Quick Action Hover Pill (Desktop) -->
+            <div class="absolute bottom-2.5 inset-x-2.5 hidden sm:flex items-center justify-center gap-1.5 opacity-0 group-hover:opacity-100 transition duration-300">
+              <span class="w-full py-1.5 rounded-lg bg-black/90 text-amber-300 text-[10px] font-bold text-center border border-amber-500/40 shadow backdrop-blur-md">
+                <i class="fa-solid fa-eye mr-1"></i> Quick View & Specs
+              </span>
+            </div>
           </div>
 
-          <div class="p-2 sm:p-3 flex-1 flex flex-col justify-between space-y-1.5">
+          <!-- Product Details -->
+          <div class="p-2.5 sm:p-3.5 flex-1 flex flex-col justify-between space-y-2">
             <div>
-              <span class="text-[9px] font-bold uppercase tracking-wider text-amber-400 block truncate">${item.categoryLabel || item.category}</span>
-              <h3 onclick="openProductModal('${item.id}')" class="font-bold text-[11px] sm:text-sm text-white line-clamp-1 leading-snug cursor-pointer mt-0.5">
-                ${item.title}
-              </h3>
-              <p class="text-[9px] sm:text-[11px] text-gray-400 line-clamp-1 mt-0.5">${item.fabric}</p>
-            </div>
-
-            <div class="pt-1.5 border-t border-gray-800/80 space-y-1.5">
-              <div class="flex items-baseline justify-between">
-                <span class="text-xs sm:text-base font-black text-amber-300 font-mono">Rs. ${item.price.toLocaleString()}</span>
-                <span class="text-[9px] text-gray-500 line-through">Rs. ${item.originalPrice ? item.originalPrice.toLocaleString() : ''}</span>
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-[8px] sm:text-[9px] font-bold uppercase tracking-wider text-amber-400 block truncate">${item.categoryLabel || item.category}</span>
+                <span class="text-[8px] text-emerald-400 font-semibold shrink-0 flex items-center gap-0.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> In Stock
+                </span>
               </div>
 
-              <button onclick="quickOrderWhatsApp('${item.id}')" class="w-full py-1.5 rounded-lg bg-emerald-600 active:bg-emerald-700 text-white font-black text-[10px] sm:text-xs uppercase flex items-center justify-center gap-1 shadow tap-active">
-                <i class="fa-brands fa-whatsapp text-xs"></i> Order
-              </button>
+              <h3 onclick="openProductModal('${item.id}')" class="font-serif font-bold text-xs sm:text-sm text-white line-clamp-1 leading-snug cursor-pointer hover:text-amber-300 transition mt-0.5">
+                ${item.title}
+              </h3>
+              
+              <p class="text-[9px] sm:text-[11px] text-gray-400 line-clamp-1 mt-0.5">${item.fabric}</p>
+
+              <!-- Color Shades Dots -->
+              ${colorDots ? `
+                <div class="flex items-center gap-1 mt-2 pt-1.5 border-t border-gray-800/60">
+                  <span class="text-[8px] text-gray-400 mr-0.5">Colors:</span>
+                  <div class="flex items-center gap-1 overflow-hidden">
+                    ${colorDots}
+                  </div>
+                  ${(item.colors && item.colors.length > 5) ? `<span class="text-[8px] text-gray-400">+${item.colors.length - 5}</span>` : ''}
+                </div>
+              ` : ''}
             </div>
+
+            <!-- Price & Action Buttons -->
+            <div class="pt-2 border-t border-gray-800/80 space-y-2">
+              <div class="flex items-baseline justify-between">
+                <div>
+                  <span class="text-xs sm:text-base font-black text-amber-300 font-mono tracking-tight">Rs. ${item.price.toLocaleString()}</span>
+                  ${item.originalPrice ? `<span class="text-[9px] sm:text-[10px] text-gray-500 line-through ml-1.5">Rs. ${item.originalPrice.toLocaleString()}</span>` : ''}
+                </div>
+                <button onclick="openProductModal('${item.id}')" class="text-[9px] text-gray-400 hover:text-amber-300 sm:hidden">
+                  Details →
+                </button>
+              </div>
+
+              <div class="grid grid-cols-2 gap-1.5">
+                <button onclick="openProductModal('${item.id}')" class="py-1.5 rounded-lg bg-[#141b29] hover:bg-[#1a2335] text-gray-200 border border-gray-700/80 font-bold text-[10px] flex items-center justify-center gap-1 tap-active transition">
+                  <i class="fa-solid fa-sliders text-[9px] text-amber-400"></i> Sizes
+                </button>
+                <button onclick="quickOrderWhatsApp('${item.id}')" class="py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 active:bg-emerald-700 text-white font-black text-[10px] uppercase flex items-center justify-center gap-1 shadow tap-active transition">
+                  <i class="fa-brands fa-whatsapp text-xs"></i> Order
+                </button>
+              </div>
+            </div>
+
           </div>
 
         </div>
-      `).join("");
+        `;
+      }).join("");
     }
 
     function filterCategory(cat, btn) {

@@ -44,6 +44,7 @@
     .custom-scroll::-webkit-scrollbar-track { background: #0b0f17; }
   </style>
   <script src="config.js"></script>
+  <script src="products-data.js"></script>
 </head>
 <body class="bg-[#080b11] text-gray-100 font-sans antialiased min-h-screen flex flex-col custom-scroll">
 
@@ -74,78 +75,118 @@
     
     <!-- Tab Navigation -->
     <div class="flex items-center gap-2 border-b border-gray-800 pb-3 overflow-x-auto custom-scroll">
-      <button onclick="switchTab('overview', this)" class="admin-tab active px-4 py-2 rounded-xl text-xs font-bold bg-brand-gold text-black transition">
-        <i class="fa-solid fa-chart-pie mr-1.5"></i> Dashboard Overview
+      <button onclick="switchTab('products', this)" class="admin-tab active px-4 py-2 rounded-xl text-xs font-bold bg-brand-gold text-black transition">
+        <i class="fa-solid fa-shirt mr-1.5"></i> All Products & Price Manager (<span id="productsCountBadge">11</span>)
       </button>
       <button onclick="switchTab('orders', this)" class="admin-tab px-4 py-2 rounded-xl text-xs font-bold bg-gray-900 text-gray-300 hover:text-white border border-gray-800 transition">
-        <i class="fa-solid fa-bag-shopping mr-1.5"></i> Customer Orders (<span id="ordersCountBadge">0</span>)
-      </button>
-      <button onclick="switchTab('products', this)" class="admin-tab px-4 py-2 rounded-xl text-xs font-bold bg-gray-900 text-gray-300 hover:text-white border border-gray-800 transition">
-        <i class="fa-solid fa-shirt mr-1.5"></i> Products & Prices (<span id="productsCountBadge">0</span>)
+        <i class="fa-solid fa-bag-shopping mr-1.5"></i> Customer Bookings (<span id="ordersCountBadge">0</span>)
       </button>
       <button onclick="switchTab('settings', this)" class="admin-tab px-4 py-2 rounded-xl text-xs font-bold bg-gray-900 text-gray-300 hover:text-white border border-gray-800 transition">
         <i class="fa-solid fa-building-columns mr-1.5"></i> Payment Accounts & Settings
       </button>
     </div>
 
-    <!-- 1. OVERVIEW TAB -->
-    <div id="tabOverview" class="space-y-6">
-      <!-- Summary Cards -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- 1. PRODUCTS MANAGEMENT TAB (Default Active - All Products List) -->
+    <div id="tabProducts" class="space-y-6">
+      
+      <!-- Summary Metric Cards -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         
-        <div class="p-5 rounded-2xl bg-[#101522] border border-gray-800 space-y-1">
+        <div class="p-4 sm:p-5 rounded-2xl bg-[#101522] border border-gray-800 space-y-1">
           <div class="flex items-center justify-between text-xs text-gray-400">
             <span>Total Sales Revenue</span>
             <i class="fa-solid fa-sack-dollar text-emerald-400 text-base"></i>
           </div>
-          <p id="statRevenue" class="text-xl sm:text-2xl font-mono font-black text-emerald-400">Rs. 0</p>
-          <span class="text-[10px] text-gray-500">Excluding cancelled orders</span>
+          <p id="statRevenue" class="text-lg sm:text-2xl font-mono font-black text-emerald-400">Rs. 0</p>
+          <span class="text-[10px] text-gray-500">Excluding cancelled</span>
         </div>
 
-        <div class="p-5 rounded-2xl bg-[#101522] border border-gray-800 space-y-1">
+        <div class="p-4 sm:p-5 rounded-2xl bg-[#101522] border border-gray-800 space-y-1">
           <div class="flex items-center justify-between text-xs text-gray-400">
-            <span>Total Orders Booked</span>
+            <span>Orders Booked</span>
             <i class="fa-solid fa-cart-shopping text-blue-400 text-base"></i>
           </div>
-          <p id="statOrders" class="text-xl sm:text-2xl font-mono font-black text-white">0</p>
-          <span class="text-[10px] text-gray-500">Recorded bookings</span>
+          <p id="statOrders" class="text-lg sm:text-2xl font-mono font-black text-white">0</p>
+          <span class="text-[10px] text-gray-500">Live order bookings</span>
         </div>
 
-        <div class="p-5 rounded-2xl bg-[#101522] border border-gray-800 space-y-1">
+        <div class="p-4 sm:p-5 rounded-2xl bg-[#101522] border border-gray-800 space-y-1">
           <div class="flex items-center justify-between text-xs text-gray-400">
-            <span>Pending Advance Verifications</span>
+            <span>Pending Verifications</span>
             <i class="fa-solid fa-clock text-amber-400 text-base"></i>
           </div>
-          <p id="statPending" class="text-xl sm:text-2xl font-mono font-black text-amber-300">0</p>
-          <span class="text-[10px] text-amber-400/80">Action required (Slips check)</span>
+          <p id="statPending" class="text-lg sm:text-2xl font-mono font-black text-amber-300">0</p>
+          <span class="text-[10px] text-amber-400/80">Advance slip check</span>
         </div>
 
-        <div class="p-5 rounded-2xl bg-[#101522] border border-gray-800 space-y-1">
+        <div class="p-4 sm:p-5 rounded-2xl bg-[#101522] border border-gray-800 space-y-1">
           <div class="flex items-center justify-between text-xs text-gray-400">
             <span>Active Products</span>
             <i class="fa-solid fa-boxes-stacked text-purple-400 text-base"></i>
           </div>
-          <p id="statProducts" class="text-xl sm:text-2xl font-mono font-black text-purple-300">0</p>
+          <p id="statProducts" class="text-lg sm:text-2xl font-mono font-black text-purple-300">11</p>
           <span class="text-[10px] text-gray-500">Live in catalog</span>
         </div>
 
       </div>
 
-      <!-- Quick Actions Banner -->
-      <div class="p-6 rounded-2xl bg-gradient-to-r from-amber-950/40 via-[#101522] to-[#101522] border border-amber-500/30 flex flex-col sm:flex-row items-center justify-between gap-4">
-        <div class="space-y-1 text-center sm:text-left">
-          <h3 class="font-serif font-bold text-white text-base">Naya Product Add Karein Ya Rate Update Karein</h3>
-          <p class="text-xs text-gray-400">Aap kisi bhi product ki wholesale/retail price change kar sakte hain jo live store par foran update hogi.</p>
+      <!-- Product List Header & Controls -->
+      <div class="bg-[#101522] border border-gray-800 rounded-2xl p-4 sm:p-5 space-y-4 shadow">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h2 class="text-base sm:text-lg font-serif font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-boxes-packing text-amber-400"></i>
+              Product Catalog & Live Inventory
+            </h2>
+            <p class="text-xs text-gray-400">Yahan se aap kisi bhi product ki price foran tabdeel kar sakte hain, naya item add kar sakte hain, ya delete kar sakte hain.</p>
+          </div>
+          <button onclick="openAddProductModal()" class="px-4 py-2.5 rounded-xl bg-brand-gold text-black font-extrabold text-xs uppercase flex items-center gap-1.5 shadow shrink-0 hover:bg-amber-400 transition">
+            <i class="fa-solid fa-plus"></i> Add New Product
+          </button>
         </div>
-        <div class="flex gap-2.5">
-          <button onclick="openAddProductModal()" class="px-4 py-2.5 rounded-xl bg-brand-gold text-black font-extrabold text-xs uppercase flex items-center gap-1.5 shadow">
-            <i class="fa-solid fa-plus"></i> Add Product
-          </button>
-          <button onclick="switchTab('orders', document.querySelectorAll('.admin-tab')[1])" class="px-4 py-2.5 rounded-xl bg-gray-800 hover:bg-gray-700 text-white font-bold text-xs">
-            View Orders
-          </button>
+
+        <!-- Search & Filter Controls -->
+        <div class="flex flex-col sm:flex-row gap-2.5 pt-2 border-t border-gray-800/80">
+          <div class="relative flex-1">
+            <input type="text" id="adminProdSearch" oninput="filterAdminProducts()" placeholder="Search product title, fabric, or color..." 
+              class="w-full bg-[#080b11] border border-gray-800 focus:border-brand-gold rounded-xl py-2 pl-9 pr-4 text-xs text-gray-200 placeholder-gray-500 focus:outline-none">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-500 text-xs"></i>
+          </div>
+          <select id="adminProdCategoryFilter" onchange="filterAdminProducts()" 
+            class="bg-[#080b11] border border-gray-800 text-xs text-gray-200 rounded-xl px-3 py-2 focus:border-brand-gold focus:outline-none">
+            <option value="all">All Categories</option>
+            <option value="men">Men's Tracksuits</option>
+            <option value="women">Women's Suits & Knitwear</option>
+            <option value="bags">Handbags & Wallets</option>
+            <option value="accessories">Jewelry & Footwear</option>
+          </select>
+        </div>
+
+      </div>
+
+      <!-- Products Table -->
+      <div class="bg-[#101522] border border-gray-800 rounded-2xl overflow-hidden shadow">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-[#0b0f17] text-gray-400 uppercase text-[10px] border-b border-gray-800">
+              <tr>
+                <th class="p-3.5">Image</th>
+                <th class="p-3.5">Product Details</th>
+                <th class="p-3.5">Category</th>
+                <th class="p-3.5">Current Price</th>
+                <th class="p-3.5">Original Price</th>
+                <th class="p-3.5">Stock</th>
+                <th class="p-3.5 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="productsTableBody" class="divide-y divide-gray-800/80 text-gray-200">
+              <!-- Injected via JS -->
+            </tbody>
+          </table>
         </div>
       </div>
+
     </div>
 
     <!-- 2. ORDERS MANAGEMENT TAB -->
@@ -184,41 +225,6 @@
               </tr>
             </thead>
             <tbody id="ordersTableBody" class="divide-y divide-gray-800/80 text-gray-200">
-              <!-- Injected via JS -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- 3. PRODUCTS MANAGEMENT TAB -->
-    <div id="tabProducts" class="hidden space-y-4">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h2 class="text-lg font-serif font-bold text-white">Product Catalog & Price Manager</h2>
-          <p class="text-xs text-gray-400">Edit prices, manage inventory stock, or add new clothing and accessories.</p>
-        </div>
-        <button onclick="openAddProductModal()" class="px-4 py-2 rounded-xl bg-brand-gold text-black font-extrabold text-xs uppercase flex items-center gap-1.5 shadow shrink-0">
-          <i class="fa-solid fa-plus"></i> Add New Product
-        </button>
-      </div>
-
-      <!-- Products Table -->
-      <div class="bg-[#101522] border border-gray-800 rounded-2xl overflow-hidden shadow">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs">
-            <thead class="bg-[#0b0f17] text-gray-400 uppercase text-[10px] border-b border-gray-800">
-              <tr>
-                <th class="p-3.5">Image</th>
-                <th class="p-3.5">Product Title</th>
-                <th class="p-3.5">Category</th>
-                <th class="p-3.5">Current Price</th>
-                <th class="p-3.5">Original Price</th>
-                <th class="p-3.5">Stock</th>
-                <th class="p-3.5 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="productsTableBody" class="divide-y divide-gray-800/80 text-gray-200">
               <!-- Injected via JS -->
             </tbody>
           </table>
@@ -467,9 +473,15 @@
   <!-- Scripts -->
   <script>
     let allOrders = [];
-    let allProducts = [];
+    let allProducts = window.INITIAL_PRODUCTS || [];
 
     document.addEventListener("DOMContentLoaded", () => {
+      initBackendInput();
+      if (allProducts && allProducts.length > 0) {
+        document.getElementById('productsCountBadge').innerText = allProducts.length;
+        document.getElementById('statProducts').innerText = allProducts.length;
+        renderProductsTable(allProducts);
+      }
       refreshData();
     });
 
@@ -919,20 +931,34 @@
       } catch (err) { console.error(err); }
     }
 
+    function filterAdminProducts() {
+      const q = (document.getElementById('adminProdSearch') ? document.getElementById('adminProdSearch').value : '').toLowerCase().trim();
+      const cat = document.getElementById('adminProdCategoryFilter') ? document.getElementById('adminProdCategoryFilter').value : 'all';
+
+      let filtered = allProducts.filter(p => {
+        const matchesCat = (cat === 'all') || (p.category === cat);
+        const matchesQ = !q || 
+          p.title.toLowerCase().includes(q) || 
+          (p.fabric && p.fabric.toLowerCase().includes(q)) ||
+          (p.categoryLabel && p.categoryLabel.toLowerCase().includes(q));
+        return matchesCat && matchesQ;
+      });
+
+      renderProductsTable(filtered);
+    }
+
     function switchTab(tabName, btn) {
       document.querySelectorAll('.admin-tab').forEach(b => {
         b.className = 'admin-tab px-4 py-2 rounded-xl text-xs font-bold bg-gray-900 text-gray-300 hover:text-white border border-gray-800 transition';
       });
       btn.className = 'admin-tab active px-4 py-2 rounded-xl text-xs font-bold bg-brand-gold text-black transition';
 
-      document.getElementById('tabOverview').classList.add('hidden');
-      document.getElementById('tabOrders').classList.add('hidden');
       document.getElementById('tabProducts').classList.add('hidden');
+      document.getElementById('tabOrders').classList.add('hidden');
       document.getElementById('tabSettings').classList.add('hidden');
 
-      if (tabName === 'overview') document.getElementById('tabOverview').classList.remove('hidden');
+      if (tabName === 'products') document.getElementById('tabProducts').classList.remove('hidden');
       else if (tabName === 'orders') document.getElementById('tabOrders').classList.remove('hidden');
-      else if (tabName === 'products') document.getElementById('tabProducts').classList.remove('hidden');
       else if (tabName === 'settings') document.getElementById('tabSettings').classList.remove('hidden');
     }
 

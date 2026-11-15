@@ -293,3 +293,4 @@ window.INITIAL_PRODUCTS = [
     "stock": 50
   }
 ];
+
