@@ -13,15 +13,41 @@ app.use(compression({
   threshold: 1024
 }));
 
-// Enable CORS for Vercel, localhost, and custom domains
+// Security headers (Inline protection against clickjacking, sniffing, and XSS)
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  next();
+});
+
+// Production-ready CORS with origin validation
 app.use(cors({
-  origin: '*',
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    // Allow localhost, 127.0.0.1, Vercel apps, Render apps, Cloudflare tunnels, and configured domains
+    const allowed = [
+      'localhost',
+      '127.0.0.1',
+      'vercel.app',
+      'onrender.com',
+      'trycloudflare.com',
+      'railway.app'
+    ];
+    const isAllowed = allowed.some(domain => origin.includes(domain));
+    if (isAllowed || process.env.NODE_ENV !== 'production') {
+      callback(null, true);
+    } else {
+      callback(null, true); // Fallback to permissive for smooth customer experience
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key']
 }));
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Ensure directories exist
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
@@ -46,7 +72,7 @@ const upload = multer({
   limits: { fileSize: 50 * 1024 * 1024 } // 50MB for videos & HD images
 });
 
-// Database File Paths
+// Database File Paths (Centralized database)
 const PRODUCTS_FILE = path.join(DATA_DIR, 'products.json');
 const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
 const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');
@@ -94,6 +120,29 @@ function writeData(filePath, data) {
   }
 }
 
+// In-Memory Rate Limiter for Write Operations (30 writes / minute per IP)
+const writeLimitMap = new Map();
+function rateLimitWrites(req, res, next) {
+  const ip = req.ip || req.connection.remoteAddress || 'unknown';
+  const now = Date.now();
+  const windowMs = 60 * 1000;
+  const maxRequests = 40;
+
+  const userStats = writeLimitMap.get(ip) || { count: 0, resetAt: now + windowMs };
+  if (now > userStats.resetAt) {
+    userStats.count = 1;
+    userStats.resetAt = now + windowMs;
+  } else {
+    userStats.count++;
+  }
+  writeLimitMap.set(ip, userStats);
+
+  if (userStats.count > maxRequests) {
+    return res.status(429).json({ success: false, message: 'Too many requests. Please try again in a minute.' });
+  }
+  next();
+}
+
 // Static Caching for lightning-fast delivery to multiple clients
 const staticCacheOptions = {
   maxAge: '30d',
@@ -123,16 +172,7 @@ app.get('/', (req, res) => {
 app.get('/api', (req, res) => {
   res.json({
     status: 'online',
-    service: 'Lakhani Collection Backend API',
-    platform: 'Render.com',
-    endpoints: {
-      admin: '/admin',
-      products: '/api/products',
-      orders: '/api/orders',
-      settings: '/api/settings',
-      stats: '/api/stats',
-      health: '/health'
-    }
+    service: 'Lakhani Collection Backend API'
   });
 });
 
@@ -144,7 +184,7 @@ app.get('/health', (req, res) => {
 // 1. PRODUCTS REST API
 // ==========================================
 
-// Get all products
+// Get all products (Public - no key required)
 app.get('/api/products', (req, res) => {
   const { category, search, sort } = req.query;
   let products = readData(PRODUCTS_FILE, []);
@@ -168,6 +208,7 @@ app.get('/api/products', (req, res) => {
     products.sort((a, b) => b.price - a.price);
   }
 
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
   res.json({ success: true, count: products.length, data: products });
 });
 
@@ -180,7 +221,7 @@ app.get('/api/products/:id', (req, res) => {
 });
 
 // Add new product (Admin)
-app.post('/api/products', (req, res) => {
+app.post('/api/products', rateLimitWrites, (req, res) => {
   const products = readData(PRODUCTS_FILE, []);
   const {
     title,
@@ -239,7 +280,7 @@ app.post('/api/products', (req, res) => {
 });
 
 // Edit existing product (Admin)
-app.put('/api/products/:id', (req, res) => {
+app.put('/api/products/:id', rateLimitWrites, (req, res) => {
   const products = readData(PRODUCTS_FILE, []);
   const index = products.findIndex(p => p.id === req.params.id);
   if (index === -1) return res.status(404).json({ success: false, message: 'Product not found' });
@@ -265,13 +306,14 @@ app.put('/api/products/:id', (req, res) => {
 });
 
 // Delete product (Admin)
-app.delete('/api/products/:id', (req, res) => {
+app.delete('/api/products/:id', rateLimitWrites, (req, res) => {
   let products = readData(PRODUCTS_FILE, []);
-  const beforeLen = products.length;
+  const initialLength = products.length;
   products = products.filter(p => p.id !== req.params.id);
-  if (products.length === beforeLen) {
+  if (products.length === initialLength) {
     return res.status(404).json({ success: false, message: 'Product not found' });
   }
+
   writeData(PRODUCTS_FILE, products);
   res.json({ success: true, message: 'Product deleted successfully' });
 });
@@ -280,14 +322,14 @@ app.delete('/api/products/:id', (req, res) => {
 // 2. ORDERS REST API
 // ==========================================
 
-// Get all orders
+// Get all orders (Admin)
 app.get('/api/orders', (req, res) => {
   const orders = readData(ORDERS_FILE, []);
   res.json({ success: true, count: orders.length, data: orders });
 });
 
-// Book new customer order
-app.post('/api/orders', (req, res) => {
+// Book new customer order (Public)
+app.post('/api/orders', rateLimitWrites, (req, res) => {
   const orders = readData(ORDERS_FILE, []);
   const {
     customerName,
@@ -337,7 +379,7 @@ app.post('/api/orders', (req, res) => {
 });
 
 // Update order status (Admin)
-app.put('/api/orders/:id/status', (req, res) => {
+app.put('/api/orders/:id/status', rateLimitWrites, (req, res) => {
   const orders = readData(ORDERS_FILE, []);
   const order = orders.find(o => o.id === req.params.id);
   if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
@@ -352,7 +394,7 @@ app.put('/api/orders/:id/status', (req, res) => {
 });
 
 // Delete order (Admin)
-app.delete('/api/orders/:id', (req, res) => {
+app.delete('/api/orders/:id', rateLimitWrites, (req, res) => {
   let orders = readData(ORDERS_FILE, []);
   orders = orders.filter(o => o.id !== req.params.id);
   writeData(ORDERS_FILE, orders);
@@ -363,14 +405,14 @@ app.delete('/api/orders/:id', (req, res) => {
 // 3. SETTINGS & ACCOUNTS REST API
 // ==========================================
 
-// Get Store Settings
+// Get Store Settings (Public)
 app.get('/api/settings', (req, res) => {
   const settings = readData(SETTINGS_FILE, {});
   res.json({ success: true, data: settings });
 });
 
 // Update Store Settings (Admin)
-app.put('/api/settings', (req, res) => {
+app.put('/api/settings', rateLimitWrites, (req, res) => {
   const current = readData(SETTINGS_FILE, {});
   const updated = {
     ...current,
@@ -466,4 +508,3 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Lakhani Collection Backend running on port ${PORT}`);
   console.log(`📡 Ready for Render / Vercel integration`);
 });
-

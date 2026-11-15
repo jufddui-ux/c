@@ -3,8 +3,8 @@ const path = require('path');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-api-key');
 
   if (req.method === 'OPTIONS') return res.status(200).end();
 
@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
       const fetchRes = await fetch(targetUrl, {
         method: req.method,
         headers: { 'Content-Type': 'application/json' },
-        body: req.method === 'POST' ? JSON.stringify(req.body) : undefined
+        body: req.method === 'PUT' || req.method === 'POST' ? JSON.stringify(req.body) : undefined
       });
       const data = await fetchRes.json();
       return res.status(fetchRes.status).json(data);
@@ -25,8 +25,7 @@ module.exports = async (req, res) => {
   const possiblePaths = [
     path.join(process.cwd(), 'data', 'settings.json'),
     path.join(process.cwd(), 'backend', 'data', 'settings.json'),
-    path.join(__dirname, '..', 'data', 'settings.json'),
-    path.join(__dirname, '..', '..', 'data', 'settings.json')
+    path.join(__dirname, '..', 'data', 'settings.json')
   ];
 
   for (const p of possiblePaths) {

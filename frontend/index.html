@@ -87,10 +87,7 @@
       <button onclick="openPaymentModal()" class="text-amber-300 hover:text-white font-bold text-[10px] flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-neutral-800 border border-neutral-700 tap-active transition">
         <i class="fa-solid fa-building-columns text-[9px]"></i> Bank Accounts
       </button>
-      <button onclick="openBackendModal()" id="backendIndicatorBtn" class="text-neutral-400 hover:text-amber-300 font-medium text-[10px] flex items-center gap-1 px-2 py-0.5 rounded-full bg-neutral-900 border border-neutral-800 tap-active transition" title="Backend Server Sync Status">
-        <span id="backendDot" class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span id="backendIndicatorText">Live Sync</span>
-      </button>
+
     </div>
   </div>
 
@@ -836,7 +833,7 @@
 
     async function loadProducts() {
       try {
-        const res = await fetch(apiUrl('/api/products'));
+        const res = await fetch(apiUrl('/api/products'), { cache: 'no-store' });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json();
         if (json.success && Array.isArray(json.data) && json.data.length > 0) {
@@ -845,12 +842,10 @@
             localStorage.setItem('LAKHANI_CUSTOM_PRODUCTS', JSON.stringify(products));
           } catch(err) {}
           renderCatalog();
-          updateBackendIndicatorUI(true);
           return;
         }
       } catch (e) {
-        console.warn('Backend API fetch error, fallback active:', e);
-        updateBackendIndicatorUI(false);
+        console.warn('Backend API fetch notice:', e.message);
       }
 
       if (products.length === 0) {
@@ -932,11 +927,7 @@
             </div>
 
             <div class="absolute top-2.5 right-2.5 flex items-center gap-1">
-              ${discountPkr > 0 ? `
-                <span class="text-[9px] font-bold text-amber-900 bg-amber-100 px-2 py-0.5 rounded border border-amber-300/80 shadow-sm">
-                  SAVE Rs. ${discountPkr.toLocaleString()}
-                </span>
-              ` : ''}
+
               ${item.gallery && item.gallery.length > 1 ? `
                 <span class="text-[9px] font-bold text-white bg-black/75 px-1.5 py-0.5 rounded shadow flex items-center gap-1">
                   <i class="fa-solid fa-images text-[8px]"></i> ${item.gallery.length}
@@ -1480,79 +1471,6 @@
       setTimeout(() => { toast.classList.add("translate-y-28", "opacity-0"); }, 2200);
     }
 
-    function openBackendModal() {
-      const modal = document.getElementById("backendModal");
-      const input = document.getElementById("storefrontBackendInput");
-      const saved = localStorage.getItem("LAKHANI_BACKEND_URL") || window.API_BASE || "";
-      if (input) input.value = saved;
-      const res = document.getElementById("backendTestResult");
-      if (res) res.innerText = saved ? `Current: ${saved}` : "Using relative / same origin API";
-      if (modal) modal.classList.remove("hidden");
-    }
-
-    function closeBackendModal() {
-      const modal = document.getElementById("backendModal");
-      if (modal) modal.classList.add("hidden");
-    }
-
-    function saveStorefrontBackend() {
-      const input = document.getElementById("storefrontBackendInput");
-      const val = input ? input.value.trim().replace(/\/+$/, '') : "";
-      if (val) {
-        localStorage.setItem("LAKHANI_BACKEND_URL", val);
-        window.API_BASE = val;
-        showToast("Backend linked: " + val);
-      } else {
-        localStorage.removeItem("LAKHANI_BACKEND_URL");
-        window.API_BASE = "";
-        showToast("Backend reset to default");
-      }
-      closeBackendModal();
-      loadProducts();
-    }
-
-    function resetStorefrontBackend() {
-      localStorage.removeItem("LAKHANI_BACKEND_URL");
-      window.API_BASE = "";
-      const input = document.getElementById("storefrontBackendInput");
-      if (input) input.value = "";
-      showToast("Reset to default relative API");
-      closeBackendModal();
-      loadProducts();
-    }
-
-    async function testCurrentBackend() {
-      const input = document.getElementById("storefrontBackendInput");
-      const testUrl = (input ? input.value.trim() : "") || window.API_BASE || window.location.origin;
-      const res = document.getElementById("backendTestResult");
-      if (res) res.innerText = "Testing " + testUrl + "...";
-      try {
-        const clean = testUrl.replace(/\/+$/, '');
-        const r = await fetch(clean + "/health", { cache: "no-store" });
-        if (r.ok) {
-          if (res) res.innerHTML = `<span class="text-emerald-600 font-bold">✅ Online & Healthy!</span>`;
-          showToast("Backend connection verified!");
-        } else {
-          if (res) res.innerHTML = `<span class="text-red-500 font-bold">⚠️ Returned HTTP ${r.status}</span>`;
-        }
-      } catch (err) {
-        if (res) res.innerHTML = `<span class="text-red-500 font-bold">❌ Connection failed: ${err.message}</span>`;
-      }
-    }
-
-    function updateBackendIndicatorUI(isOnline) {
-      const dot = document.getElementById("backendDot");
-      const text = document.getElementById("backendIndicatorText");
-      if (!dot || !text) return;
-      if (isOnline) {
-        dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse";
-        text.innerText = "Live Sync";
-      } else {
-        dot.className = "w-1.5 h-1.5 rounded-full bg-amber-400";
-        text.innerText = "Catalog";
-      }
-    }
-
     function saveCartToStorage() {
       try { localStorage.setItem("lc_bag", JSON.stringify(cart)); } catch(e){}
     }
@@ -1565,44 +1483,6 @@
     }
   </script>
 
-  <!-- Backend Server Connection Modal -->
-  <div id="backendModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm">
-    <div class="bg-white rounded-2xl w-full max-w-md p-5 sm:p-6 space-y-4 shadow-2xl border border-neutral-200">
-      <div class="flex items-center justify-between pb-3 border-b border-neutral-200">
-        <div class="flex items-center gap-2">
-          <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          <h3 class="font-serif font-bold text-base text-neutral-900">Backend Server Connection</h3>
-        </div>
-        <button onclick="closeBackendModal()" class="text-neutral-400 hover:text-neutral-900 text-lg">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <p class="text-xs text-neutral-600 leading-relaxed">
-        Render backend URL paste karein taake storefront live catalog foran sync ho sake:
-      </p>
-
-      <div class="space-y-2">
-        <label class="block text-xs font-bold text-neutral-800">Render Backend URL:</label>
-        <div class="flex gap-2">
-          <input type="text" id="storefrontBackendInput" placeholder="https://your-app.onrender.com" class="flex-1 border border-neutral-300 rounded-xl px-3 py-2 text-xs font-mono focus:border-black focus:outline-none">
-          <button onclick="saveStorefrontBackend()" class="px-4 py-2 bg-black text-white text-xs font-bold rounded-xl hover:bg-neutral-800 transition">
-            Save
-          </button>
-        </div>
-        <p id="backendTestResult" class="text-[11px] font-medium text-neutral-500"></p>
-      </div>
-
-      <div class="pt-2 flex justify-between items-center text-xs text-neutral-500">
-        <button onclick="testCurrentBackend()" class="underline hover:text-neutral-900 font-bold">
-          <i class="fa-solid fa-bolt mr-1"></i> Test Connection
-        </button>
-        <button onclick="resetStorefrontBackend()" class="text-red-500 hover:text-red-700">
-          Reset to Default
-        </button>
-      </div>
-    </div>
-  </div>
 
 </body>
 </html>

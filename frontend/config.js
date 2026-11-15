@@ -1,6 +1,6 @@
 /**
  * Lakhani Collection — Frontend API Configuration
- * Supports Localhost, Vercel Frontend, and Render Backend
+ * Supports Localhost, Vercel Serverless, and Render Backend
  */
 
 (function () {
@@ -13,32 +13,19 @@
   // 2. Check if running directly on Render or Cloudflare tunnel server
   const isBackendHost = hostname.includes('onrender.com') || hostname.includes('render.com') || hostname.includes('trycloudflare.com') || hostname.includes('railway.app');
 
-  // 3. Auto-detect backend from URL query parameters (e.g. ?backend=https://your-app.onrender.com)
-  try {
-    const urlParams = new URLSearchParams(window.location.search);
-    const backendParam = urlParams.get('backend') || urlParams.get('api');
-    if (backendParam) {
-      const cleanParam = backendParam.trim().replace(/\/+$/, '');
-      localStorage.setItem('LAKHANI_BACKEND_URL', cleanParam);
-      console.log('✅ Auto-linked Backend from URL:', cleanParam);
-    }
-  } catch (e) {}
-
-  // 4. Saved backend from localStorage
+  // 3. Saved backend from localStorage (set by admin if needed)
   const savedBackend = localStorage.getItem('LAKHANI_BACKEND_URL');
 
-  // 5. Determine active API Base URL
+  // 4. Determine active API Base URL
   if (isBackendHost) {
-    // When running directly on Render, ALWAYS use current origin! Never call another domain!
+    // When running directly on Render/Backend, use current origin
     window.API_BASE = window.location.origin;
-    // Auto-save this origin so if admin tests here, it's memorized
-    localStorage.setItem('LAKHANI_BACKEND_URL', window.location.origin);
   } else if (savedBackend) {
     window.API_BASE = savedBackend.replace(/\/+$/, '');
   } else if (isLocal) {
     window.API_BASE = protocol === 'file:' ? 'http://localhost:3000' : '';
   } else {
-    // On Vercel / Cloud without custom URL: use relative /api routes
+    // On Vercel / Cloud: use relative /api routes handled seamlessly by serverless proxies
     window.API_BASE = '';
   }
 
@@ -69,7 +56,7 @@
     return path;
   };
 
-  // Helper to change backend URL dynamically
+  // Helper to change backend URL dynamically if needed
   window.setBackendUrl = function (newUrl) {
     if (!newUrl) {
       localStorage.removeItem('LAKHANI_BACKEND_URL');
@@ -81,6 +68,4 @@
     window.API_BASE = clean;
     window.location.reload();
   };
-
-  console.log('🌐 Connected Backend API URL:', window.API_BASE || '(Relative / Same Origin)');
 })();

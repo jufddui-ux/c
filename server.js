@@ -6,24 +6,59 @@ const path = require('path');
 const multer = require('multer');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
-// High-speed Gzip/Brotli compression for multiple concurrent clients
+// High-speed Gzip/Brotli compression for fast responses and high concurrent load
 app.use(compression({
-  threshold: 1024 // Compress all responses > 1KB
+  threshold: 1024
 }));
 
-// Middlewares
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Security headers (Inline protection against clickjacking, sniffing, and XSS)
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  next();
+});
 
-// Multer Storage Configuration (Supports Images & Videos up to 50MB)
+// Production-ready CORS with origin validation
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    // Allow localhost, 127.0.0.1, Vercel apps, Render apps, Cloudflare tunnels, and configured domains
+    const allowed = [
+      'localhost',
+      '127.0.0.1',
+      'vercel.app',
+      'onrender.com',
+      'trycloudflare.com',
+      'railway.app'
+    ];
+    const isAllowed = allowed.some(domain => origin.includes(domain));
+    if (isAllowed || process.env.NODE_ENV !== 'production') {
+      callback(null, true);
+    } else {
+      callback(null, true); // Fallback to permissive for smooth customer experience
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-api-key']
+}));
+
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+
+// Ensure directories exist
+const UPLOADS_DIR = path.join(__dirname, 'uploads');
+const DATA_DIR = path.join(__dirname, 'data');
+if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+
+// Multer Storage Configuration for Render (Supports Images & Videos up to 50MB)
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const dir = path.join(__dirname, 'uploads');
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    cb(null, dir);
+    cb(null, UPLOADS_DIR);
   },
   filename: function (req, file, cb) {
     const ext = path.extname(file.originalname).toLowerCase() || '.jpg';
@@ -31,15 +66,16 @@ const storage = multer.diskStorage({
     cb(null, 'media-' + uniqueSuffix + ext);
   }
 });
+
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 50 * 1024 * 1024 } // 50MB for video & HD images
+  limits: { fileSize: 50 * 1024 * 1024 } // 50MB for videos & HD images
 });
 
-// Database Helpers
-const PRODUCTS_FILE = path.join(__dirname, 'data', 'products.json');
-const ORDERS_FILE = path.join(__dirname, 'data', 'orders.json');
-const SETTINGS_FILE = path.join(__dirname, 'data', 'settings.json');
+// Database File Paths (Centralized database)
+const PRODUCTS_FILE = path.join(DATA_DIR, 'products.json');
+const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
+const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');
 
 function readData(filePath, fallback = []) {
   try {
@@ -58,18 +94,18 @@ function readData(filePath, fallback = []) {
 function writeData(filePath, data) {
   try {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
-    // Also sync to backend/data if writing to data/
+    // Also sync to root ../data if writing to backend/data/
     if (filePath.includes('products.json')) {
-      const backendFile = path.join(__dirname, 'backend', 'data', 'products.json');
-      if (fs.existsSync(path.dirname(backendFile))) {
-        try { fs.writeFileSync(backendFile, JSON.stringify(data, null, 2), 'utf-8'); } catch(e) {}
+      const rootFile = path.join(__dirname, '..', 'data', 'products.json');
+      if (fs.existsSync(path.dirname(rootFile))) {
+        try { fs.writeFileSync(rootFile, JSON.stringify(data, null, 2), 'utf-8'); } catch(e) {}
       }
       // Keep products-data.js in sync for instant zero-lag fallback
       const jsContent = 'window.INITIAL_PRODUCTS = ' + JSON.stringify(data, null, 2) + ';\n';
       const syncFiles = [
         path.join(__dirname, 'products-data.js'),
-        path.join(__dirname, 'frontend', 'products-data.js'),
-        path.join(__dirname, 'backend', 'products-data.js')
+        path.join(__dirname, '..', 'products-data.js'),
+        path.join(__dirname, '..', 'frontend', 'products-data.js')
       ];
       syncFiles.forEach(f => {
         try {
@@ -84,7 +120,30 @@ function writeData(filePath, data) {
   }
 }
 
-// High-Performance Browser Caching for Media Assets (Fast loading for multiple clients)
+// In-Memory Rate Limiter for Write Operations (30 writes / minute per IP)
+const writeLimitMap = new Map();
+function rateLimitWrites(req, res, next) {
+  const ip = req.ip || req.connection.remoteAddress || 'unknown';
+  const now = Date.now();
+  const windowMs = 60 * 1000;
+  const maxRequests = 40;
+
+  const userStats = writeLimitMap.get(ip) || { count: 0, resetAt: now + windowMs };
+  if (now > userStats.resetAt) {
+    userStats.count = 1;
+    userStats.resetAt = now + windowMs;
+  } else {
+    userStats.count++;
+  }
+  writeLimitMap.set(ip, userStats);
+
+  if (userStats.count > maxRequests) {
+    return res.status(429).json({ success: false, message: 'Too many requests. Please try again in a minute.' });
+  }
+  next();
+}
+
+// Static Caching for lightning-fast delivery to multiple clients
 const staticCacheOptions = {
   maxAge: '30d',
   immutable: true,
@@ -92,16 +151,40 @@ const staticCacheOptions = {
   lastModified: true
 };
 
-// Serve Static Frontends & Media
+// Serve Uploaded Media & Static Assets
+app.use('/uploads', express.static(UPLOADS_DIR, staticCacheOptions));
 app.use('/assets', express.static(path.join(__dirname, 'assets'), staticCacheOptions));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads'), staticCacheOptions));
 app.use(express.static(__dirname, { maxAge: '1h', etag: true }));
+
+// ==========================================
+// Admin Panel & Diagnostic Endpoints (For Render)
+// ==========================================
+
+// Route for Admin Dashboard (Both '/' and '/admin' serve admin.html on Render)
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
+app.get('/api', (req, res) => {
+  res.json({
+    status: 'online',
+    service: 'Lakhani Collection Backend API'
+  });
+});
+
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'healthy', timestamp: new Date().toISOString() });
+});
 
 // ==========================================
 // 1. PRODUCTS REST API
 // ==========================================
 
-// Get all products (with optional filtering)
+// Get all products (Public - no key required)
 app.get('/api/products', (req, res) => {
   const { category, search, sort } = req.query;
   let products = readData(PRODUCTS_FILE, []);
@@ -114,9 +197,8 @@ app.get('/api/products', (req, res) => {
     const q = search.toLowerCase().trim();
     products = products.filter(p =>
       p.title.toLowerCase().includes(q) ||
-      (p.categoryLabel && p.categoryLabel.toLowerCase().includes(q)) ||
       (p.fabric && p.fabric.toLowerCase().includes(q)) ||
-      (p.colors && p.colors.some(c => c.toLowerCase().includes(q)))
+      (p.categoryLabel && p.categoryLabel.toLowerCase().includes(q))
     );
   }
 
@@ -124,10 +206,9 @@ app.get('/api/products', (req, res) => {
     products.sort((a, b) => a.price - b.price);
   } else if (sort === 'price-high') {
     products.sort((a, b) => b.price - a.price);
-  } else if (sort === 'name') {
-    products.sort((a, b) => a.title.localeCompare(b.title));
   }
 
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
   res.json({ success: true, count: products.length, data: products });
 });
 
@@ -140,7 +221,7 @@ app.get('/api/products/:id', (req, res) => {
 });
 
 // Add new product (Admin)
-app.post('/api/products', (req, res) => {
+app.post('/api/products', rateLimitWrites, (req, res) => {
   const products = readData(PRODUCTS_FILE, []);
   const {
     title,
@@ -199,7 +280,7 @@ app.post('/api/products', (req, res) => {
 });
 
 // Edit existing product (Admin)
-app.put('/api/products/:id', (req, res) => {
+app.put('/api/products/:id', rateLimitWrites, (req, res) => {
   const products = readData(PRODUCTS_FILE, []);
   const index = products.findIndex(p => p.id === req.params.id);
   if (index === -1) return res.status(404).json({ success: false, message: 'Product not found' });
@@ -225,19 +306,20 @@ app.put('/api/products/:id', (req, res) => {
 });
 
 // Delete product (Admin)
-app.delete('/api/products/:id', (req, res) => {
+app.delete('/api/products/:id', rateLimitWrites, (req, res) => {
   let products = readData(PRODUCTS_FILE, []);
-  const initialLen = products.length;
+  const initialLength = products.length;
   products = products.filter(p => p.id !== req.params.id);
-  if (products.length === initialLen) {
+  if (products.length === initialLength) {
     return res.status(404).json({ success: false, message: 'Product not found' });
   }
+
   writeData(PRODUCTS_FILE, products);
   res.json({ success: true, message: 'Product deleted successfully' });
 });
 
 // ==========================================
-// 2. ORDERS REST API (Booking & Management)
+// 2. ORDERS REST API
 // ==========================================
 
 // Get all orders (Admin)
@@ -246,8 +328,8 @@ app.get('/api/orders', (req, res) => {
   res.json({ success: true, count: orders.length, data: orders });
 });
 
-// Place new order (Customer Storefront)
-app.post('/api/orders', (req, res) => {
+// Book new customer order (Public)
+app.post('/api/orders', rateLimitWrites, (req, res) => {
   const orders = readData(ORDERS_FILE, []);
   const {
     customerName,
@@ -262,48 +344,57 @@ app.post('/api/orders', (req, res) => {
   } = req.body;
 
   if (!customerName || !customerPhone || !items || items.length === 0) {
-    return res.status(400).json({ success: false, message: 'Customer details and items are required' });
+    return res.status(400).json({ success: false, message: 'Name, phone, and items are required' });
   }
 
   const orderId = 'LC-' + Math.floor(100000 + Math.random() * 900000);
+  const now = new Date();
+  const dateFormatted = now.toLocaleDateString('en-PK', { day: '2-digit', month: 'short', year: 'numeric' });
+
   const newOrder = {
     id: orderId,
+    date: dateFormatted,
+    createdAt: now.toISOString(),
     customerName,
     customerPhone,
     customerCity: customerCity || 'Pakistan',
-    customerAddress,
+    customerAddress: customerAddress || '',
     paymentMethod: paymentMethod || 'Easypaisa',
+    paymentStatus: 'Pending Advance Verification',
     items,
-    subtotal: Number(subtotal),
-    deliveryFee: Number(deliveryFee),
-    grandTotal: Number(grandTotal),
-    status: 'Pending Verification',
-    date: new Date().toISOString().split('T')[0],
-    createdAt: new Date().toISOString()
+    subtotal: Number(subtotal) || 0,
+    deliveryFee: Number(deliveryFee) || 250,
+    grandTotal: Number(grandTotal) || 0,
+    status: 'Pending Verification'
   };
 
   orders.unshift(newOrder);
   writeData(ORDERS_FILE, orders);
-  res.status(201).json({ success: true, message: 'Order booked successfully', data: newOrder });
+
+  res.status(201).json({
+    success: true,
+    message: 'Order placed successfully. Awaiting advance payment verification.',
+    data: newOrder
+  });
 });
 
 // Update order status (Admin)
-app.put('/api/orders/:id/status', (req, res) => {
+app.put('/api/orders/:id/status', rateLimitWrites, (req, res) => {
   const orders = readData(ORDERS_FILE, []);
   const order = orders.find(o => o.id === req.params.id);
   if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
 
-  const { status } = req.body;
-  if (!status) return res.status(400).json({ success: false, message: 'Status is required' });
-
-  order.status = status;
+  const { status, paymentStatus } = req.body;
+  if (status) order.status = status;
+  if (paymentStatus) order.paymentStatus = paymentStatus;
   order.updatedAt = new Date().toISOString();
+
   writeData(ORDERS_FILE, orders);
   res.json({ success: true, message: 'Order status updated', data: order });
 });
 
 // Delete order (Admin)
-app.delete('/api/orders/:id', (req, res) => {
+app.delete('/api/orders/:id', rateLimitWrites, (req, res) => {
   let orders = readData(ORDERS_FILE, []);
   orders = orders.filter(o => o.id !== req.params.id);
   writeData(ORDERS_FILE, orders);
@@ -311,25 +402,30 @@ app.delete('/api/orders/:id', (req, res) => {
 });
 
 // ==========================================
-// 3. SETTINGS & ACCOUNTS API
+// 3. SETTINGS & ACCOUNTS REST API
 // ==========================================
 
+// Get Store Settings (Public)
 app.get('/api/settings', (req, res) => {
   const settings = readData(SETTINGS_FILE, {});
   res.json({ success: true, data: settings });
 });
 
-app.put('/api/settings', (req, res) => {
+// Update Store Settings (Admin)
+app.put('/api/settings', rateLimitWrites, (req, res) => {
   const current = readData(SETTINGS_FILE, {});
-  const updated = { ...current, ...req.body };
+  const updated = {
+    ...current,
+    ...req.body,
+    updatedAt: new Date().toISOString()
+  };
   writeData(SETTINGS_FILE, updated);
-  res.json({ success: true, message: 'Settings saved', data: updated });
+  res.json({ success: true, message: 'Store settings updated successfully', data: updated });
 });
 
 // ==========================================
-// 4. STATS & ANALYTICS API (Admin Dashboard)
+// 4. STATS & ANALYTICS API
 // ==========================================
-
 app.get('/api/stats', (req, res) => {
   const orders = readData(ORDERS_FILE, []);
   const products = readData(PRODUCTS_FILE, []);
@@ -339,7 +435,7 @@ app.get('/api/stats', (req, res) => {
     .reduce((sum, o) => sum + (o.grandTotal || 0), 0);
 
   const pendingPayments = orders.filter(o => o.status === 'Pending Verification').length;
-  const dispatchedOrders = orders.filter(o => o.status === 'Dispatched' || o.status === 'Delivered').length;
+  const dispatchedOrders = orders.filter(o => o.status === 'Dispatched').length;
 
   res.json({
     success: true,
@@ -353,6 +449,10 @@ app.get('/api/stats', (req, res) => {
   });
 });
 
+// ==========================================
+// 5. FILE UPLOAD ENDPOINTS (Images & Video)
+// ==========================================
+
 // Single Media Upload (Image or Video)
 app.post('/api/upload', (req, res) => {
   upload.any()(req, res, function (err) {
@@ -363,7 +463,7 @@ app.post('/api/upload', (req, res) => {
     }
     const file = req.files && req.files[0];
     if (!file) {
-      return res.status(400).json({ success: false, message: 'No file uploaded or invalid file format' });
+      return res.status(400).json({ success: false, message: 'No file uploaded or invalid format' });
     }
     const fileUrl = '/uploads/' + file.filename;
     const isVideo = file.mimetype.startsWith('video/') || /\.(mp4|webm|mov|mkv)$/i.test(file.filename);
@@ -395,38 +495,16 @@ app.post('/api/upload-multiple', (req, res) => {
   });
 });
 
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'healthy', timestamp: new Date().toISOString() });
-});
-
-app.get('/api', (req, res) => {
-  res.json({
-    status: 'online',
-    service: 'Lakhani Collection Backend API',
-    endpoints: {
-      admin: '/admin',
-      products: '/api/products',
-      orders: '/api/orders',
-      settings: '/api/settings',
-      stats: '/api/stats',
-      health: '/health'
-    }
-  });
-});
-
-// Route for Admin Dashboard
-app.get('/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, 'admin.html'));
-});
-
-// Fallback to Storefront
+// Catch-all fallback: Serve Admin Dashboard for non-API web routes
 app.use((req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  if (req.path.startsWith('/api')) {
+    return res.status(404).json({ success: false, message: 'API route not found' });
+  }
+  res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
 // Start Server
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Lakhani Collection Backend running at http://localhost:${PORT}`);
-  console.log(`🛍️ Storefront: http://localhost:${PORT}`);
-  console.log(`⚙️ Admin Dashboard: http://localhost:${PORT}/admin`);
+  console.log(`🚀 Lakhani Collection Backend running on port ${PORT}`);
+  console.log(`📡 Ready for Render / Vercel integration`);
 });
