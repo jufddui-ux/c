@@ -130,6 +130,36 @@
 
       </div>
 
+      <!-- Live Backend & Vercel Storefront 1-Click Auto-Link Bar -->
+      <div class="bg-gradient-to-r from-blue-950/70 via-[#101522] to-amber-950/40 border border-blue-800/60 rounded-2xl p-4 sm:p-5 shadow space-y-3">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <h3 class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
+                <i class="fa-solid fa-server text-blue-400"></i> Backend Host & Vercel Live Link
+              </h3>
+              <span id="backendHostBadge" class="text-[10px] font-mono bg-emerald-950 text-emerald-300 border border-emerald-700/60 px-2 py-0.5 rounded-full">Live Active</span>
+            </div>
+            <p class="text-[11px] text-gray-400">
+              Current Backend API: <code id="currentBackendDisplay" class="font-mono text-amber-300 bg-black/50 px-1.5 py-0.5 rounded border border-gray-800">detecting...</code>
+            </p>
+          </div>
+          
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="copyBackendOrigin()" class="px-3 py-2 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-semibold flex items-center gap-1.5 border border-gray-700 shadow transition tap-active">
+              <i class="fa-regular fa-copy text-amber-400"></i> Copy Backend URL
+            </button>
+            <button onclick="linkToVercelStorefront()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black text-xs font-extrabold uppercase flex items-center gap-1.5 shadow transition tap-active">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Storefront (Auto-Linked)
+            </button>
+            <button onclick="downloadProductsDataJs()" class="px-3 py-2 rounded-xl bg-purple-900/60 hover:bg-purple-800/80 text-purple-200 text-xs font-semibold flex items-center gap-1.5 border border-purple-700/50 shadow transition tap-active" title="Download updated products-data.js for Git repo">
+              <i class="fa-solid fa-download"></i> Sync Data JS
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Product List Header & Controls -->
       <div class="bg-[#101522] border border-gray-800 rounded-2xl p-4 sm:p-5 space-y-4 shadow">
         
@@ -533,6 +563,7 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       initBackendInput();
+      initBackendLinkBar();
       if (allProducts && allProducts.length > 0) {
         document.getElementById('productsCountBadge').innerText = allProducts.length;
         document.getElementById('statProducts').innerText = allProducts.length;
@@ -543,7 +574,47 @@
 
     async function refreshData() {
       initBackendInput();
+      initBackendLinkBar();
       await Promise.all([fetchStats(), fetchOrders(), fetchProducts(), fetchSettings()]);
+    }
+
+    function initBackendLinkBar() {
+      const origin = window.location.origin;
+      const display = document.getElementById('currentBackendDisplay');
+      if (display) display.innerText = origin;
+      const hostBadge = document.getElementById('backendHostBadge');
+      if (hostBadge) {
+        hostBadge.innerText = origin.includes('onrender.com') ? 'Render Live' : (origin.includes('localhost') ? 'Localhost' : 'Active');
+      }
+    }
+
+    function copyBackendOrigin() {
+      const origin = window.location.origin;
+      navigator.clipboard.writeText(origin).then(() => {
+        showToast('Backend URL copied: ' + origin);
+      });
+    }
+
+    function linkToVercelStorefront() {
+      const savedVercel = localStorage.getItem('LAKHANI_VERCEL_URL') || '';
+      const vercelUrl = prompt('Enter your Vercel Storefront URL (e.g. https://your-project.vercel.app):', savedVercel);
+      if (!vercelUrl) return;
+      const cleanVercel = vercelUrl.trim().replace(/\/+$/, '');
+      localStorage.setItem('LAKHANI_VERCEL_URL', cleanVercel);
+      const target = `${cleanVercel}/?backend=${encodeURIComponent(window.location.origin)}`;
+      window.open(target, '_blank');
+    }
+
+    function downloadProductsDataJs() {
+      const content = 'window.INITIAL_PRODUCTS = ' + JSON.stringify(allProducts, null, 2) + ';\n';
+      const blob = new Blob([content], { type: 'application/javascript' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'products-data.js';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('products-data.js downloaded with ' + allProducts.length + ' products!');
     }
 
     function initBackendInput() {
@@ -745,9 +816,22 @@
         const json = await res.json();
         if (json.success) {
           showToast(`Price updated to Rs. ${Number(newPrice).toLocaleString()}`);
-          fetchProducts();
+          await fetchProducts();
+          fetchStats();
+          try {
+            localStorage.setItem('LAKHANI_CUSTOM_PRODUCTS', JSON.stringify(allProducts));
+            if (window.BroadcastChannel) {
+              const bc = new BroadcastChannel('lakhani_catalog_channel');
+              bc.postMessage({ type: 'PRODUCTS_UPDATED', products: allProducts });
+            }
+          } catch(err) {}
+        } else {
+          showToast('Failed to update price: ' + (json.message || 'Error'));
         }
-      } catch (e) { console.error(e); }
+      } catch (e) {
+        console.error(e);
+        showToast('Connection error updating price');
+      }
     }
 
     let currentGallery = [];
@@ -1090,10 +1174,22 @@
         const json = await res.json();
         if (json.success) {
           showToast('Product deleted');
-          fetchProducts();
+          await fetchProducts();
           fetchStats();
+          try {
+            localStorage.setItem('LAKHANI_CUSTOM_PRODUCTS', JSON.stringify(allProducts));
+            if (window.BroadcastChannel) {
+              const bc = new BroadcastChannel('lakhani_catalog_channel');
+              bc.postMessage({ type: 'PRODUCTS_UPDATED', products: allProducts });
+            }
+          } catch(err) {}
+        } else {
+          showToast('Failed to delete product: ' + (json.message || 'Error'));
         }
-      } catch (e) { console.error(e); }
+      } catch (e) {
+        console.error(e);
+        showToast('Connection error deleting product');
+      }
     }
 
     async function fetchSettings() {

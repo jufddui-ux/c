@@ -59,11 +59,23 @@ function writeData(filePath, data) {
   try {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
     // Also sync to backend/data if writing to data/
-    if (filePath.includes(path.join('data', 'products.json'))) {
+    if (filePath.includes('products.json')) {
       const backendFile = path.join(__dirname, 'backend', 'data', 'products.json');
       if (fs.existsSync(path.dirname(backendFile))) {
-        fs.writeFileSync(backendFile, JSON.stringify(data, null, 2), 'utf-8');
+        try { fs.writeFileSync(backendFile, JSON.stringify(data, null, 2), 'utf-8'); } catch(e) {}
       }
+      // Keep products-data.js in sync for instant zero-lag fallback
+      const jsContent = 'window.INITIAL_PRODUCTS = ' + JSON.stringify(data, null, 2) + ';\n';
+      const syncFiles = [
+        path.join(__dirname, 'products-data.js'),
+        path.join(__dirname, 'frontend', 'products-data.js'),
+        path.join(__dirname, 'backend', 'products-data.js')
+      ];
+      syncFiles.forEach(f => {
+        try {
+          if (fs.existsSync(path.dirname(f))) fs.writeFileSync(f, jsContent, 'utf-8');
+        } catch(e) {}
+      });
     }
     return true;
   } catch (err) {
@@ -380,6 +392,25 @@ app.post('/api/upload-multiple', (req, res) => {
       };
     });
     res.json({ success: true, count: files.length, files });
+  });
+});
+
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'healthy', timestamp: new Date().toISOString() });
+});
+
+app.get('/api', (req, res) => {
+  res.json({
+    status: 'online',
+    service: 'Lakhani Collection Backend API',
+    endpoints: {
+      admin: '/admin',
+      products: '/api/products',
+      orders: '/api/orders',
+      settings: '/api/settings',
+      stats: '/api/stats',
+      health: '/health'
+    }
   });
 });
 

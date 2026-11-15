@@ -69,11 +69,23 @@ function writeData(filePath, data) {
   try {
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8');
     // Also sync to root ../data if writing to backend/data/
-    if (filePath.includes(path.join('data', 'products.json'))) {
+    if (filePath.includes('products.json')) {
       const rootFile = path.join(__dirname, '..', 'data', 'products.json');
       if (fs.existsSync(path.dirname(rootFile))) {
-        fs.writeFileSync(rootFile, JSON.stringify(data, null, 2), 'utf-8');
+        try { fs.writeFileSync(rootFile, JSON.stringify(data, null, 2), 'utf-8'); } catch(e) {}
       }
+      // Keep products-data.js in sync for instant zero-lag fallback
+      const jsContent = 'window.INITIAL_PRODUCTS = ' + JSON.stringify(data, null, 2) + ';\n';
+      const syncFiles = [
+        path.join(__dirname, 'products-data.js'),
+        path.join(__dirname, '..', 'products-data.js'),
+        path.join(__dirname, '..', 'frontend', 'products-data.js')
+      ];
+      syncFiles.forEach(f => {
+        try {
+          if (fs.existsSync(path.dirname(f))) fs.writeFileSync(f, jsContent, 'utf-8');
+        } catch(e) {}
+      });
     }
     return true;
   } catch (err) {
@@ -99,30 +111,12 @@ app.use(express.static(__dirname, { maxAge: '1h', etag: true }));
 // Admin Panel & Diagnostic Endpoints (For Render)
 // ==========================================
 
-// Route for Admin Dashboard
+// Route for Admin Dashboard (Both '/' and '/admin' serve admin.html on Render)
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
-// Root route: By default in browser, serve Admin Dashboard!
-// Only return JSON if explicitly requested by API client with Accept: application/json and not text/html
 app.get('/', (req, res) => {
-  const accept = req.headers.accept || '';
-  if (accept.includes('application/json') && !accept.includes('text/html')) {
-    return res.json({
-      status: 'online',
-      service: 'Lakhani Collection Backend API',
-      platform: 'Render.com',
-      adminPanel: '/admin',
-      endpoints: {
-        products: '/api/products',
-        orders: '/api/orders',
-        settings: '/api/settings',
-        stats: '/api/stats',
-        health: '/health'
-      }
-    });
-  }
   res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
