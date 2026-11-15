@@ -49,11 +49,47 @@ app.use(cors({
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Ensure directories exist
-const UPLOADS_DIR = path.join(__dirname, 'uploads');
-const DATA_DIR = path.join(__dirname, 'data');
-if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+// Persistent Storage Detection (Render Persistent Disk /var/data or custom DATA_DIR)
+const PERSISTENT_MOUNT = process.env.DATA_DIR || (fs.existsSync('/var/data') ? '/var/data' : null);
+
+const DATA_DIR = PERSISTENT_MOUNT ? path.join(PERSISTENT_MOUNT, 'data') : path.join(__dirname, 'data');
+const UPLOADS_DIR = PERSISTENT_MOUNT ? path.join(PERSISTENT_MOUNT, 'uploads') : path.join(__dirname, 'uploads');
+
 if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+
+// Database File Paths (Centralized database on Persistent Storage)
+const PRODUCTS_FILE = path.join(DATA_DIR, 'products.json');
+const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
+const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');
+
+// Auto-seed persistent disk on initial attach if empty
+if (PERSISTENT_MOUNT) {
+  const bundledProducts = path.join(__dirname, 'data', 'products.json');
+  if (!fs.existsSync(PRODUCTS_FILE) && fs.existsSync(bundledProducts)) {
+    try {
+      fs.copyFileSync(bundledProducts, PRODUCTS_FILE);
+      console.log('✅ Auto-seeded persistent disk with initial products.json');
+    } catch (e) {
+      console.error('Seed error:', e.message);
+    }
+  }
+
+  const bundledSettings = path.join(__dirname, 'data', 'settings.json');
+  if (!fs.existsSync(SETTINGS_FILE) && fs.existsSync(bundledSettings)) {
+    try {
+      fs.copyFileSync(bundledSettings, SETTINGS_FILE);
+      console.log('✅ Auto-seeded persistent disk with initial settings.json');
+    } catch (e) {}
+  }
+
+  const bundledOrders = path.join(__dirname, 'data', 'orders.json');
+  if (!fs.existsSync(ORDERS_FILE) && fs.existsSync(bundledOrders)) {
+    try {
+      fs.copyFileSync(bundledOrders, ORDERS_FILE);
+    } catch (e) {}
+  }
+}
 
 // Multer Storage Configuration for Render (Supports Images & Videos up to 50MB)
 const storage = multer.diskStorage({
@@ -71,11 +107,6 @@ const upload = multer({
   storage: storage,
   limits: { fileSize: 50 * 1024 * 1024 } // 50MB for videos & HD images
 });
-
-// Database File Paths (Centralized database)
-const PRODUCTS_FILE = path.join(DATA_DIR, 'products.json');
-const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
-const SETTINGS_FILE = path.join(DATA_DIR, 'settings.json');
 
 function readData(filePath, fallback = []) {
   try {
@@ -153,6 +184,10 @@ const staticCacheOptions = {
 
 // Serve Uploaded Media & Static Assets
 app.use('/uploads', express.static(UPLOADS_DIR, staticCacheOptions));
+if (PERSISTENT_MOUNT) {
+  // Fallback to local uploads if file was uploaded prior to mounting disk
+  app.use('/uploads', express.static(path.join(__dirname, 'uploads'), staticCacheOptions));
+}
 app.use('/assets', express.static(path.join(__dirname, 'assets'), staticCacheOptions));
 app.use(express.static(__dirname, { maxAge: '1h', etag: true }));
 
@@ -172,12 +207,17 @@ app.get('/', (req, res) => {
 app.get('/api', (req, res) => {
   res.json({
     status: 'online',
-    service: 'Lakhani Collection Backend API'
+    service: 'Lakhani Collection Backend API',
+    persistentStorage: Boolean(PERSISTENT_MOUNT)
   });
 });
 
 app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'healthy', timestamp: new Date().toISOString() });
+  res.status(200).json({
+    status: 'healthy',
+    persistentStorage: Boolean(PERSISTENT_MOUNT),
+    timestamp: new Date().toISOString()
+  });
 });
 
 // ==========================================
