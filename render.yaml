@@ -2,17 +2,13 @@ services:
   - type: web
     name: lakhani-backend
     runtime: node
-    plan: starter
+    plan: free
     rootDir: backend
     buildCommand: npm install
     startCommand: node server.js
     healthCheckPath: /health
-    disk:
-      name: lakhani-data
-      mountPath: /var/data
-      sizeGB: 1
     envVars:
       - key: NODE_ENV
         value: production
-      - key: DATA_DIR
-        value: /var/data
+      - key: MONGODB_URI
+        sync: false
