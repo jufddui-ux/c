@@ -2,8 +2,10 @@
   "name": "shop",
   "version": "1.0.0",
   "description": "Official digital storefront for **Lakhani Collection (By Fahad)**, specializing in premium men's and women's apparel, winter fleece tracksuits, luxury embroidered pashmina shawls, designer lawn 3-piece collections, handbags, footwear, and jewelry.",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

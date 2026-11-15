@@ -15,9 +15,31 @@
       "dest": "/frontend/config.js"
     },
     {
+      "src": "/products-data.js",
+      "dest": "/frontend/products-data.js"
+    },
+    {
+      "src": "/uploads/(.*)",
+      "dest": "/uploads/$1"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "https://c-backend-render.onrender.com/api/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/frontend/index.html"
     }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        }
+      ]
+    }
   ]
 }
-

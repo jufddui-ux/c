@@ -15,6 +15,18 @@
       "dest": "/config.js"
     },
     {
+      "src": "/products-data.js",
+      "dest": "/products-data.js"
+    },
+    {
+      "src": "/uploads/(.*)",
+      "dest": "https://c-backend-render.onrender.com/uploads/$1"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "https://c-backend-render.onrender.com/api/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/index.html"
     }
@@ -35,4 +47,3 @@
     }
   ]
 }
-
