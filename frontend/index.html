@@ -754,14 +754,20 @@
 
     async function fetchStoreSettings() {
       try {
-        const res = await fetch(apiUrl('/api/settings'));
-        const json = await res.json();
-        if (json.success && json.data) {
-          storeSettings = json.data;
+        let liveSettings = null;
+        if (window.sbApi) {
+          liveSettings = await sbApi.getSettings();
+        } else {
+          const res = await fetch(apiUrl('/api/settings'), { cache: 'no-store' });
+          const json = await res.json();
+          if (json.success && json.data) liveSettings = json.data;
+        }
+        if (liveSettings && Object.keys(liveSettings).length > 0) {
+          storeSettings = liveSettings;
           renderPaymentAccounts();
         }
       } catch (e) {
-        console.warn('Backend settings fetch fallback:', e);
+        console.warn('Supabase settings fetch fallback:', e);
       }
     }
 
@@ -833,11 +839,18 @@
 
     async function loadProducts() {
       try {
-        const res = await fetch(apiUrl('/api/products'), { cache: 'no-store' });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const json = await res.json();
-        if (json.success && Array.isArray(json.data) && json.data.length > 0) {
-          products = json.data;
+        let liveProducts = null;
+        if (window.sbApi) {
+          liveProducts = await sbApi.getProducts();
+        } else {
+          const res = await fetch(apiUrl('/api/products'), { cache: 'no-store' });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const json = await res.json();
+          if (json.success && Array.isArray(json.data)) liveProducts = json.data;
+        }
+
+        if (Array.isArray(liveProducts)) {
+          products = liveProducts;
           try {
             localStorage.setItem('LAKHANI_CUSTOM_PRODUCTS', JSON.stringify(products));
           } catch(err) {}
@@ -845,7 +858,7 @@
           return;
         }
       } catch (e) {
-        console.warn('Backend API fetch notice:', e.message);
+        console.warn('Supabase products fetch notice:', e.message);
       }
 
       if (products.length === 0) {
@@ -915,7 +928,7 @@
           
           <!-- Image Container with 4:5 fashion ratio & hover zoom -->
           <div class="relative w-full aspect-[4/5] bg-neutral-100 cursor-pointer overflow-hidden" onclick="openProductModal('${item.id}')">
-            <img src="${formatImgUrl(item.aiImage)}" alt="${item.title}" loading="lazy" decoding="async" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500">
+            <img src="${formatImgUrl(item.aiImage)}" alt="${item.title}" loading="lazy" decoding="async" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='assets/hero_banner.webp';}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500">
             <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300"></div>
             
             <!-- Category & Badge -->
@@ -1070,7 +1083,7 @@
         <div class="space-y-3">
           <!-- Main Media Viewer (Supports Photos & Video Player) -->
           <div id="modalMediaContainer" class="relative w-full h-64 sm:h-84 rounded-2xl overflow-hidden bg-neutral-100 flex items-center justify-center border border-neutral-200">
-            <img id="modalMainImg" src="${formatImgUrl(coverImg)}" alt="${item.title}" loading="lazy" decoding="async" class="w-full h-full object-contain">
+            <img id="modalMainImg" src="${formatImgUrl(coverImg)}" alt="${item.title}" loading="lazy" decoding="async" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='assets/hero_banner.webp';}" class="w-full h-full object-contain">
             <video id="modalMainVideo" controls playsinline class="hidden w-full h-full object-contain bg-black"></video>
           </div>
 
@@ -1085,7 +1098,7 @@
 
             ${allImgs.map((img, idx) => `
               <button type="button" onclick="switchModalImage('${formatImgUrl(img)}', this)" class="modal-thumb-btn ${idx === 0 && !item.video ? 'border-2 border-black' : 'border border-neutral-300'} rounded-xl overflow-hidden h-14 w-14 bg-neutral-100 p-0.5 hover:border-black transition shrink-0">
-                <img src="${formatImgUrl(img)}" loading="lazy" decoding="async" class="w-full h-full object-cover rounded-lg">
+                <img src="${formatImgUrl(img)}" loading="lazy" decoding="async" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='assets/hero_banner.webp';}" class="w-full h-full object-cover rounded-lg">
               </button>
             `).join('')}
           </div>
@@ -1300,7 +1313,7 @@
 
       itemsList.innerHTML = cart.map((item, index) => `
         <div class="flex items-center gap-3 p-3 rounded-xl bg-neutral-50 border border-neutral-200">
-          <img src="${item.image}" alt="${item.title}" class="w-14 h-16 rounded-lg object-cover bg-neutral-200 shrink-0">
+          <img src="${item.image}" alt="${item.title}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='assets/hero_banner.webp';}" class="w-14 h-16 rounded-lg object-cover bg-neutral-200 shrink-0">
           <div class="flex-1 min-w-0 space-y-0.5">
             <h4 class="font-serif font-bold text-xs text-neutral-900 truncate">${item.title}</h4>
             <p class="text-[10px] text-neutral-500">${item.color} • ${item.size}</p>
@@ -1373,20 +1386,34 @@
       };
 
       let bookedOrderId = "LC-" + Math.floor(100000 + Math.random() * 900000);
+      const now = new Date();
+      const newOrderRecord = {
+        id: bookedOrderId,
+        date: now.toLocaleDateString('en-PK', { day: '2-digit', month: 'short', year: 'numeric' }),
+        createdAt: now.toISOString(),
+        ...orderPayload,
+        paymentStatus: 'Pending Advance Verification',
+        status: 'Pending Verification'
+      };
 
-      // Save order to Backend Database
+      // Save order directly to Supabase Cloud Database
       try {
-        const res = await fetch(apiUrl('/api/orders'), {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(orderPayload)
-        });
-        const json = await res.json();
-        if (json.success && json.data) {
-          bookedOrderId = json.data.id;
+        if (window.sbApi) {
+          const saved = await sbApi.createOrder(newOrderRecord);
+          if (saved && saved.id) bookedOrderId = saved.id;
+        } else {
+          const res = await fetch(apiUrl('/api/orders'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderPayload)
+          });
+          const json = await res.json();
+          if (json.success && json.data) {
+            bookedOrderId = json.data.id;
+          }
         }
       } catch (err) {
-        console.error('API order booking error:', err);
+        console.error('Supabase order booking error:', err);
       }
 
       // Populate Digital Invoice Modal

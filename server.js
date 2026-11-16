@@ -91,8 +91,8 @@ if (PERSISTENT_MOUNT) {
   }
 }
 
-// Multer Storage Configuration
-const storage = multer.diskStorage({
+// Multer Storage Configuration (Memory when cloud-backed without persistent disk, else disk)
+const diskStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, UPLOADS_DIR);
   },
@@ -104,7 +104,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({
-  storage: storage,
+  storage: PERSISTENT_MOUNT ? diskStorage : multer.memoryStorage(),
   limits: { fileSize: 50 * 1024 * 1024 } // 50MB for video & HD images
 });
 
@@ -124,23 +124,28 @@ if (SUPABASE_URL && SUPABASE_KEY) {
     });
     isSupabaseActive = true;
     console.log('⚡ Supabase Cloud PostgreSQL Active (Zero Firewall Friction)');
-if (isSupabaseActive) {
-  (async () => {
-    try {
-      const { count, error } = await supabase.from('products').select('*', { count: 'exact', head: true });
-      if (!error && (count === 0 || count === null)) {
-        const bundled = readData(PRODUCTS_FILE, []);
-        if (bundled.length > 0) {
-          await supabase.from('products').insert(bundled);
-          console.log(`✅ Seeded Supabase with ${bundled.length} initial products`);
+    (async () => {
+      try {
+        const { count, error } = await supabase.from('products').select('*', { count: 'exact', head: true });
+        if (!error && count === 0) {
+          const nowIso = new Date().toISOString();
+          const bundled = readData(PRODUCTS_FILE, []).map(p => ({
+            ...p,
+            createdAt: p.createdAt || nowIso,
+            updatedAt: p.updatedAt || nowIso
+          }));
+          if (bundled.length > 0) {
+            const { error: seedErr } = await supabase.from('products').insert(bundled);
+            if (!seedErr) console.log(`✅ Seeded Supabase with ${bundled.length} initial products`);
+          }
         }
+        if (process.env.SUPABASE_SERVICE_ROLE_KEY) {
+          await supabase.storage.createBucket('product-media', { public: true }).catch(() => {});
+        }
+      } catch (e) {
+        console.log('Supabase auto-seed note:', e.message);
       }
-    } catch (e) {
-      console.log('Supabase auto-seed note:', e.message);
-    }
-  })();
-}
-
+    })();
   } catch (err) {
     console.error('Supabase Init Error:', err.message);
   }
@@ -307,7 +312,7 @@ if (PERSISTENT_MOUNT) {
   app.use('/uploads', express.static(path.join(__dirname, 'uploads'), staticCacheOptions));
 }
 app.use('/assets', express.static(path.join(__dirname, 'assets'), staticCacheOptions));
-app.use(express.static(__dirname, { maxAge: '1h', etag: true }));
+app.use(express.static(__dirname, { maxAge: 0, etag: true }));
 
 // ==========================================
 // Admin Panel & Diagnostic Endpoints (For Render)
@@ -349,28 +354,21 @@ app.get('/api/products', async (req, res) => {
   try {
     let products = [];
     if (isSupabaseActive) {
-      try {
-        let query = supabase.from('products').select('*');
-        if (category && category !== 'all') {
-          query = query.eq('category', category);
-        }
-        if (search) {
-          query = query.ilike('title', `%${search.trim()}%`);
-        }
-        if (sort === 'price-low') query = query.order('price', { ascending: true });
-        else if (sort === 'price-high') query = query.order('price', { ascending: false });
-        else query = query.order('createdAt', { ascending: false });
-        const { data, error } = await query;
-        if (!error && data && data.length > 0) {
-          products = data;
-        } else {
-          // If empty in Supabase, fallback to bundled file
-          products = readData(PRODUCTS_FILE, []);
-        }
-      } catch(err) {
-        console.error('Supabase fetch error, fallback to file:', err.message);
-        products = readData(PRODUCTS_FILE, []);
+      let query = supabase.from('products').select('*');
+      if (category && category !== 'all') {
+        query = query.eq('category', category);
       }
+      if (search) {
+        const q = String(search).trim();
+        query = query.or(`title.ilike.%${q}%,fabric.ilike.%${q}%,categoryLabel.ilike.%${q}%`);
+      }
+      if (sort === 'price-low') query = query.order('price', { ascending: true });
+      else if (sort === 'price-high') query = query.order('price', { ascending: false });
+      else query = query.order('createdAt', { ascending: false, nullsFirst: false });
+
+      const { data, error } = await query;
+      if (error) throw new Error(error.message);
+      products = data || [];
     } else if (isMongoConnected) {
       let query = {};
       if (category && category !== 'all') {
@@ -409,9 +407,9 @@ app.get('/api/products', async (req, res) => {
 
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     res.json({ success: true, count: products.length, data: products });
-  } catch(err) {
+  } catch (err) {
     console.error('Error fetching products:', err);
-    res.status(500).json({ success: false, message: 'Database fetch error' });
+    res.status(500).json({ success: false, message: 'Database fetch error: ' + err.message });
   }
 });
 
@@ -419,7 +417,11 @@ app.get('/api/products', async (req, res) => {
 app.get('/api/products/:id', async (req, res) => {
   try {
     let product = null;
-    if (isMongoConnected) {
+    if (isSupabaseActive) {
+      const { data, error } = await supabase.from('products').select('*').eq('id', req.params.id).maybeSingle();
+      if (error) throw new Error(error.message);
+      product = data;
+    } else if (isMongoConnected) {
       product = await MongoProduct.findOne({ id: req.params.id }).lean();
     } else {
       const products = readData(PRODUCTS_FILE, []);
@@ -427,10 +429,17 @@ app.get('/api/products/:id', async (req, res) => {
     }
     if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
     res.json({ success: true, data: product });
-  } catch(err) {
+  } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 });
+
+const CATEGORY_LABELS_MAP = {
+  men: "Men's Wear",
+  women: "Women's Luxury",
+  bags: 'Handbags',
+  accessories: 'Jewelry & Footwear'
+};
 
 // Add new product (Admin)
 app.post('/api/products', rateLimitWrites, async (req, res) => {
@@ -454,19 +463,21 @@ app.post('/api/products', rateLimitWrites, async (req, res) => {
     stock
   } = req.body;
 
-  if (!title || !price) {
+  if (!title || price === undefined || price === '') {
     return res.status(400).json({ success: false, message: 'Title and price are required' });
   }
 
+  const nowIso = new Date().toISOString();
   const id = req.body.id || 'prod_' + Date.now();
   const galleryList = Array.isArray(gallery) && gallery.length > 0 ? gallery : (aiImage ? [aiImage] : ['assets/hero_banner.webp']);
   const primaryImg = aiImage || galleryList[0] || 'assets/hero_banner.webp';
+  const cat = category || 'women';
 
   const newProduct = {
     id,
     title,
-    category: category || 'women',
-    categoryLabel: categoryLabel || (category === 'men' ? "Men's Wear" : (category === 'bags' ? "Handbags" : "Women's Luxury")),
+    category: cat,
+    categoryLabel: categoryLabel || CATEGORY_LABELS_MAP[cat] || "Women's Luxury",
     badge: badge || 'New Arrival',
     badgeColor: badgeColor || 'bg-amber-900/90 text-amber-300 border-amber-700',
     originalPrice: Number(originalPrice) || Number(price) + 500,
@@ -481,28 +492,25 @@ app.post('/api/products', rateLimitWrites, async (req, res) => {
     specs: req.body.specs || [{ label: 'Quality', val: 'Premium Authentic' }],
     sizes: sizes || [{ name: 'Standard Fit', desc: 'Universal' }],
     colors: colors || ['Standard'],
-    stock: Number(stock) || 25,
-    createdAt: new Date().toISOString()
+    stock: stock !== undefined && stock !== '' ? Number(stock) : 25,
+    createdAt: nowIso,
+    updatedAt: nowIso
   };
 
   try {
     if (isSupabaseActive) {
-      try {
-        await supabase.from('products').insert([newProduct]);
-      } catch(e) {
-        console.error('Supabase product insert error:', e.message);
-      }
+      const { error } = await supabase.from('products').insert([newProduct]);
+      if (error) throw new Error(error.message);
     }
     if (isMongoConnected) {
       await MongoProduct.create(newProduct);
     }
-    // Also save to local file as backup
     const products = readData(PRODUCTS_FILE, []);
     products.unshift(newProduct);
     writeData(PRODUCTS_FILE, products);
 
     res.status(201).json({ success: true, message: 'Product added successfully', data: newProduct });
-  } catch(err) {
+  } catch (err) {
     console.error('Error adding product:', err);
     res.status(500).json({ success: false, message: 'Failed to save product: ' + err.message });
   }
@@ -512,7 +520,12 @@ app.post('/api/products', rateLimitWrites, async (req, res) => {
 app.put('/api/products/:id', rateLimitWrites, async (req, res) => {
   try {
     let existing = null;
-    if (isMongoConnected) {
+    if (isSupabaseActive) {
+      const { data, error } = await supabase.from('products').select('*').eq('id', req.params.id).maybeSingle();
+      if (error) throw new Error(error.message);
+      existing = data;
+    }
+    if (!existing && isMongoConnected) {
       existing = await MongoProduct.findOne({ id: req.params.id }).lean();
     }
     if (!existing) {
@@ -523,40 +536,41 @@ app.put('/api/products/:id', rateLimitWrites, async (req, res) => {
 
     const galleryList = req.body.gallery !== undefined ? req.body.gallery : existing.gallery;
     const primaryImg = req.body.aiImage || (Array.isArray(galleryList) && galleryList.length ? galleryList[0] : existing.aiImage);
+    const nextCategory = req.body.category || existing.category;
 
     const updated = {
       ...existing,
       ...req.body,
+      category: nextCategory,
+      categoryLabel: req.body.categoryLabel || CATEGORY_LABELS_MAP[nextCategory] || existing.categoryLabel,
       aiImage: primaryImg,
       gallery: galleryList || [primaryImg],
       video: req.body.video !== undefined ? req.body.video : (existing.video || ''),
-      price: req.body.price ? Number(req.body.price) : existing.price,
-      originalPrice: req.body.originalPrice ? Number(req.body.originalPrice) : existing.originalPrice,
-      stock: req.body.stock !== undefined ? Number(req.body.stock) : existing.stock,
+      price: req.body.price !== undefined ? Number(req.body.price) : existing.price,
+      originalPrice: req.body.originalPrice !== undefined ? Number(req.body.originalPrice) : existing.originalPrice,
+      stock: req.body.stock !== undefined && req.body.stock !== '' ? Number(req.body.stock) : existing.stock,
       updatedAt: new Date().toISOString()
     };
+    delete updated.id;
 
     if (isSupabaseActive) {
-      try {
-        await supabase.from('products').update(updated).eq('id', req.params.id);
-      } catch(e) {
-        console.error('Supabase product update error:', e.message);
-      }
+      const { error } = await supabase.from('products').update(updated).eq('id', req.params.id);
+      if (error) throw new Error(error.message);
     }
     if (isMongoConnected) {
-      await MongoProduct.findOneAndUpdate({ id: req.params.id }, updated, { new: true });
+      await MongoProduct.findOneAndUpdate({ id: req.params.id }, { ...updated, id: req.params.id }, { new: true });
     }
 
-    // Also update local file
+    const savedObj = { id: req.params.id, ...updated };
     const products = readData(PRODUCTS_FILE, []);
     const idx = products.findIndex(p => p.id === req.params.id);
     if (idx !== -1) {
-      products[idx] = updated;
+      products[idx] = savedObj;
       writeData(PRODUCTS_FILE, products);
     }
 
-    res.json({ success: true, message: 'Product updated successfully', data: updated });
-  } catch(err) {
+    res.json({ success: true, message: 'Product updated successfully', data: savedObj });
+  } catch (err) {
     console.error('Error updating product:', err);
     res.status(500).json({ success: false, message: 'Update failed: ' + err.message });
   }
@@ -566,11 +580,8 @@ app.put('/api/products/:id', rateLimitWrites, async (req, res) => {
 app.delete('/api/products/:id', rateLimitWrites, async (req, res) => {
   try {
     if (isSupabaseActive) {
-      try {
-        await supabase.from('products').delete().eq('id', req.params.id);
-      } catch(e) {
-        console.error('Supabase product delete error:', e.message);
-      }
+      const { error } = await supabase.from('products').delete().eq('id', req.params.id);
+      if (error) throw new Error(error.message);
     }
     if (isMongoConnected) {
       await MongoProduct.deleteOne({ id: req.params.id });
@@ -580,7 +591,7 @@ app.delete('/api/products/:id', rateLimitWrites, async (req, res) => {
     writeData(PRODUCTS_FILE, products);
 
     res.json({ success: true, message: 'Product deleted successfully' });
-  } catch(err) {
+  } catch (err) {
     res.status(500).json({ success: false, message: 'Delete error: ' + err.message });
   }
 });
@@ -594,17 +605,16 @@ app.get('/api/orders', async (req, res) => {
   try {
     let orders = [];
     if (isSupabaseActive) {
-      try {
-        const { data, error } = await supabase.from('orders').select('*').order('createdAt', { ascending: false });
-        if (!error && data) orders = data;
-      } catch(e) {}
+      const { data, error } = await supabase.from('orders').select('*').order('createdAt', { ascending: false, nullsFirst: false });
+      if (error) throw new Error(error.message);
+      orders = data || [];
     } else if (isMongoConnected) {
       orders = await MongoOrder.find().sort({ createdAt: -1 }).lean();
     } else {
       orders = readData(ORDERS_FILE, []);
     }
     res.json({ success: true, count: orders.length, data: orders });
-  } catch(err) {
+  } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 });
@@ -650,7 +660,8 @@ app.post('/api/orders', rateLimitWrites, async (req, res) => {
 
   try {
     if (isSupabaseActive) {
-      try { await supabase.from('orders').insert([newOrder]); } catch(e) {}
+      const { error } = await supabase.from('orders').insert([newOrder]);
+      if (error) throw new Error(error.message);
     }
     if (isMongoConnected) {
       await MongoOrder.create(newOrder);
@@ -664,7 +675,7 @@ app.post('/api/orders', rateLimitWrites, async (req, res) => {
       message: 'Order placed successfully. Awaiting advance payment verification.',
       data: newOrder
     });
-  } catch(err) {
+  } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 });
@@ -675,11 +686,10 @@ app.put('/api/orders/:id/status', rateLimitWrites, async (req, res) => {
     const { status, paymentStatus } = req.body;
     let order = null;
     if (isSupabaseActive) {
-      try {
-        const updatePayload = { ...(status && { status }), ...(paymentStatus && { paymentStatus }), updatedAt: new Date().toISOString() };
-        const { data } = await supabase.from('orders').update(updatePayload).eq('id', req.params.id).select();
-        if (data && data[0]) order = data[0];
-      } catch(e) {}
+      const updatePayload = { ...(status && { status }), ...(paymentStatus && { paymentStatus }), updatedAt: new Date().toISOString() };
+      const { data, error } = await supabase.from('orders').update(updatePayload).eq('id', req.params.id).select();
+      if (error) throw new Error(error.message);
+      if (data && data[0]) order = data[0];
     }
     if (isMongoConnected) {
       order = await MongoOrder.findOneAndUpdate(
@@ -695,11 +705,11 @@ app.put('/api/orders/:id/status', rateLimitWrites, async (req, res) => {
       if (paymentStatus) o.paymentStatus = paymentStatus;
       o.updatedAt = new Date().toISOString();
       writeData(ORDERS_FILE, orders);
-      order = o;
+      if (!order) order = o;
     }
     if (!order) return res.status(404).json({ success: false, message: 'Order not found' });
     res.json({ success: true, message: 'Order status updated', data: order });
-  } catch(err) {
+  } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 });
@@ -708,7 +718,8 @@ app.put('/api/orders/:id/status', rateLimitWrites, async (req, res) => {
 app.delete('/api/orders/:id', rateLimitWrites, async (req, res) => {
   try {
     if (isSupabaseActive) {
-      try { await supabase.from('orders').delete().eq('id', req.params.id); } catch(e) {}
+      const { error } = await supabase.from('orders').delete().eq('id', req.params.id);
+      if (error) throw new Error(error.message);
     }
     if (isMongoConnected) {
       await MongoOrder.deleteOne({ id: req.params.id });
@@ -717,7 +728,7 @@ app.delete('/api/orders/:id', rateLimitWrites, async (req, res) => {
     orders = orders.filter(o => o.id !== req.params.id);
     writeData(ORDERS_FILE, orders);
     res.json({ success: true, message: 'Order removed' });
-  } catch(err) {
+  } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 });
@@ -731,10 +742,9 @@ app.get('/api/settings', async (req, res) => {
   try {
     let settings = {};
     if (isSupabaseActive) {
-      try {
-        const { data } = await supabase.from('settings').select('*').eq('key', 'store_settings').single();
-        if (data && data.data) settings = data.data;
-      } catch(e) {}
+      const { data, error } = await supabase.from('settings').select('*').eq('key', 'store_settings').maybeSingle();
+      if (error) throw new Error(error.message);
+      if (data && data.data) settings = data.data;
     } else if (isMongoConnected) {
       const doc = await MongoSetting.findOne({ key: 'store_settings' }).lean();
       if (doc && doc.data) settings = doc.data;
@@ -743,7 +753,7 @@ app.get('/api/settings', async (req, res) => {
       settings = readData(SETTINGS_FILE, {});
     }
     res.json({ success: true, data: settings });
-  } catch(err) {
+  } catch (err) {
     res.json({ success: true, data: readData(SETTINGS_FILE, {}) });
   }
 });
@@ -751,16 +761,19 @@ app.get('/api/settings', async (req, res) => {
 // Update Store Settings (Admin)
 app.put('/api/settings', rateLimitWrites, async (req, res) => {
   try {
-    const current = readData(SETTINGS_FILE, {});
+    let current = readData(SETTINGS_FILE, {});
+    if (isSupabaseActive) {
+      const { data } = await supabase.from('settings').select('*').eq('key', 'store_settings').maybeSingle();
+      if (data && data.data) current = { ...current, ...data.data };
+    }
     const updated = {
       ...current,
       ...req.body,
       updatedAt: new Date().toISOString()
     };
     if (isSupabaseActive) {
-      try {
-        await supabase.from('settings').upsert({ key: 'store_settings', data: updated });
-      } catch(e) {}
+      const { error } = await supabase.from('settings').upsert({ key: 'store_settings', data: updated });
+      if (error) throw new Error(error.message);
     }
     if (isMongoConnected) {
       await MongoSetting.findOneAndUpdate(
@@ -771,7 +784,7 @@ app.put('/api/settings', rateLimitWrites, async (req, res) => {
     }
     writeData(SETTINGS_FILE, updated);
     res.json({ success: true, message: 'Store settings updated successfully', data: updated });
-  } catch(err) {
+  } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 });
@@ -783,7 +796,16 @@ app.get('/api/stats', async (req, res) => {
   try {
     let orders = [];
     let products = [];
-    if (isMongoConnected) {
+    if (isSupabaseActive) {
+      const [ordRes, prodRes] = await Promise.all([
+        supabase.from('orders').select('grandTotal,status'),
+        supabase.from('products').select('id')
+      ]);
+      if (ordRes.error) throw new Error(ordRes.error.message);
+      if (prodRes.error) throw new Error(prodRes.error.message);
+      orders = ordRes.data || [];
+      products = prodRes.data || [];
+    } else if (isMongoConnected) {
       orders = await MongoOrder.find().lean();
       products = await MongoProduct.find().lean();
     } else {
@@ -806,21 +828,59 @@ app.get('/api/stats', async (req, res) => {
         activeProducts: products.length,
         pendingPayments,
         dispatchedOrders,
-        database: isMongoConnected ? 'MongoDB Atlas' : 'Local Storage'
+        database: isSupabaseActive ? 'Supabase PostgreSQL' : (isMongoConnected ? 'MongoDB Atlas' : (PERSISTENT_MOUNT ? 'Render Persistent Disk' : 'Local Storage'))
       }
     });
-  } catch(err) {
+  } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 });
 
 // ==========================================
-// 5. FILE UPLOAD ENDPOINTS (Images & Video)
+// 5. FILE UPLOAD ENDPOINTS (Supabase Storage / Persistent Data URI)
 // ==========================================
+
+async function persistUploadedFile(file) {
+  const isVideo = file.mimetype.startsWith('video/') || /\.(mp4|webm|mov|mkv)$/i.test(file.originalname || file.filename || '');
+
+  if (isSupabaseActive) {
+    const ext = path.extname(file.originalname || '').toLowerCase() || (isVideo ? '.mp4' : '.webp');
+    const remotePath = `catalog/media-${Date.now()}-${Math.round(Math.random() * 1e9)}${ext}`;
+    const fileBody = file.buffer || fs.readFileSync(file.path);
+
+    for (const bucket of ['product-media', 'media', 'products', 'uploads']) {
+      const { error } = await supabase.storage.from(bucket).upload(remotePath, fileBody, {
+        contentType: file.mimetype || 'application/octet-stream',
+        upsert: true
+      });
+      if (!error) {
+        const { data: pub } = supabase.storage.from(bucket).getPublicUrl(remotePath);
+        return { url: pub.publicUrl, filename: file.originalname || remotePath, isVideo, type: isVideo ? 'video' : 'image' };
+      }
+    }
+  }
+
+  if (PERSISTENT_MOUNT && file.filename) {
+    return { url: '/uploads/' + file.filename, filename: file.filename, isVideo, type: isVideo ? 'video' : 'image' };
+  }
+
+  // Fallback for images when no Supabase Storage bucket or Persistent Disk is active: permanent base64 Data URI
+  if (!isVideo && file.buffer && file.buffer.length <= 2 * 1024 * 1024) {
+    const mime = file.mimetype || 'image/jpeg';
+    return {
+      url: `data:${mime};base64,${file.buffer.toString('base64')}`,
+      filename: file.originalname || 'image',
+      isVideo: false,
+      type: 'image'
+    };
+  }
+
+  throw new Error('Supabase Storage bucket "product-media" is not configured yet for large files/videos.');
+}
 
 // Single Media Upload (Image or Video)
 app.post('/api/upload', (req, res) => {
-  upload.any()(req, res, function (err) {
+  upload.any()(req, res, async function (err) {
     if (err instanceof multer.MulterError) {
       return res.status(400).json({ success: false, message: 'Upload limit exceeded: ' + err.message });
     } else if (err) {
@@ -830,15 +890,18 @@ app.post('/api/upload', (req, res) => {
     if (!file) {
       return res.status(400).json({ success: false, message: 'No file uploaded or invalid format' });
     }
-    const fileUrl = '/uploads/' + file.filename;
-    const isVideo = file.mimetype.startsWith('video/') || /\.(mp4|webm|mov|mkv)$/i.test(file.filename);
-    res.json({ success: true, url: fileUrl, filename: file.filename, isVideo, type: isVideo ? 'video' : 'image' });
+    try {
+      const result = await persistUploadedFile(file);
+      res.json({ success: true, ...result });
+    } catch (uploadErr) {
+      res.status(400).json({ success: false, message: uploadErr.message });
+    }
   });
 });
 
 // Multiple Media Upload (Batch of Images & Video)
 app.post('/api/upload-multiple', (req, res) => {
-  upload.array('files', 12)(req, res, function (err) {
+  upload.array('files', 12)(req, res, async function (err) {
     if (err instanceof multer.MulterError) {
       return res.status(400).json({ success: false, message: 'Upload error: ' + err.message });
     } else if (err) {
@@ -847,23 +910,22 @@ app.post('/api/upload-multiple', (req, res) => {
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ success: false, message: 'No files uploaded' });
     }
-    const files = req.files.map(f => {
-      const isVideo = f.mimetype.startsWith('video/') || /\.(mp4|webm|mov|mkv)$/i.test(f.filename);
-      return {
-        url: '/uploads/' + f.filename,
-        filename: f.filename,
-        isVideo,
-        type: isVideo ? 'video' : 'image'
-      };
-    });
-    res.json({ success: true, count: files.length, files });
+    try {
+      const files = await Promise.all(req.files.map(persistUploadedFile));
+      res.json({ success: true, count: files.length, files });
+    } catch (uploadErr) {
+      res.status(400).json({ success: false, message: uploadErr.message });
+    }
   });
 });
 
-// Catch-all fallback: Serve Admin Dashboard for non-API web routes
+// Catch-all fallback: Return 404 for missing API/media files, serve Admin Dashboard for web routes
 app.use((req, res) => {
   if (req.path.startsWith('/api')) {
     return res.status(404).json({ success: false, message: 'API route not found' });
+  }
+  if (req.path.startsWith('/uploads/') || req.path.startsWith('/assets/')) {
+    return res.status(404).send('Media file not found');
   }
   res.sendFile(path.join(__dirname, 'admin.html'));
 });

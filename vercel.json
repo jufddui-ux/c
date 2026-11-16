@@ -3,7 +3,7 @@
   "cleanUrls": true,
   "routes": [
     {
-      "src": "/admin",
+      "src": "/admin(\\.html)?/?",
       "dest": "/frontend/admin.html"
     },
     {

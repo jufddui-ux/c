@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Portal | Lakhani Collection</title>
-  
+  <title>Admin Portal | Lakhani Collection (Supabase Cloud)</title>
+
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
+
   <!-- Tailwind CSS via CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -33,7 +33,7 @@
       }
     }
   </script>
-  
+
   <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
@@ -56,42 +56,42 @@
       </div>
       <div>
         <h1 class="font-serif font-bold text-base sm:text-lg text-white">Lakhani Collection</h1>
-        <p class="text-[10px] text-amber-300 font-mono -mt-1">Merchant Admin Portal • Fahad</p>
+        <p class="text-[10px] text-emerald-400 font-mono -mt-1">Supabase Cloud Admin • Permanent DB</p>
       </div>
     </div>
 
-    <div class="flex items-center gap-3">
-      <a href="/" target="_blank" class="px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-700 hover:border-brand-gold text-xs font-semibold text-gray-300 flex items-center gap-1.5 transition">
+    <div class="flex items-center gap-2.5">
+      <button type="button" onclick="openStorefront()" class="px-3 py-1.5 rounded-lg bg-gray-900 border border-gray-700 hover:border-brand-gold text-xs font-semibold text-gray-300 flex items-center gap-1.5 transition">
         <i class="fa-solid fa-store text-brand-gold"></i> <span class="hidden sm:inline">View Storefront</span>
-      </a>
-      <button onclick="refreshData()" class="p-2 rounded-lg bg-gray-900 border border-gray-700 text-gray-300 hover:text-white text-xs">
-        <i class="fa-solid fa-rotate"></i>
+      </button>
+      <button type="button" onclick="refreshData()" class="p-2 rounded-lg bg-gray-900 border border-gray-700 text-gray-300 hover:text-white text-xs" title="Sync from Supabase">
+        <i id="refreshIcon" class="fa-solid fa-rotate"></i>
       </button>
     </div>
   </header>
 
   <!-- Main Container -->
   <div class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
-    
+
     <!-- Tab Navigation -->
     <div class="flex items-center gap-2 border-b border-gray-800 pb-3 overflow-x-auto custom-scroll">
       <button onclick="switchTab('products', this)" class="admin-tab active px-4 py-2 rounded-xl text-xs font-bold bg-brand-gold text-black transition">
-        <i class="fa-solid fa-shirt mr-1.5"></i> All Products & Price Manager (<span id="productsCountBadge">11</span>)
+        <i class="fa-solid fa-shirt mr-1.5"></i> All Products & Price Manager (<span id="productsCountBadge">0</span>)
       </button>
       <button onclick="switchTab('orders', this)" class="admin-tab px-4 py-2 rounded-xl text-xs font-bold bg-gray-900 text-gray-300 hover:text-white border border-gray-800 transition">
         <i class="fa-solid fa-bag-shopping mr-1.5"></i> Customer Bookings (<span id="ordersCountBadge">0</span>)
       </button>
       <button onclick="switchTab('settings', this)" class="admin-tab px-4 py-2 rounded-xl text-xs font-bold bg-gray-900 text-gray-300 hover:text-white border border-gray-800 transition">
-        <i class="fa-solid fa-building-columns mr-1.5"></i> Payment Accounts & Settings
+        <i class="fa-solid fa-building-columns mr-1.5"></i> Payment Accounts & Supabase Config
       </button>
     </div>
 
-    <!-- 1. PRODUCTS MANAGEMENT TAB (Default Active - All Products List) -->
+    <!-- 1. PRODUCTS MANAGEMENT TAB -->
     <div id="tabProducts" class="space-y-6">
-      
+
       <!-- Summary Metric Cards -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        
+
         <div class="p-4 sm:p-5 rounded-2xl bg-[#101522] border border-gray-800 space-y-1">
           <div class="flex items-center justify-between text-xs text-gray-400">
             <span>Total Sales Revenue</span>
@@ -107,7 +107,7 @@
             <i class="fa-solid fa-cart-shopping text-blue-400 text-base"></i>
           </div>
           <p id="statOrders" class="text-lg sm:text-2xl font-mono font-black text-white">0</p>
-          <span class="text-[10px] text-gray-500">Live order bookings</span>
+          <span class="text-[10px] text-gray-500">Live Supabase orders</span>
         </div>
 
         <div class="p-4 sm:p-5 rounded-2xl bg-[#101522] border border-gray-800 space-y-1">
@@ -124,37 +124,38 @@
             <span>Active Products</span>
             <i class="fa-solid fa-boxes-stacked text-purple-400 text-base"></i>
           </div>
-          <p id="statProducts" class="text-lg sm:text-2xl font-mono font-black text-purple-300">11</p>
-          <span class="text-[10px] text-gray-500">Live in catalog</span>
+          <p id="statProducts" class="text-lg sm:text-2xl font-mono font-black text-purple-300">0</p>
+          <span class="text-[10px] text-gray-500">Saved permanently</span>
         </div>
 
       </div>
 
-      <!-- Live Backend & Vercel Storefront 1-Click Auto-Link Bar -->
-      <div class="bg-gradient-to-r from-blue-950/70 via-[#101522] to-amber-950/40 border border-blue-800/60 rounded-2xl p-4 sm:p-5 shadow space-y-3">
+      <!-- Direct Supabase Cloud Persistence Bar -->
+      <div class="bg-gradient-to-r from-emerald-950/60 via-[#101522] to-amber-950/30 border border-emerald-800/50 rounded-2xl p-4 sm:p-5 shadow space-y-3">
         <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div class="space-y-1">
-            <div class="flex items-center gap-2">
-              <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <div class="flex flex-wrap items-center gap-2">
+              <span id="supabaseStatusDot" class="inline-block w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
               <h3 class="text-xs sm:text-sm font-bold text-white uppercase tracking-wider flex items-center gap-1.5">
-                <i class="fa-solid fa-server text-blue-400"></i> Backend Host & Vercel Live Link
+                <i class="fa-solid fa-database text-emerald-400"></i> Direct Supabase Cloud Persistence
               </h3>
-              <span id="backendHostBadge" class="text-[10px] font-mono bg-emerald-950 text-emerald-300 border border-emerald-700/60 px-2 py-0.5 rounded-full">Live Active</span>
+              <span id="supabaseStatusBadge" class="text-[10px] font-mono bg-amber-950 text-amber-300 border border-amber-700/60 px-2 py-0.5 rounded-full">Connecting...</span>
+              <span id="mediaStorageBadge" class="text-[10px] font-mono bg-gray-900 text-gray-300 border border-gray-700 px-2 py-0.5 rounded-full">Checking media...</span>
             </div>
             <p class="text-[11px] text-gray-400">
-              Current Backend API: <code id="currentBackendDisplay" class="font-mono text-amber-300 bg-black/50 px-1.5 py-0.5 rounded border border-gray-800">detecting...</code>
+              Products, prices & photos save directly to Supabase (<code id="currentSupabaseDisplay" class="font-mono text-emerald-300 bg-black/50 px-1.5 py-0.5 rounded border border-gray-800">...</code>) — zero temporary Render storage loss.
             </p>
           </div>
-          
+
           <div class="flex flex-wrap items-center gap-2">
-            <button onclick="copyBackendOrigin()" class="px-3 py-2 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-semibold flex items-center gap-1.5 border border-gray-700 shadow transition tap-active">
-              <i class="fa-regular fa-copy text-amber-400"></i> Copy Backend URL
+            <button type="button" onclick="openStorageSqlModal()" class="px-3 py-2 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs font-semibold flex items-center gap-1.5 border border-gray-700 shadow transition">
+              <i class="fa-solid fa-bucket text-emerald-400"></i> Storage Setup SQL
             </button>
-            <button onclick="linkToVercelStorefront()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black text-xs font-extrabold uppercase flex items-center gap-1.5 shadow transition tap-active">
-              <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Storefront (Auto-Linked)
+            <button type="button" onclick="openStorefront()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black text-xs font-extrabold uppercase flex items-center gap-1.5 shadow transition">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Storefront
             </button>
-            <button onclick="downloadProductsDataJs()" class="px-3 py-2 rounded-xl bg-purple-900/60 hover:bg-purple-800/80 text-purple-200 text-xs font-semibold flex items-center gap-1.5 border border-purple-700/50 shadow transition tap-active" title="Download updated products-data.js for Git repo">
-              <i class="fa-solid fa-download"></i> Sync Data JS
+            <button type="button" onclick="downloadProductsDataJs()" class="px-3 py-2 rounded-xl bg-purple-900/60 hover:bg-purple-800/80 text-purple-200 text-xs font-semibold flex items-center gap-1.5 border border-purple-700/50 shadow transition" title="Optional backup download">
+              <i class="fa-solid fa-download"></i> Backup JS
             </button>
           </div>
         </div>
@@ -162,14 +163,14 @@
 
       <!-- Product List Header & Controls -->
       <div class="bg-[#101522] border border-gray-800 rounded-2xl p-4 sm:p-5 space-y-4 shadow">
-        
+
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h2 class="text-base sm:text-lg font-serif font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-boxes-packing text-amber-400"></i>
               Product Catalog & Live Inventory
             </h2>
-            <p class="text-xs text-gray-400">Yahan se aap kisi bhi product ki price foran tabdeel kar sakte hain, naya item add kar sakte hain, ya delete kar sakte hain.</p>
+            <p class="text-xs text-gray-400">Yahan se add, edit ya delete kiya gaya har product aur photo direct Supabase cloud mein permanently save hota hai.</p>
           </div>
           <button onclick="openAddProductModal()" class="px-4 py-2.5 rounded-xl bg-brand-gold text-black font-extrabold text-xs uppercase flex items-center gap-1.5 shadow shrink-0 hover:bg-amber-400 transition">
             <i class="fa-solid fa-plus"></i> Add New Product
@@ -179,11 +180,11 @@
         <!-- Search & Filter Controls -->
         <div class="flex flex-col sm:flex-row gap-2.5 pt-2 border-t border-gray-800/80">
           <div class="relative flex-1">
-            <input type="text" id="adminProdSearch" oninput="filterAdminProducts()" placeholder="Search product title, fabric, or color..." 
+            <input type="text" id="adminProdSearch" oninput="filterAdminProducts()" placeholder="Search product title, fabric, or color..."
               class="w-full bg-[#080b11] border border-gray-800 focus:border-brand-gold rounded-xl py-2 pl-9 pr-4 text-xs text-gray-200 placeholder-gray-500 focus:outline-none">
             <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-500 text-xs"></i>
           </div>
-          <select id="adminProdCategoryFilter" onchange="filterAdminProducts()" 
+          <select id="adminProdCategoryFilter" onchange="filterAdminProducts()"
             class="bg-[#080b11] border border-gray-800 text-xs text-gray-200 rounded-xl px-3 py-2 focus:border-brand-gold focus:outline-none">
             <option value="all">All Categories</option>
             <option value="men">Men's Tracksuits</option>
@@ -211,7 +212,7 @@
               </tr>
             </thead>
             <tbody id="productsTableBody" class="divide-y divide-gray-800/80 text-gray-200">
-              <!-- Injected via JS -->
+              <tr><td colspan="7" class="p-6 text-center text-gray-400">Loading products from Supabase...</td></tr>
             </tbody>
           </table>
         </div>
@@ -255,36 +256,62 @@
               </tr>
             </thead>
             <tbody id="ordersTableBody" class="divide-y divide-gray-800/80 text-gray-200">
-              <!-- Injected via JS -->
+              <tr><td colspan="8" class="p-6 text-center text-gray-500">Loading orders from Supabase...</td></tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- 4. SETTINGS TAB -->
+    <!-- 3. SETTINGS TAB -->
     <div id="tabSettings" class="hidden space-y-6">
       <div>
-        <h2 class="text-lg font-serif font-bold text-white">Store Settings & Bank Accounts</h2>
+        <h2 class="text-lg font-serif font-bold text-white">Store Settings, Payment Accounts & Supabase Config</h2>
         <p class="text-xs text-gray-400">Aapke bank account numbers ya WhatsApp number tabdeel karne par website par foran update ho jayenge.</p>
       </div>
 
-      <!-- Render Backend Server Connection Card -->
-      <div class="bg-[#101522] border border-blue-900/60 rounded-2xl p-5 space-y-3 max-w-2xl shadow">
+      <!-- Supabase Cloud Connection Card -->
+      <div class="bg-[#101522] border border-emerald-900/60 rounded-2xl p-5 space-y-3 max-w-2xl shadow">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-            <h3 class="text-xs font-bold uppercase tracking-wider text-blue-300">Backend Server (Render Deployment)</h3>
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-emerald-300">Supabase Project Connection</h3>
           </div>
-          <span id="backendStatusBadge" class="text-[10px] font-mono bg-blue-950 text-blue-300 px-2 py-0.5 rounded border border-blue-800">Checking...</span>
+          <span id="settingsSupabaseBadge" class="text-[10px] font-mono bg-emerald-950 text-emerald-300 px-2 py-0.5 rounded border border-emerald-800">Default Project</span>
         </div>
-        <p class="text-[11px] text-gray-400">Jab aap Render par backend deploy kar dein, toh uska live URL yahan paste karein taake Vercel frontend live Render backend se connect ho sake:</p>
-        <div class="flex flex-col sm:flex-row gap-2">
-          <input type="text" id="renderBackendInput" placeholder="https://your-backend.onrender.com" 
-            class="flex-1 bg-[#080b11] border border-gray-700 rounded-lg p-2.5 text-xs text-white font-mono focus:border-brand-gold focus:outline-none">
-          <button type="button" onclick="saveBackendConnectionUrl()" class="px-4 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs uppercase shadow transition shrink-0">
-            <i class="fa-solid fa-link mr-1"></i> Save URL
-          </button>
+        <p class="text-[11px] text-gray-400">Default Supabase database already configured hai. Agar aap apna Supabase project ya key change karna chahein to yahan update kar sakte hain:</p>
+
+        <div class="space-y-2.5">
+          <div>
+            <label class="block text-[11px] font-semibold text-gray-400 mb-1">Supabase Project URL</label>
+            <input type="text" id="supabaseUrlInput" placeholder="https://your-project.supabase.co"
+              class="w-full bg-[#080b11] border border-gray-700 rounded-lg p-2.5 text-xs text-white font-mono focus:border-brand-gold focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-[11px] font-semibold text-gray-400 mb-1">Supabase Anon / Public Key</label>
+            <input type="text" id="supabaseKeyInput" placeholder="eyJhbGci..."
+              class="w-full bg-[#080b11] border border-gray-700 rounded-lg p-2.5 text-xs text-white font-mono focus:border-brand-gold focus:outline-none">
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+            <div>
+              <label class="block text-[11px] font-semibold text-gray-400 mb-1">Storage Bucket Name</label>
+              <input type="text" id="supabaseBucketInput" placeholder="product-media"
+                class="w-full bg-[#080b11] border border-gray-700 rounded-lg p-2.5 text-xs text-white font-mono focus:border-brand-gold focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-[11px] font-semibold text-gray-400 mb-1">Storefront URL (Optional)</label>
+              <input type="text" id="vercelUrlInput" placeholder="https://your-shop.vercel.app"
+                class="w-full bg-[#080b11] border border-gray-700 rounded-lg p-2.5 text-xs text-white font-mono focus:border-brand-gold focus:outline-none">
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-2 pt-1">
+            <button type="button" onclick="saveSupabaseConnection()" class="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs uppercase shadow transition">
+              <i class="fa-solid fa-plug-circle-check mr-1"></i> Save & Reconnect
+            </button>
+            <button type="button" onclick="resetSupabaseConnection()" class="px-3 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-xs border border-gray-700 transition">
+              Reset to Default
+            </button>
+          </div>
         </div>
       </div>
 
@@ -378,7 +405,7 @@
 
         <div>
           <label class="block text-xs font-semibold text-gray-300 mb-1">Product Title *</label>
-          <input type="text" id="prodTitle" required placeholder="e.g. Luxury Linen Shalwar Kameez" 
+          <input type="text" id="prodTitle" required placeholder="e.g. Luxury Linen Shalwar Kameez"
             class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white focus:border-brand-gold focus:outline-none">
         </div>
 
@@ -394,7 +421,7 @@
           </div>
           <div>
             <label class="block text-xs font-semibold text-gray-300 mb-1">Badge</label>
-            <input type="text" id="prodBadge" placeholder="e.g. Bestseller, New Arrival" 
+            <input type="text" id="prodBadge" placeholder="e.g. Bestseller, New Arrival"
               class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white">
           </div>
         </div>
@@ -402,12 +429,12 @@
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-semibold text-gray-300 mb-1">Sale Price (PKR) *</label>
-            <input type="number" id="prodPrice" required placeholder="2500" 
+            <input type="number" id="prodPrice" required placeholder="2500"
               class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white font-mono">
           </div>
           <div>
             <label class="block text-xs font-semibold text-gray-300 mb-1">Original Price (PKR)</label>
-            <input type="number" id="prodOriginalPrice" placeholder="3200" 
+            <input type="number" id="prodOriginalPrice" placeholder="3200"
               class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white font-mono">
           </div>
         </div>
@@ -415,35 +442,35 @@
         <div class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs font-semibold text-gray-300 mb-1">Stock Quantity</label>
-            <input type="number" id="prodStock" placeholder="50" 
+            <input type="number" id="prodStock" placeholder="25" min="0"
               class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white font-mono">
           </div>
           <div>
             <label class="block text-xs font-semibold text-gray-300 mb-1">Fabric Quality</label>
-            <input type="text" id="prodFabric" placeholder="e.g. Pure Cotton Lawn 90/70" 
+            <input type="text" id="prodFabric" placeholder="e.g. Pure Cotton Lawn 90/70"
               class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white">
           </div>
         </div>
 
         <div>
           <label class="block text-xs font-semibold text-gray-300 mb-1">Colors (Comma separated)</label>
-          <input type="text" id="prodColors" placeholder="Black, Navy Blue, Maroon, Beige" 
+          <input type="text" id="prodColors" placeholder="Black, Navy Blue, Maroon, Beige"
             class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white">
         </div>
 
         <div>
           <label class="block text-xs font-semibold text-gray-300 mb-1">Product Description</label>
-          <textarea id="prodDesc" rows="2" placeholder="Detailed product specifications..." 
+          <textarea id="prodDesc" rows="2" placeholder="Detailed product specifications..."
             class="w-full bg-[#080b11] border border-gray-800 rounded-lg p-2.5 text-xs text-white"></textarea>
         </div>
 
-        <!-- Product Media Section (Primary Photo, Multi-Image Gallery & Video Clip) -->
+        <!-- Product Media Section -->
         <div class="space-y-3 pt-2 border-t border-gray-800">
           <div class="flex items-center justify-between">
             <label class="block text-xs font-bold text-amber-300 uppercase tracking-wider flex items-center gap-1.5">
-              <i class="fa-solid fa-photo-film"></i> Product Media (Photos & Video)
+              <i class="fa-solid fa-photo-film"></i> Product Media (Permanent Cloud)
             </label>
-            <span class="text-[10px] text-gray-400">Multiple Photos + Video supported</span>
+            <span class="text-[10px] text-emerald-400">Saved permanently in Supabase</span>
           </div>
 
           <!-- 1. Primary Cover Photo -->
@@ -455,22 +482,20 @@
               <span id="uploadStatusText" class="text-[10px] font-normal text-gray-500">Tap to upload</span>
             </div>
 
-            <!-- Upload Dropzone / File Picker -->
-            <div id="dropzoneContainer" onclick="document.getElementById('prodImageFile').click()" 
+            <div id="dropzoneContainer" onclick="document.getElementById('prodImageFile').click()"
               class="border-2 border-dashed border-gray-700 hover:border-brand-gold/80 rounded-xl p-3 text-center cursor-pointer bg-[#101522]/80 hover:bg-[#121724] transition group">
               <input type="file" id="prodImageFile" accept="image/*" class="hidden" onchange="handleImageFileSelected(this)">
-              
+
               <div id="uploadPrompt" class="flex flex-col items-center justify-center py-1">
                 <div class="w-10 h-10 rounded-full bg-brand-gold/10 text-brand-gold flex items-center justify-center mb-1 group-hover:scale-110 transition">
                   <i class="fa-solid fa-cloud-arrow-up text-lg"></i>
                 </div>
                 <p class="text-[11px] font-semibold text-gray-200">Tap to choose Main Product Photo from your device</p>
-                <p class="text-[9px] text-gray-500">JPG, PNG, WebP (Instant Upload)</p>
+                <p class="text-[9px] text-gray-500">JPG, PNG, WebP (Auto-optimized & permanent)</p>
               </div>
 
-              <!-- Upload Progress / Preview Card -->
               <div id="uploadPreviewCard" class="hidden flex items-center gap-3 bg-[#080b11] border border-gray-700 p-2 rounded-lg text-left">
-                <img id="imagePreviewThumb" src="" alt="Preview" class="w-12 h-14 rounded-lg object-cover bg-black border border-gray-700 shrink-0">
+                <img id="imagePreviewThumb" src="" alt="Preview" class="w-12 h-14 rounded-lg object-cover bg-black border border-gray-700 shrink-0" onerror="this.onerror=null;this.src='assets/hero_banner.webp';">
                 <div class="flex-1 min-w-0">
                   <p id="imagePreviewFilename" class="text-xs font-bold text-white truncate">product_image.jpg</p>
                   <p id="imagePreviewSubtext" class="text-[10px] text-emerald-400 font-semibold flex items-center gap-1 mt-0.5">
@@ -483,7 +508,7 @@
               </div>
             </div>
 
-            <input type="text" id="prodImage" placeholder="Or enter manual path (e.g. assets/products/... or /uploads/...)" 
+            <input type="text" id="prodImage" placeholder="Or enter direct image URL (https://... or assets/...)"
               oninput="handleManualImageUrl(this.value)"
               class="w-full bg-[#101522] border border-gray-800 rounded-lg p-2 text-[11px] text-white focus:border-brand-gold focus:outline-none">
           </div>
@@ -496,17 +521,16 @@
               </span>
               <span id="galleryCountBadge" class="text-[10px] text-gray-400 font-mono">0 added</span>
             </div>
-            
+
             <p class="text-[10px] text-gray-400">Mukhtalif angles, embroidery, dupatta ya trouser ki tasweerein ek sath select karein:</p>
 
             <input type="file" id="prodGalleryFiles" multiple accept="image/*" class="hidden" onchange="handleGalleryFilesSelected(this)">
-            
-            <button type="button" onclick="document.getElementById('prodGalleryFiles').click()" 
+
+            <button type="button" onclick="document.getElementById('prodGalleryFiles').click()"
               class="w-full py-2.5 px-3 rounded-lg border border-dashed border-blue-500/50 hover:border-blue-400 bg-blue-950/20 hover:bg-blue-950/40 text-blue-300 text-xs font-bold flex items-center justify-center gap-2 transition">
               <i class="fa-solid fa-plus-circle text-sm"></i> + Add Multiple Photos (Select up to 8 at once)
             </button>
 
-            <!-- Gallery Thumbnails Grid -->
             <div id="galleryPreviewGrid" class="grid grid-cols-4 gap-2 pt-1 hidden"></div>
           </div>
 
@@ -516,24 +540,23 @@
               <span class="text-[11px] font-bold text-gray-300">
                 <i class="fa-solid fa-video text-amber-400 mr-1"></i> Product Video Clip (Optional)
               </span>
-              <span id="videoStatusBadge" class="text-[10px] text-gray-500 font-mono">MP4, WebM (up to 50MB)</span>
+              <span id="videoStatusBadge" class="text-[10px] text-gray-500 font-mono">Requires Bucket or URL</span>
             </div>
 
-            <p class="text-[10px] text-gray-400">Customer ko kapray ka fall, shine aur texture dikhane ke liye video lagayein:</p>
+            <p class="text-[10px] text-gray-400">Video file upload ke liye Supabase Storage bucket setup karein ya direct MP4 link paste karein:</p>
 
             <input type="file" id="prodVideoFile" accept="video/mp4,video/webm,video/quicktime" class="hidden" onchange="handleVideoFileSelected(this)">
 
             <div class="flex gap-2">
-              <button type="button" onclick="document.getElementById('prodVideoFile').click()" 
+              <button type="button" onclick="document.getElementById('prodVideoFile').click()"
                 class="py-2 px-3 rounded-lg border border-dashed border-amber-500/50 hover:border-amber-400 bg-amber-950/20 hover:bg-amber-950/40 text-amber-300 text-xs font-bold flex items-center justify-center gap-1.5 transition shrink-0">
-                <i class="fa-solid fa-file-video"></i> Upload Video File
+                <i class="fa-solid fa-file-video"></i> Upload Video
               </button>
-              <input type="text" id="prodVideoUrl" placeholder="Or paste direct video URL (.mp4 / video link)" 
+              <input type="text" id="prodVideoUrl" placeholder="Or paste direct video URL (.mp4 / video link)"
                 oninput="handleManualVideoUrl(this.value)"
                 class="flex-1 bg-[#101522] border border-gray-800 rounded-lg p-2 text-[11px] text-white focus:border-brand-gold focus:outline-none">
             </div>
 
-            <!-- Video Player Preview -->
             <div id="videoPreviewContainer" class="hidden relative rounded-xl overflow-hidden border border-gray-700 bg-black mt-2">
               <video id="videoPreviewPlayer" controls class="w-full max-h-44 object-contain bg-black"></video>
               <button type="button" onclick="clearUploadedVideo()" class="absolute top-2 right-2 px-2.5 py-1 rounded bg-red-900/90 text-white text-[10px] font-bold shadow hover:bg-red-800 transition">
@@ -543,10 +566,50 @@
           </div>
         </div>
 
-        <button type="submit" class="w-full py-3 rounded-xl bg-brand-gold text-black font-extrabold text-xs uppercase shadow transition mt-2">
+        <button type="submit" id="saveProductBtn" class="w-full py-3 rounded-xl bg-brand-gold hover:bg-amber-400 text-black font-extrabold text-xs uppercase shadow transition mt-2 disabled:opacity-60 disabled:cursor-not-allowed">
           Save Product
         </button>
       </form>
+    </div>
+  </div>
+
+  <!-- Supabase Storage SQL Helper Modal -->
+  <div id="storageSqlModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md hidden">
+    <div class="bg-[#101522] border border-gray-800 rounded-3xl max-w-xl w-full p-6 shadow-2xl relative space-y-4">
+      <button onclick="closeStorageSqlModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div class="space-y-1">
+        <h3 class="text-base font-serif font-bold text-white flex items-center gap-2">
+          <i class="fa-solid fa-bucket text-emerald-400"></i> Optional: Enable Supabase Storage Bucket
+        </h3>
+        <p class="text-xs text-gray-400">
+          Photos ab bina bucket ke bhi permanent save hoti hain (Embedded WebP). Agar aap HD videos aur raw photos Supabase Storage CDN par upload karna chahein to Supabase Dashboard → SQL Editor mein yeh SQL ek martaba run karein:
+        </p>
+      </div>
+      <pre id="storageSqlCode" class="bg-[#080b11] border border-gray-800 rounded-xl p-3 text-[11px] font-mono text-emerald-300 overflow-x-auto select-all">insert into storage.buckets (id, name, public)
+values ('product-media', 'product-media', true)
+on conflict (id) do update set public = true;
+
+create policy "Public read product-media"
+on storage.objects for select to public
+using (bucket_id = 'product-media');
+
+create policy "Public upload product-media"
+on storage.objects for insert to public
+with check (bucket_id = 'product-media');
+
+create policy "Public update product-media"
+on storage.objects for update to public
+using (bucket_id = 'product-media');</pre>
+      <div class="flex justify-end gap-2">
+        <button type="button" onclick="copyStorageSql()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold">
+          <i class="fa-regular fa-copy mr-1"></i> Copy SQL
+        </button>
+        <button type="button" onclick="closeStorageSqlModal()" class="px-4 py-2 rounded-xl bg-gray-800 text-gray-200 text-xs font-semibold">
+          Close
+        </button>
+      </div>
     </div>
   </div>
 
@@ -556,53 +619,156 @@
     <span id="toastMsg">Operation successful</span>
   </div>
 
-  <!-- Scripts -->
   <script>
-    let allOrders = [];
-    let allProducts = window.INITIAL_PRODUCTS || [];
+    const CATEGORY_LABELS = {
+      men: "Men's Wear",
+      women: "Women's Luxury",
+      bags: "Handbags",
+      accessories: "Jewelry & Footwear"
+    };
 
-    document.addEventListener("DOMContentLoaded", () => {
-      initBackendInput();
-      initBackendLinkBar();
-      if (allProducts && allProducts.length > 0) {
-        document.getElementById('productsCountBadge').innerText = allProducts.length;
-        document.getElementById('statProducts').innerText = allProducts.length;
-        renderProductsTable(allProducts);
+    const CATEGORY_BADGE_COLORS = {
+      men: 'bg-blue-900/90 text-blue-300 border-blue-700',
+      women: 'bg-amber-900/90 text-amber-300 border-amber-700',
+      bags: 'bg-amber-900/90 text-amber-300 border-amber-700',
+      accessories: 'bg-rose-900/90 text-rose-300 border-rose-700'
+    };
+
+    let allOrders = [];
+    let allProducts = [];
+    let currentSettings = {};
+    let currentGallery = [];
+    let currentVideo = '';
+    let pendingUploads = 0;
+
+    function escHtml(str) {
+      return String(str ?? '').replace(/[&<>"']/g, c => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[c]));
+    }
+
+    function setPendingUpload(delta) {
+      pendingUploads = Math.max(0, pendingUploads + delta);
+      const btn = document.getElementById('saveProductBtn');
+      if (!btn) return;
+      if (pendingUploads > 0) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> Uploading media...';
+      } else {
+        btn.disabled = false;
+        btn.innerText = 'Save Product';
       }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      initSupabaseInputs();
       refreshData();
     });
 
     async function refreshData() {
-      initBackendInput();
-      initBackendLinkBar();
-      await Promise.all([fetchStats(), fetchOrders(), fetchProducts(), fetchSettings()]);
+      const icon = document.getElementById('refreshIcon');
+      if (icon) icon.classList.add('fa-spin');
+      initSupabaseInputs();
+      await Promise.all([checkSupabaseStatus(), fetchProducts(), fetchOrders(), fetchSettings()]);
+      computeAndRenderStats();
+      if (icon) icon.classList.remove('fa-spin');
     }
 
-    function initBackendLinkBar() {
-      const origin = window.location.origin;
-      const display = document.getElementById('currentBackendDisplay');
-      if (display) display.innerText = origin;
-      const hostBadge = document.getElementById('backendHostBadge');
-      if (hostBadge) {
-        hostBadge.innerText = origin.includes('onrender.com') ? 'Render Live' : (origin.includes('localhost') ? 'Localhost' : 'Active');
+    function initSupabaseInputs() {
+      const cfg = getSupabaseConfig();
+      const display = document.getElementById('currentSupabaseDisplay');
+      if (display) display.innerText = cfg.url.replace(/^https?:\/\//, '');
+
+      const urlEl = document.getElementById('supabaseUrlInput');
+      const keyEl = document.getElementById('supabaseKeyInput');
+      const bucketEl = document.getElementById('supabaseBucketInput');
+      const vercelEl = document.getElementById('vercelUrlInput');
+      const badgeEl = document.getElementById('settingsSupabaseBadge');
+
+      if (urlEl) urlEl.value = cfg.url;
+      if (keyEl) keyEl.value = cfg.key;
+      if (bucketEl) bucketEl.value = cfg.bucket;
+      if (vercelEl) vercelEl.value = localStorage.getItem('LAKHANI_VERCEL_URL') || '';
+      if (badgeEl) badgeEl.innerText = cfg.isCustom ? 'Custom Project' : 'Default Active';
+    }
+
+    async function checkSupabaseStatus() {
+      const dot = document.getElementById('supabaseStatusDot');
+      const badge = document.getElementById('supabaseStatusBadge');
+      const mediaBadge = document.getElementById('mediaStorageBadge');
+
+      try {
+        const health = await sbApi.checkHealth();
+        if (dot) dot.className = 'inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse';
+        if (badge) {
+          badge.className = 'text-[10px] font-mono bg-emerald-950 text-emerald-300 border border-emerald-700/60 px-2 py-0.5 rounded-full';
+          badge.innerText = 'Supabase Connected';
+        }
+        if (mediaBadge) {
+          mediaBadge.className = health.storageBucket
+            ? 'text-[10px] font-mono bg-blue-950 text-blue-300 border border-blue-700/60 px-2 py-0.5 rounded-full'
+            : 'text-[10px] font-mono bg-purple-950 text-purple-300 border border-purple-700/60 px-2 py-0.5 rounded-full';
+          mediaBadge.innerText = health.storageBucket
+            ? `Storage CDN (${health.storageBucket})`
+            : 'Permanent WebP Mode';
+        }
+      } catch (err) {
+        if (dot) dot.className = 'inline-block w-2.5 h-2.5 rounded-full bg-red-500';
+        if (badge) {
+          badge.className = 'text-[10px] font-mono bg-red-950 text-red-300 border border-red-700/60 px-2 py-0.5 rounded-full';
+          badge.innerText = 'Connection Error';
+        }
+        if (mediaBadge) mediaBadge.innerText = err.message;
       }
     }
 
-    function copyBackendOrigin() {
-      const origin = window.location.origin;
-      navigator.clipboard.writeText(origin).then(() => {
-        showToast('Backend URL copied: ' + origin);
-      });
+    function saveSupabaseConnection() {
+      const url = document.getElementById('supabaseUrlInput').value.trim();
+      const key = document.getElementById('supabaseKeyInput').value.trim();
+      const bucket = document.getElementById('supabaseBucketInput').value.trim();
+      const vercelUrl = document.getElementById('vercelUrlInput').value.trim().replace(/\/+$/, '');
+      if (vercelUrl) localStorage.setItem('LAKHANI_VERCEL_URL', vercelUrl);
+      else localStorage.removeItem('LAKHANI_VERCEL_URL');
+
+      if (!url || !key) {
+        showToast('Please enter both Supabase URL and Anon Key');
+        return;
+      }
+      setSupabaseConfig(url, key, bucket);
     }
 
-    function linkToVercelStorefront() {
-      const savedVercel = localStorage.getItem('LAKHANI_VERCEL_URL') || '';
-      const vercelUrl = prompt('Enter your Vercel Storefront URL (e.g. https://your-project.vercel.app):', savedVercel);
-      if (!vercelUrl) return;
-      const cleanVercel = vercelUrl.trim().replace(/\/+$/, '');
-      localStorage.setItem('LAKHANI_VERCEL_URL', cleanVercel);
-      const target = `${cleanVercel}/?backend=${encodeURIComponent(window.location.origin)}`;
-      window.open(target, '_blank');
+    function resetSupabaseConnection() {
+      if (!confirm('Reset Supabase connection to default project?')) return;
+      setSupabaseConfig('', '', '');
+    }
+
+    function openStorefront() {
+      const host = window.location.hostname || '';
+      if (host.includes('onrender.com') || host.includes('render.com')) {
+        const saved = localStorage.getItem('LAKHANI_VERCEL_URL') || '';
+        const target = saved || prompt('Enter your Vercel Storefront URL (e.g. https://your-shop.vercel.app):', '');
+        if (!target) return;
+        const clean = target.trim().replace(/\/+$/, '');
+        localStorage.setItem('LAKHANI_VERCEL_URL', clean);
+        window.open(clean, '_blank');
+      } else {
+        window.open('index.html', '_blank');
+      }
+    }
+
+    function openStorageSqlModal() {
+      document.getElementById('storageSqlModal').classList.remove('hidden');
+    }
+
+    function closeStorageSqlModal() {
+      document.getElementById('storageSqlModal').classList.add('hidden');
+    }
+
+    function copyStorageSql() {
+      const sql = document.getElementById('storageSqlCode').innerText;
+      navigator.clipboard.writeText(sql).then(() => {
+        showToast('Supabase Storage SQL copied!');
+      });
     }
 
     function downloadProductsDataJs() {
@@ -614,55 +780,47 @@
       a.download = 'products-data.js';
       a.click();
       URL.revokeObjectURL(url);
-      showToast('products-data.js downloaded with ' + allProducts.length + ' products!');
+      showToast('Backup products-data.js downloaded (' + allProducts.length + ' products)');
     }
 
-    function initBackendInput() {
-      const input = document.getElementById('renderBackendInput');
-      if (input) {
-        input.value = window.API_BASE || '';
-      }
-      const badge = document.getElementById('backendStatusBadge');
-      if (badge) {
-        badge.innerText = window.API_BASE ? (window.API_BASE.includes('localhost') ? 'Local Server' : 'Render Live') : 'Default';
-      }
+    function computeAndRenderStats() {
+      const totalRevenue = allOrders
+        .filter(o => o.status !== 'Cancelled')
+        .reduce((sum, o) => sum + (Number(o.grandTotal) || 0), 0);
+      const pendingPayments = allOrders.filter(o => o.status === 'Pending Verification').length;
+
+      document.getElementById('statRevenue').innerText = `Rs. ${totalRevenue.toLocaleString()}`;
+      document.getElementById('statOrders').innerText = allOrders.length;
+      document.getElementById('statPending').innerText = pendingPayments;
+      document.getElementById('statProducts').innerText = allProducts.length;
     }
 
-    function saveBackendConnectionUrl() {
-      const input = document.getElementById('renderBackendInput');
-      const val = input.value.trim();
-      setBackendUrl(val);
-      showToast('Render backend connection saved! Reloading...');
-    }
-
-    async function fetchStats() {
+    function syncCatalogToBrowserTabs() {
       try {
-        const res = await fetch(apiUrl('/api/stats'));
-        const json = await res.json();
-        if (json.success) {
-          document.getElementById('statRevenue').innerText = `Rs. ${json.data.totalRevenue.toLocaleString()}`;
-          document.getElementById('statOrders').innerText = json.data.totalOrders;
-          document.getElementById('statPending').innerText = json.data.pendingPayments;
-          document.getElementById('statProducts').innerText = json.data.activeProducts;
+        localStorage.setItem('LAKHANI_CUSTOM_PRODUCTS', JSON.stringify(allProducts));
+        if (window.BroadcastChannel) {
+          const bc = new BroadcastChannel('lakhani_catalog_channel');
+          bc.postMessage({ type: 'PRODUCTS_UPDATED', products: allProducts });
         }
-      } catch (e) { console.error(e); }
+      } catch (err) {}
     }
 
     async function fetchOrders() {
       try {
-        const res = await fetch(apiUrl('/api/orders'));
-        const json = await res.json();
-        if (json.success) {
-          allOrders = json.data;
-          document.getElementById('ordersCountBadge').innerText = allOrders.length;
-          renderOrdersTable(allOrders);
-        }
-      } catch (e) { console.error(e); }
+        allOrders = await sbApi.getOrders();
+        document.getElementById('ordersCountBadge').innerText = allOrders.length;
+        const activeFilter = document.getElementById('orderStatusFilter')?.value || 'all';
+        filterOrders(activeFilter);
+      } catch (e) {
+        console.error(e);
+        document.getElementById('ordersTableBody').innerHTML =
+          `<tr><td colspan="8" class="p-6 text-center text-red-400">Error loading orders: ${escHtml(e.message)}</td></tr>`;
+      }
     }
 
     function renderOrdersTable(orders) {
       const tbody = document.getElementById('ordersTableBody');
-      if (orders.length === 0) {
+      if (!orders || orders.length === 0) {
         tbody.innerHTML = `<tr><td colspan="8" class="p-6 text-center text-gray-500">No orders recorded yet.</td></tr>`;
         return;
       }
@@ -670,29 +828,29 @@
       tbody.innerHTML = orders.map(o => `
         <tr class="hover:bg-gray-900/60 transition">
           <td class="p-3.5">
-            <span class="font-mono font-bold text-amber-300">${o.id}</span>
-            <span class="text-[10px] text-gray-500 block">${o.date || ''}</span>
+            <span class="font-mono font-bold text-amber-300">${escHtml(o.id)}</span>
+            <span class="text-[10px] text-gray-500 block">${escHtml(o.date || '')}</span>
           </td>
           <td class="p-3.5">
-            <span class="font-bold text-white block">${o.customerName}</span>
-            <span class="text-[11px] text-gray-400 font-mono">${o.customerPhone}</span>
+            <span class="font-bold text-white block">${escHtml(o.customerName)}</span>
+            <span class="text-[11px] text-gray-400 font-mono">${escHtml(o.customerPhone)}</span>
           </td>
           <td class="p-3.5">
-            <span class="font-semibold text-gray-300 block">${o.customerCity}</span>
-            <span class="text-[10px] text-gray-500 line-clamp-1">${o.customerAddress}</span>
+            <span class="font-semibold text-gray-300 block">${escHtml(o.customerCity)}</span>
+            <span class="text-[10px] text-gray-500 line-clamp-1">${escHtml(o.customerAddress)}</span>
           </td>
           <td class="p-3.5">
-            ${(o.items || []).map(i => `<div class="text-[11px] text-gray-300">• ${i.title} (${i.color || ''}) x${i.quantity}</div>`).join("")}
+            ${(o.items || []).map(i => `<div class="text-[11px] text-gray-300">• ${escHtml(i.title)} (${escHtml(i.color || '')}) x${Number(i.quantity) || 1}</div>`).join('')}
           </td>
           <td class="p-3.5">
-            <span class="text-xs font-bold text-emerald-400">${o.paymentMethod}</span>
+            <span class="text-xs font-bold text-emerald-400">${escHtml(o.paymentMethod)}</span>
             <span class="text-[10px] text-amber-300/80 block">Advance Required</span>
           </td>
           <td class="p-3.5 text-right font-mono font-bold text-amber-300 text-sm">
-            Rs. ${o.grandTotal ? o.grandTotal.toLocaleString() : 0}
+            Rs. ${o.grandTotal ? Number(o.grandTotal).toLocaleString() : 0}
           </td>
           <td class="p-3.5">
-            <select onchange="updateOrderStatus('${o.id}', this.value)" class="bg-[#080b11] border border-gray-700 text-[11px] rounded-lg px-2 py-1 font-bold ${
+            <select onchange="updateOrderStatus('${escHtml(o.id)}', this.value)" class="bg-[#080b11] border border-gray-700 text-[11px] rounded-lg px-2 py-1 font-bold ${
               o.status === 'Delivered' ? 'text-emerald-400' : (o.status === 'Dispatched' ? 'text-blue-400' : 'text-amber-300')
             }">
               <option value="Pending Verification" ${o.status === 'Pending Verification' ? 'selected' : ''}>Pending Verification</option>
@@ -704,44 +862,42 @@
           </td>
           <td class="p-3.5 text-center">
             <div class="flex items-center justify-center gap-2">
-              <a href="https://wa.me/92${(o.customerPhone || '').replace(/^0/, '')}?text=Assalam%20o%20Alaikum%20${encodeURIComponent(o.customerName)}!%20Lakhani%20Collection%20se%20aapke%20order%20(${o.id})%20ke%20hawale%20se%20rabta%20kar%20rahe%20hain." target="_blank" class="p-1.5 rounded-lg bg-emerald-950 text-emerald-300 hover:bg-emerald-900 border border-emerald-800" title="WhatsApp Customer">
+              <a href="https://wa.me/92${encodeURIComponent((o.customerPhone || '').replace(/^0/, ''))}?text=Assalam%20o%20Alaikum%20${encodeURIComponent(o.customerName || '')}!%20Lakhani%20Collection%20se%20aapke%20order%20(${encodeURIComponent(o.id)})%20ke%20hawale%20se%20rabta%20kar%20rahe%20hain." target="_blank" class="p-1.5 rounded-lg bg-emerald-950 text-emerald-300 hover:bg-emerald-900 border border-emerald-800" title="WhatsApp Customer">
                 <i class="fa-brands fa-whatsapp text-sm"></i>
               </a>
-              <button onclick="deleteOrder('${o.id}')" class="p-1.5 rounded-lg bg-red-950 text-red-400 hover:bg-red-900 border border-red-800" title="Delete">
+              <button onclick="deleteOrder('${escHtml(o.id)}')" class="p-1.5 rounded-lg bg-red-950 text-red-400 hover:bg-red-900 border border-red-800" title="Delete">
                 <i class="fa-solid fa-trash text-xs"></i>
               </button>
             </div>
           </td>
         </tr>
-      `).join("");
+      `).join('');
     }
 
     async function updateOrderStatus(orderId, newStatus) {
       try {
-        const res = await fetch(apiUrl(`/api/orders/${orderId}/status`), {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: newStatus })
-        });
-        const json = await res.json();
-        if (json.success) {
-          showToast(`Order ${orderId} marked as ${newStatus}`);
-          fetchStats();
-        }
-      } catch (e) { console.error(e); }
+        await sbApi.updateOrderStatus(orderId, { status: newStatus, updatedAt: new Date().toISOString() });
+        const target = allOrders.find(o => o.id === orderId);
+        if (target) target.status = newStatus;
+        computeAndRenderStats();
+        showToast(`Order ${orderId} marked as ${newStatus}`);
+      } catch (e) {
+        console.error(e);
+        showToast('Failed to update order: ' + e.message);
+      }
     }
 
     async function deleteOrder(orderId) {
       if (!confirm(`Delete order ${orderId}?`)) return;
       try {
-        const res = await fetch(apiUrl(`/api/orders/${orderId}`), { method: 'DELETE' });
-        const json = await res.json();
-        if (json.success) {
-          showToast('Order removed');
-          fetchOrders();
-          fetchStats();
-        }
-      } catch (e) { console.error(e); }
+        await sbApi.deleteOrder(orderId);
+        showToast('Order removed from Supabase');
+        await fetchOrders();
+        computeAndRenderStats();
+      } catch (e) {
+        console.error(e);
+        showToast('Delete failed: ' + e.message);
+      }
     }
 
     function filterOrders(status) {
@@ -751,137 +907,127 @@
 
     async function fetchProducts() {
       try {
-        const res = await fetch(apiUrl('/api/products'));
-        const json = await res.json();
-        if (json.success) {
-          allProducts = json.data;
-          document.getElementById('productsCountBadge').innerText = allProducts.length;
-          renderProductsTable(allProducts);
-        }
-      } catch (e) { console.error(e); }
+        allProducts = await sbApi.getProducts();
+        document.getElementById('productsCountBadge').innerText = allProducts.length;
+        syncCatalogToBrowserTabs();
+        filterAdminProducts();
+      } catch (e) {
+        console.error(e);
+        showToast('Supabase fetch error: ' + e.message);
+        document.getElementById('productsTableBody').innerHTML =
+          `<tr><td colspan="7" class="p-6 text-center text-red-400">Error loading products: ${escHtml(e.message)}</td></tr>`;
+      }
     }
 
     function renderProductsTable(products) {
       const tbody = document.getElementById('productsTableBody');
-      tbody.innerHTML = products.map(p => `
+      if (!products || products.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-gray-500">No products found. Click "Add New Product" to create one.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = products.map(p => {
+        const hasLegacyUpload = isLegacyUploadPath(p.aiImage) || (Array.isArray(p.gallery) && p.gallery.some(isLegacyUploadPath));
+        const priceNum = Number(p.price) || 0;
+        const origPriceNum = Number(p.originalPrice) || 0;
+        const stockNum = p.stock !== undefined && p.stock !== null ? Number(p.stock) : 25;
+
+        return `
         <tr class="hover:bg-gray-900/60 transition">
           <td class="p-3.5">
             <div class="relative w-12 h-14 rounded-lg overflow-hidden bg-black shrink-0 border border-gray-800">
-              <img src="${formatImgUrl(p.aiImage)}" alt="${p.title}" class="w-full h-full object-cover">
+              <img src="${escHtml(formatImgUrl(p.aiImage))}" alt="${escHtml(p.title)}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='assets/hero_banner.webp';">
               ${p.video ? `<span class="absolute bottom-0.5 right-0.5 bg-black/85 text-amber-300 text-[8px] px-1 rounded font-bold" title="Video attached"><i class="fa-solid fa-play"></i></span>` : ''}
               ${p.gallery && p.gallery.length > 1 ? `<span class="absolute top-0.5 left-0.5 bg-black/85 text-white text-[8px] px-1 rounded font-bold" title="${p.gallery.length} photos"><i class="fa-solid fa-images"></i> ${p.gallery.length}</span>` : ''}
             </div>
           </td>
-          <td class="p-3.5 font-bold text-white max-w-xs truncate">
-            ${p.title}
-            <span class="text-[10px] text-gray-500 block truncate">${p.fabric}</span>
+          <td class="p-3.5 font-bold text-white max-w-xs">
+            <div class="truncate">${escHtml(p.title)}</div>
+            <span class="text-[10px] text-gray-500 block truncate">${escHtml(p.fabric)}</span>
+            ${hasLegacyUpload ? `<span class="inline-block mt-1 text-[9px] font-semibold bg-amber-950/80 text-amber-300 border border-amber-700/60 px-1.5 py-0.5 rounded">Old Render image path — click Edit to re-upload permanently</span>` : ''}
           </td>
           <td class="p-3.5">
             <span class="text-[10px] font-bold uppercase tracking-wider text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/30">
-              ${p.categoryLabel || p.category}
+              ${escHtml(p.categoryLabel || CATEGORY_LABELS[p.category] || p.category)}
             </span>
           </td>
           <td class="p-3.5">
             <div class="flex items-center gap-1.5">
-              <span class="font-mono font-bold text-amber-300 text-sm">Rs. ${p.price.toLocaleString()}</span>
-              <button onclick="quickEditPrice('${p.id}', ${p.price})" class="text-gray-500 hover:text-brand-gold text-xs" title="Edit Price">
+              <span class="font-mono font-bold text-amber-300 text-sm">Rs. ${priceNum.toLocaleString()}</span>
+              <button onclick="quickEditPrice('${escHtml(p.id)}', ${priceNum})" class="text-gray-500 hover:text-brand-gold text-xs" title="Edit Price">
                 <i class="fa-solid fa-pen-to-square"></i>
               </button>
             </div>
           </td>
-          <td class="p-3.5 font-mono text-gray-400">Rs. ${p.originalPrice ? p.originalPrice.toLocaleString() : ''}</td>
-          <td class="p-3.5 font-mono font-bold ${p.stock < 10 ? 'text-red-400' : 'text-emerald-400'}">${p.stock || 25} pcs</td>
+          <td class="p-3.5 font-mono text-gray-400">${origPriceNum ? 'Rs. ' + origPriceNum.toLocaleString() : '-'}</td>
+          <td class="p-3.5 font-mono font-bold ${stockNum < 10 ? 'text-red-400' : 'text-emerald-400'}">${stockNum} pcs</td>
           <td class="p-3.5 text-right">
             <div class="flex items-center justify-end gap-2">
-              <button onclick="editProduct('${p.id}')" class="px-2.5 py-1 rounded bg-gray-800 hover:bg-gray-700 text-xs font-semibold text-gray-200">Edit</button>
-              <button onclick="deleteProduct('${p.id}')" class="p-1.5 rounded bg-red-950 text-red-400 hover:bg-red-900 text-xs">
+              <button onclick="editProduct('${escHtml(p.id)}')" class="px-2.5 py-1 rounded bg-gray-800 hover:bg-gray-700 text-xs font-semibold text-gray-200">Edit</button>
+              <button onclick="deleteProduct('${escHtml(p.id)}')" class="p-1.5 rounded bg-red-950 text-red-400 hover:bg-red-900 text-xs" title="Delete">
                 <i class="fa-solid fa-trash"></i>
               </button>
             </div>
           </td>
         </tr>
-      `).join("");
+      `;}).join('');
     }
 
     async function quickEditPrice(id, currentPrice) {
-      const newPrice = prompt(`Enter new price in PKR:`, currentPrice);
+      const newPrice = prompt('Enter new price in PKR:', currentPrice);
       if (!newPrice || isNaN(newPrice) || Number(newPrice) <= 0) return;
 
       try {
-        const res = await fetch(apiUrl(`/api/products/${id}`), {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ price: Number(newPrice) })
+        await sbApi.updateProduct(id, {
+          price: Number(newPrice),
+          updatedAt: new Date().toISOString()
         });
-        const json = await res.json();
-        if (json.success) {
-          showToast(`Price updated to Rs. ${Number(newPrice).toLocaleString()}`);
-          await fetchProducts();
-          fetchStats();
-          try {
-            localStorage.setItem('LAKHANI_CUSTOM_PRODUCTS', JSON.stringify(allProducts));
-            if (window.BroadcastChannel) {
-              const bc = new BroadcastChannel('lakhani_catalog_channel');
-              bc.postMessage({ type: 'PRODUCTS_UPDATED', products: allProducts });
-            }
-          } catch(err) {}
-        } else {
-          showToast('Failed to update price: ' + (json.message || 'Error'));
-        }
+        showToast(`Price updated permanently to Rs. ${Number(newPrice).toLocaleString()}`);
+        await fetchProducts();
+        computeAndRenderStats();
       } catch (e) {
         console.error(e);
-        showToast('Connection error updating price');
+        showToast('Failed to update price: ' + e.message);
       }
     }
 
-    let currentGallery = [];
-    let currentVideo = '';
-
-    function handleImageFileSelected(input) {
+    async function handleImageFileSelected(input) {
       const file = input.files && input.files[0];
       if (!file) return;
 
-      const prompt = document.getElementById('uploadPrompt');
+      const promptEl = document.getElementById('uploadPrompt');
       const card = document.getElementById('uploadPreviewCard');
       const thumb = document.getElementById('imagePreviewThumb');
       const fname = document.getElementById('imagePreviewFilename');
       const subtext = document.getElementById('imagePreviewSubtext');
       const status = document.getElementById('uploadStatusText');
 
-      // Local preview immediately
       const objectUrl = URL.createObjectURL(file);
       thumb.src = objectUrl;
       fname.innerText = file.name;
-      subtext.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-amber-300"></i> Uploading cover...';
-      status.innerText = 'Uploading photo...';
-      prompt.classList.add('hidden');
+      subtext.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-amber-300"></i> Preparing permanent photo...';
+      status.innerText = 'Processing...';
+      promptEl.classList.add('hidden');
       card.classList.remove('hidden');
 
-      // Upload to backend via FormData
-      const formData = new FormData();
-      formData.append('image', file);
-
-      fetch(apiUrl('/api/upload'), {
-        method: 'POST',
-        body: formData
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          document.getElementById('prodImage').value = data.url;
-          subtext.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400"></i> Uploaded & ready!';
-          status.innerText = 'Uploaded: ' + data.filename;
-          showToast('Cover photo uploaded successfully!');
-        } else {
-          subtext.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-red-400"></i> Upload failed: ' + (data.message || 'Error');
-          status.innerText = 'Upload failed';
-        }
-      })
-      .catch(err => {
+      setPendingUpload(1);
+      try {
+        const result = await sbApi.uploadMedia(file);
+        document.getElementById('prodImage').value = result.url;
+        thumb.src = formatImgUrl(result.url);
+        const modeLabel = result.storage.startsWith('supabase-storage') ? 'Supabase CDN Ready!' : 'Permanent WebP Ready!';
+        subtext.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-400"></i> ${modeLabel}`;
+        status.innerText = modeLabel;
+        showToast('Cover photo saved permanently!');
+      } catch (err) {
         console.error(err);
-        subtext.innerHTML = '<i class="fa-solid fa-triangle-exclamation text-red-400"></i> Server error';
-        status.innerText = 'Connection error';
-      });
+        subtext.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-red-400"></i> ${escHtml(err.message)}`;
+        status.innerText = 'Upload failed';
+        showToast('Photo error: ' + err.message);
+      } finally {
+        URL.revokeObjectURL(objectUrl);
+        setPendingUpload(-1);
+      }
     }
 
     function handleManualImageUrl(url) {
@@ -889,7 +1035,7 @@
         clearUploadedImage();
         return;
       }
-      const prompt = document.getElementById('uploadPrompt');
+      const promptEl = document.getElementById('uploadPrompt');
       const card = document.getElementById('uploadPreviewCard');
       const thumb = document.getElementById('imagePreviewThumb');
       const fname = document.getElementById('imagePreviewFilename');
@@ -897,8 +1043,10 @@
 
       thumb.src = formatImgUrl(url);
       fname.innerText = 'Cover Image';
-      subtext.innerHTML = '<i class="fa-solid fa-link text-blue-400"></i> Linked URL';
-      prompt.classList.add('hidden');
+      subtext.innerHTML = isLegacyUploadPath(url)
+        ? '<i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Old Render path — tap above to replace'
+        : '<i class="fa-solid fa-link text-blue-400"></i> Linked URL';
+      promptEl.classList.add('hidden');
       card.classList.remove('hidden');
     }
 
@@ -907,38 +1055,33 @@
       document.getElementById('prodImage').value = '';
       document.getElementById('uploadPrompt').classList.remove('hidden');
       document.getElementById('uploadPreviewCard').classList.add('hidden');
-      document.getElementById('uploadStatusText').innerText = 'Upload from device or enter URL';
+      document.getElementById('uploadStatusText').innerText = 'Tap to upload';
     }
 
-    // MULTIPLE GALLERY IMAGES HANDLING
-    function handleGalleryFilesSelected(input) {
+    async function handleGalleryFilesSelected(input) {
       if (!input.files || input.files.length === 0) return;
-      showToast('Uploading ' + input.files.length + ' gallery image(s)...');
-      
-      const formData = new FormData();
-      for (let i = 0; i < input.files.length; i++) {
-        formData.append('files', input.files[i]);
-      }
+      const files = Array.from(input.files).slice(0, 8);
+      showToast(`Processing ${files.length} gallery photo(s)...`);
 
-      fetch(apiUrl('/api/upload-multiple'), { method: 'POST', body: formData })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success && Array.isArray(data.files)) {
-            data.files.forEach(f => {
-              if (f.url && !currentGallery.includes(f.url)) {
-                currentGallery.push(f.url);
-              }
-            });
-            renderGalleryPreviews();
-            showToast(data.files.length + ' image(s) added to gallery!');
-          } else {
-            showToast('Gallery upload failed');
+      setPendingUpload(1);
+      let added = 0;
+      try {
+        for (const file of files) {
+          const result = await sbApi.uploadMedia(file);
+          if (result.url && !currentGallery.includes(result.url)) {
+            currentGallery.push(result.url);
+            added++;
           }
-        })
-        .catch(err => {
-          console.error(err);
-          showToast('Connection error during gallery upload');
-        });
+        }
+        renderGalleryPreviews();
+        if (added > 0) showToast(`${added} gallery photo(s) ready!`);
+      } catch (err) {
+        console.error(err);
+        showToast('Gallery upload error: ' + err.message);
+      } finally {
+        input.value = '';
+        setPendingUpload(-1);
+      }
     }
 
     function renderGalleryPreviews() {
@@ -955,11 +1098,11 @@
       grid.classList.remove('hidden');
       grid.innerHTML = currentGallery.map((img, idx) => `
         <div class="relative group rounded-xl overflow-hidden border border-gray-700 bg-black aspect-square">
-          <img src="${formatImgUrl(img)}" class="w-full h-full object-cover">
+          <img src="${escHtml(formatImgUrl(img))}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='assets/hero_banner.webp';">
           <button type="button" onclick="removeGalleryImage(${idx})" class="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-600 text-white flex items-center justify-center text-[10px] shadow hover:bg-red-700 transition">
             <i class="fa-solid fa-xmark"></i>
           </button>
-          <span class="absolute bottom-1 left-1 bg-black/75 text-[9px] text-gray-300 px-1 rounded font-mono">#${idx+1}</span>
+          <span class="absolute bottom-1 left-1 bg-black/75 text-[9px] text-gray-300 px-1 rounded font-mono">#${idx + 1}</span>
         </div>
       `).join('');
     }
@@ -969,33 +1112,30 @@
       renderGalleryPreviews();
     }
 
-    // PRODUCT VIDEO HANDLING
-    function handleVideoFileSelected(input) {
+    async function handleVideoFileSelected(input) {
       if (!input.files || !input.files[0]) return;
       const file = input.files[0];
       const mb = (file.size / (1024 * 1024)).toFixed(1);
-      showToast('Uploading video (' + mb + 'MB)...');
-      document.getElementById('videoStatusBadge').innerText = 'Uploading ' + mb + 'MB...';
+      const badge = document.getElementById('videoStatusBadge');
+      if (badge) badge.innerText = `Uploading ${mb}MB...`;
+      showToast(`Uploading video (${mb}MB) to Supabase Storage...`);
 
-      const formData = new FormData();
-      formData.append('file', file);
-
-      fetch(apiUrl('/api/upload'), { method: 'POST', body: formData })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success && data.url) {
-            currentVideo = data.url;
-            document.getElementById('prodVideoUrl').value = data.url;
-            renderVideoPreview(data.url);
-            showToast('Product video uploaded successfully!');
-          } else {
-            showToast('Video upload failed: ' + (data.message || 'Error'));
-          }
-        })
-        .catch(err => {
-          console.error(err);
-          showToast('Connection error during video upload');
-        });
+      setPendingUpload(1);
+      try {
+        const result = await sbApi.uploadMedia(file);
+        currentVideo = result.url;
+        document.getElementById('prodVideoUrl').value = result.url;
+        renderVideoPreview(result.url);
+        showToast('Product video uploaded to Supabase Storage!');
+      } catch (err) {
+        console.error(err);
+        if (badge) badge.innerText = 'Setup bucket or paste URL';
+        showToast(err.message);
+        openStorageSqlModal();
+      } finally {
+        input.value = '';
+        setPendingUpload(-1);
+      }
     }
 
     function handleManualVideoUrl(url) {
@@ -1011,13 +1151,13 @@
       if (!url) {
         container.classList.add('hidden');
         player.src = '';
-        if (badge) badge.innerText = 'MP4, WebM (up to 50MB)';
+        if (badge) badge.innerText = 'Requires Bucket or URL';
         return;
       }
 
       player.src = formatImgUrl(url);
       container.classList.remove('hidden');
-      if (badge) badge.innerText = '🎥 Video Attached';
+      if (badge) badge.innerText = 'Video Attached';
     }
 
     function clearUploadedVideo() {
@@ -1044,12 +1184,12 @@
 
       document.getElementById('productModalTitle').innerText = 'Edit Product & Media';
       document.getElementById('prodEditId').value = p.id;
-      document.getElementById('prodTitle').value = p.title;
-      document.getElementById('prodCategory').value = p.category;
+      document.getElementById('prodTitle').value = p.title || '';
+      document.getElementById('prodCategory').value = p.category || 'women';
       document.getElementById('prodBadge').value = p.badge || '';
-      document.getElementById('prodPrice').value = p.price;
+      document.getElementById('prodPrice').value = p.price || '';
       document.getElementById('prodOriginalPrice').value = p.originalPrice || '';
-      document.getElementById('prodStock').value = p.stock || '';
+      document.getElementById('prodStock').value = p.stock !== undefined && p.stock !== null ? p.stock : 25;
       document.getElementById('prodFabric').value = p.fabric || '';
       document.getElementById('prodColors').value = (p.colors || []).join(', ');
       document.getElementById('prodDesc').value = p.description || '';
@@ -1058,16 +1198,18 @@
       if (p.aiImage) {
         handleManualImageUrl(p.aiImage);
         document.getElementById('imagePreviewFilename').innerText = p.title;
-        document.getElementById('imagePreviewSubtext').innerHTML = '<i class="fa-solid fa-image text-amber-300"></i> Current Cover (Tap to change)';
+        if (!isLegacyUploadPath(p.aiImage)) {
+          document.getElementById('imagePreviewSubtext').innerHTML = '<i class="fa-solid fa-image text-amber-300"></i> Current Cover (Tap to change)';
+        }
       } else {
         clearUploadedImage();
       }
 
-      // Load gallery
-      currentGallery = p.gallery && Array.isArray(p.gallery) && p.gallery.length ? [...p.gallery] : (p.aiImage ? [p.aiImage] : []);
+      currentGallery = p.gallery && Array.isArray(p.gallery) && p.gallery.length
+        ? [...p.gallery]
+        : (p.aiImage ? [p.aiImage] : []);
       renderGalleryPreviews();
 
-      // Load video
       currentVideo = p.video || '';
       document.getElementById('prodVideoUrl').value = currentVideo;
       renderVideoPreview(currentVideo);
@@ -1081,49 +1223,44 @@
 
     async function handleProductSubmit(e) {
       e.preventDefault();
+      if (pendingUploads > 0) {
+        showToast('Please wait for image/video upload to finish...');
+        return;
+      }
+
       const id = document.getElementById('prodEditId').value;
       const title = document.getElementById('prodTitle').value.trim();
       const category = document.getElementById('prodCategory').value;
-      const badge = document.getElementById('prodBadge').value.trim() || 'New';
+      const badge = document.getElementById('prodBadge').value.trim() || 'New Arrival';
       const price = Number(document.getElementById('prodPrice').value);
-      const originalPrice = Number(document.getElementById('prodOriginalPrice').value) || (price + 500);
-      const stock = Number(document.getElementById('prodStock').value) || 25;
-      const fabric = document.getElementById('prodFabric').value.trim() || 'High Quality';
+      const originalPriceRaw = document.getElementById('prodOriginalPrice').value.trim();
+      const originalPrice = originalPriceRaw ? Number(originalPriceRaw) : (price + 500);
+      const stockRaw = document.getElementById('prodStock').value.trim();
+      const stock = stockRaw === '' ? 25 : Number(stockRaw);
+      const fabric = document.getElementById('prodFabric').value.trim() || 'Premium Pakistani Fabric';
       const colorsStr = document.getElementById('prodColors').value.trim();
-      const colors = colorsStr ? colorsStr.split(',').map(c => c.trim()) : ['Standard'];
-      const description = document.getElementById('prodDesc').value.trim();
-      let aiImage = document.getElementById('prodImage').value.trim();
-      const fileInput = document.getElementById('prodImageFile');
+      const colors = colorsStr ? colorsStr.split(',').map(c => c.trim()).filter(Boolean) : ['Standard'];
+      const description = document.getElementById('prodDesc').value.trim() || 'High quality Pakistani luxury design.';
 
-      // If user selected file and upload is still pending, upload immediately
-      if (!aiImage && fileInput.files && fileInput.files[0]) {
-        try {
-          const formData = new FormData();
-          formData.append('image', fileInput.files[0]);
-          const upRes = await fetch(apiUrl('/api/upload'), { method: 'POST', body: formData });
-          const upData = await upRes.json();
-          if (upData.success) {
-            aiImage = upData.url;
-          }
-        } catch (err) {
-          console.error('File upload error during submit', err);
-        }
-      }
+      let aiImage = document.getElementById('prodImage').value.trim();
+      const cleanGallery = currentGallery.filter(Boolean);
 
       if (!aiImage) {
-        aiImage = currentGallery.length > 0 ? currentGallery[0] : 'assets/hero_banner.webp';
+        aiImage = cleanGallery.length > 0 ? cleanGallery[0] : 'assets/hero_banner.webp';
+      }
+      if (aiImage && !cleanGallery.includes(aiImage)) {
+        cleanGallery.unshift(aiImage);
       }
 
-      // Add cover photo to gallery if not present
-      if (aiImage && !currentGallery.includes(aiImage)) {
-        currentGallery.unshift(aiImage);
-      }
+      const nowIso = new Date().toISOString();
+      const existing = id ? allProducts.find(p => p.id === id) : null;
 
       const payload = {
         title,
         category,
-        categoryLabel: category === 'men' ? "Men's Wear" : (category === 'bags' ? 'Handbags' : 'Women\'s Wear'),
+        categoryLabel: CATEGORY_LABELS[category] || "Women's Luxury",
         badge,
+        badgeColor: existing?.badgeColor || CATEGORY_BADGE_COLORS[category] || 'bg-amber-900/90 text-amber-300 border-amber-700',
         price,
         originalPrice,
         stock,
@@ -1131,90 +1268,74 @@
         colors,
         description,
         aiImage,
-        gallery: currentGallery,
-        video: currentVideo
+        colorsImage: aiImage,
+        flyerImage: aiImage,
+        gallery: cleanGallery.length ? cleanGallery : [aiImage],
+        video: currentVideo || '',
+        specs: existing?.specs || [{ label: 'Quality', val: 'Premium Authentic' }],
+        sizes: existing?.sizes || [{ name: 'Standard Fit', desc: 'Universal' }],
+        updatedAt: nowIso
       };
 
       try {
-        const url = id ? apiUrl(`/api/products/${id}`) : apiUrl('/api/products');
-        const method = id ? 'PUT' : 'POST';
-        const res = await fetch(url, {
-          method,
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const json = await res.json();
-        if (json.success) {
-          showToast(id ? 'Product updated successfully!' : 'Product added successfully!');
-          closeProductModal();
-          await fetchProducts();
-          fetchStats();
-
-          // Instant Sync across all browser tabs & local storage
-          try {
-            localStorage.setItem('LAKHANI_CUSTOM_PRODUCTS', JSON.stringify(allProducts));
-            if (window.BroadcastChannel) {
-              const bc = new BroadcastChannel('lakhani_catalog_channel');
-              bc.postMessage({ type: 'PRODUCTS_UPDATED', products: allProducts });
-            }
-          } catch(err) {}
+        if (id) {
+          await sbApi.updateProduct(id, payload);
+          showToast('Product updated permanently in Supabase!');
         } else {
-          showToast('Failed to save product: ' + (json.message || 'Error'));
+          const newId = 'prod_' + Date.now();
+          await sbApi.createProduct({
+            id: newId,
+            ...payload,
+            createdAt: nowIso
+          });
+          showToast('Product added permanently to Supabase!');
         }
-      } catch (err) { 
-        console.error(err); 
-        showToast('Connection error while saving product');
+
+        closeProductModal();
+        await fetchProducts();
+        computeAndRenderStats();
+      } catch (err) {
+        console.error(err);
+        showToast('Failed to save to Supabase: ' + err.message);
       }
     }
 
     async function deleteProduct(id) {
-      if (!confirm('Are you sure you want to delete this product?')) return;
+      if (!confirm('Are you sure you want to delete this product from Supabase?')) return;
       try {
-        const res = await fetch(apiUrl(`/api/products/${id}`), { method: 'DELETE' });
-        const json = await res.json();
-        if (json.success) {
-          showToast('Product deleted');
-          await fetchProducts();
-          fetchStats();
-          try {
-            localStorage.setItem('LAKHANI_CUSTOM_PRODUCTS', JSON.stringify(allProducts));
-            if (window.BroadcastChannel) {
-              const bc = new BroadcastChannel('lakhani_catalog_channel');
-              bc.postMessage({ type: 'PRODUCTS_UPDATED', products: allProducts });
-            }
-          } catch(err) {}
-        } else {
-          showToast('Failed to delete product: ' + (json.message || 'Error'));
-        }
+        await sbApi.deleteProduct(id);
+        showToast('Product deleted permanently');
+        await fetchProducts();
+        computeAndRenderStats();
       } catch (e) {
         console.error(e);
-        showToast('Connection error deleting product');
+        showToast('Failed to delete product: ' + e.message);
       }
     }
 
     async function fetchSettings() {
       try {
-        const res = await fetch(apiUrl('/api/settings'));
-        const json = await res.json();
-        if (json.success && json.data) {
-          const s = json.data;
-          document.getElementById('setStoreName').value = s.storeName || '';
-          document.getElementById('setProprietor').value = s.proprietor || '';
-          document.getElementById('setMeezanTitle').value = s.meezanBankTitle || '';
-          document.getElementById('setMeezanNo').value = s.meezanBankNo || '';
-          document.getElementById('setEasypaisaTitle').value = s.easypaisaTitle || '';
-          document.getElementById('setEasypaisaNo').value = s.easypaisaNo || '';
-          document.getElementById('setOpayTitle').value = s.opayTitle || '';
-          document.getElementById('setOpayNo').value = s.opayNo || '';
-          document.getElementById('setWhatsappNo').value = s.whatsappNumber || '';
-          document.getElementById('setDeliveryFee').value = s.standardDeliveryFee || 250;
-        }
-      } catch (e) { console.error(e); }
+        const s = await sbApi.getSettings();
+        currentSettings = s || {};
+        document.getElementById('setStoreName').value = s.storeName || '';
+        document.getElementById('setProprietor').value = s.proprietor || '';
+        document.getElementById('setMeezanTitle').value = s.meezanBankTitle || '';
+        document.getElementById('setMeezanNo').value = s.meezanBankNo || '';
+        document.getElementById('setEasypaisaTitle').value = s.easypaisaTitle || '';
+        document.getElementById('setEasypaisaNo').value = s.easypaisaNo || '';
+        document.getElementById('setOpayTitle').value = s.opayTitle || '';
+        document.getElementById('setOpayNo').value = s.opayNo || '';
+        document.getElementById('setWhatsappNo').value = s.whatsappNumber || '';
+        document.getElementById('setDeliveryFee').value = s.standardDeliveryFee || 250;
+      } catch (e) {
+        console.error(e);
+      }
     }
 
     async function saveSettings(e) {
       e.preventDefault();
       const payload = {
+        ...currentSettings,
         storeName: document.getElementById('setStoreName').value.trim(),
         proprietor: document.getElementById('setProprietor').value.trim(),
         meezanBankTitle: document.getElementById('setMeezanTitle').value.trim(),
@@ -1224,30 +1345,27 @@
         opayTitle: document.getElementById('setOpayTitle').value.trim(),
         opayNo: document.getElementById('setOpayNo').value.trim(),
         whatsappNumber: document.getElementById('setWhatsappNo').value.trim(),
-        standardDeliveryFee: Number(document.getElementById('setDeliveryFee').value) || 250
+        standardDeliveryFee: Number(document.getElementById('setDeliveryFee').value) || 250,
+        updatedAt: new Date().toISOString()
       };
 
       try {
-        const res = await fetch(apiUrl('/api/settings'), {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        });
-        const json = await res.json();
-        if (json.success) {
-          showToast('Store settings & accounts updated successfully!');
-        }
-      } catch (err) { console.error(err); }
+        currentSettings = await sbApi.saveSettings(payload);
+        showToast('Store settings saved permanently in Supabase!');
+      } catch (err) {
+        console.error(err);
+        showToast('Settings save error: ' + err.message);
+      }
     }
 
     function filterAdminProducts() {
-      const q = (document.getElementById('adminProdSearch') ? document.getElementById('adminProdSearch').value : '').toLowerCase().trim();
-      const cat = document.getElementById('adminProdCategoryFilter') ? document.getElementById('adminProdCategoryFilter').value : 'all';
+      const q = (document.getElementById('adminProdSearch')?.value || '').toLowerCase().trim();
+      const cat = document.getElementById('adminProdCategoryFilter')?.value || 'all';
 
-      let filtered = allProducts.filter(p => {
+      const filtered = allProducts.filter(p => {
         const matchesCat = (cat === 'all') || (p.category === cat);
-        const matchesQ = !q || 
-          p.title.toLowerCase().includes(q) || 
+        const matchesQ = !q ||
+          (p.title && p.title.toLowerCase().includes(q)) ||
           (p.fabric && p.fabric.toLowerCase().includes(q)) ||
           (p.categoryLabel && p.categoryLabel.toLowerCase().includes(q));
         return matchesCat && matchesQ;
@@ -1275,10 +1393,9 @@
       const toast = document.getElementById('toastNotification');
       document.getElementById('toastMsg').innerText = msg;
       toast.classList.remove('translate-y-24', 'opacity-0');
-      setTimeout(() => { toast.classList.add('translate-y-24', 'opacity-0'); }, 2500);
+      setTimeout(() => { toast.classList.add('translate-y-24', 'opacity-0'); }, 3000);
     }
   </script>
 
 </body>
 </html>
-

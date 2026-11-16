@@ -68,3 +68,23 @@ CREATE POLICY "Public can update settings" ON settings FOR ALL USING (true);
 
 DROP POLICY IF EXISTS "Public can manage orders" ON orders;
 CREATE POLICY "Public can manage orders" ON orders FOR ALL USING (true);
+
+-- Optional: Supabase Storage bucket for HD images & product videos
+INSERT INTO storage.buckets (id, name, public)
+VALUES ('product-media', 'product-media', true)
+ON CONFLICT (id) DO UPDATE SET public = true;
+
+DROP POLICY IF EXISTS "Public read product-media" ON storage.objects;
+CREATE POLICY "Public read product-media"
+ON storage.objects FOR SELECT TO public
+USING (bucket_id = 'product-media');
+
+DROP POLICY IF EXISTS "Public upload product-media" ON storage.objects;
+CREATE POLICY "Public upload product-media"
+ON storage.objects FOR INSERT TO public
+WITH CHECK (bucket_id = 'product-media');
+
+DROP POLICY IF EXISTS "Public update product-media" ON storage.objects;
+CREATE POLICY "Public update product-media"
+ON storage.objects FOR UPDATE TO public
+USING (bucket_id = 'product-media');
