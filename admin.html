@@ -43,8 +43,14 @@
     .custom-scroll::-webkit-scrollbar-thumb { background: #374151; border-radius: 9999px; }
     .custom-scroll::-webkit-scrollbar-track { background: #0b0f17; }
   </style>
-  <script src="config.js"></script>
-  <script src="products-data.js"></script>
+  <script src="/config.js?v=2.6"></script>
+  <script src="/products-data.js?v=2.6"></script>
+  <script>
+    if (!window.sbApi) {
+      document.write('<script src="config.js"><\/script>');
+      document.write('<script src="products-data.js"><\/script>');
+    }
+  </script>
 </head>
 <body class="bg-[#080b11] text-gray-100 font-sans antialiased min-h-screen flex flex-col custom-scroll">
 
@@ -660,6 +666,18 @@ using (bucket_id = 'product-media');</pre>
       }
     }
 
+    function getSafeSupabaseConfig() {
+      if (typeof window.getSupabaseConfig === 'function') {
+        return window.getSupabaseConfig();
+      }
+      return {
+        url: 'https://sqeibkcuxaierqvnnqiz.supabase.co',
+        key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNxZWlia2N1eGFpZXJxdm5ucWl6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ3NTY4MjMsImV4cCI6MjExMDMzMjgyM30.4YNNQF5NQAVjSwUef997HBn-zVRitk0jIalqBP4ud80',
+        bucket: 'product-media',
+        isCustom: false
+      };
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
       initSupabaseInputs();
       refreshData();
@@ -669,15 +687,20 @@ using (bucket_id = 'product-media');</pre>
       const icon = document.getElementById('refreshIcon');
       if (icon) icon.classList.add('fa-spin');
       initSupabaseInputs();
-      await Promise.all([checkSupabaseStatus(), fetchProducts(), fetchOrders(), fetchSettings()]);
-      computeAndRenderStats();
-      if (icon) icon.classList.remove('fa-spin');
+
+      // Parallel decoupled fetch: products render immediately without blocking on other calls
+      fetchProducts().then(() => computeAndRenderStats());
+      fetchOrders().then(() => computeAndRenderStats());
+      fetchSettings();
+      checkSupabaseStatus().finally(() => {
+        if (icon) icon.classList.remove('fa-spin');
+      });
     }
 
     function initSupabaseInputs() {
-      const cfg = getSupabaseConfig();
+      const cfg = getSafeSupabaseConfig();
       const display = document.getElementById('currentSupabaseDisplay');
-      if (display) display.innerText = cfg.url.replace(/^https?:\/\//, '');
+      if (display) display.innerText = (cfg.url || '').replace(/^https?:\/\//, '');
 
       const urlEl = document.getElementById('supabaseUrlInput');
       const keyEl = document.getElementById('supabaseKeyInput');
@@ -685,9 +708,9 @@ using (bucket_id = 'product-media');</pre>
       const vercelEl = document.getElementById('vercelUrlInput');
       const badgeEl = document.getElementById('settingsSupabaseBadge');
 
-      if (urlEl) urlEl.value = cfg.url;
-      if (keyEl) keyEl.value = cfg.key;
-      if (bucketEl) bucketEl.value = cfg.bucket;
+      if (urlEl) urlEl.value = cfg.url || '';
+      if (keyEl) keyEl.value = cfg.key || '';
+      if (bucketEl) bucketEl.value = cfg.bucket || '';
       if (vercelEl) vercelEl.value = localStorage.getItem('LAKHANI_VERCEL_URL') || '';
       if (badgeEl) badgeEl.innerText = cfg.isCustom ? 'Custom Project' : 'Default Active';
     }
@@ -743,17 +766,8 @@ using (bucket_id = 'product-media');</pre>
     }
 
     function openStorefront() {
-      const host = window.location.hostname || '';
-      if (host.includes('onrender.com') || host.includes('render.com')) {
-        const saved = localStorage.getItem('LAKHANI_VERCEL_URL') || '';
-        const target = saved || prompt('Enter your Vercel Storefront URL (e.g. https://your-shop.vercel.app):', '');
-        if (!target) return;
-        const clean = target.trim().replace(/\/+$/, '');
-        localStorage.setItem('LAKHANI_VERCEL_URL', clean);
-        window.open(clean, '_blank');
-      } else {
-        window.open('index.html', '_blank');
-      }
+      // Direct link to the live customer storefront (Render serves / as storefront)
+      window.open('/', '_blank');
     }
 
     function openStorageSqlModal() {

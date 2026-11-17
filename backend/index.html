@@ -1,0 +1,1526 @@
+<!DOCTYPE html>
+<html lang="ur-PK" dir="ltr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Lakhani Collection | Luxury Pakistani Ready-to-Wear</title>
+  <meta name="description" content="Official Lakhani Collection — Minimalist luxury Pakistani apparel. Winter tracksuits, embroidered pashmina shawls, 90/70 summer lawns, handbags and jewelry. Strict advance payment nationwide dispatch.">
+  <meta name="theme-color" content="#FFFFFF">
+  
+  <!-- Google Fonts: Cinzel & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Nastaliq+Urdu:wght@400;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              gold: '#C5A059',
+              goldDark: '#99742B',
+              dark: '#111111',
+              charcoal: '#1E1E1E',
+              sand: '#F7F5F0',
+              canvas: '#FAF9F6',
+              emerald: '#059669',
+              accent: '#800020'
+            }
+          },
+          fontFamily: {
+            serif: ['Cinzel', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            urdu: ['"Noto Nastaliq Urdu"', 'serif']
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- High-Speed Preload Hero Banner (Immediate Rendering for fast page speed) -->
+  <link rel="preload" as="image" href="assets/hero_banner.webp" type="image/webp" fetchpriority="high">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
+    body { overflow-x: hidden; width: 100%; touch-action: manipulation; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .tap-active:active { transform: scale(0.97); transition: transform 0.1s ease; }
+    @media (max-width: 640px) {
+      .mobile-sheet {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        max-height: 90vh;
+        border-bottom-left-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+        animation: slideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      @keyframes slideUp {
+        from { transform: translateY(100%); }
+        to { transform: translateY(0); }
+      }
+    }
+  </style>
+  <script src="/config.js?v=2.6"></script>
+  <script src="/products-data.js?v=2.6"></script>
+  <script>
+    if (!window.sbApi) {
+      document.write('<script src="config.js"><\/script>');
+      document.write('<script src="products-data.js"><\/script>');
+    }
+  </script>
+</head>
+<body class="bg-[#FAF9F6] text-neutral-900 font-sans antialiased min-h-screen flex flex-col selection:bg-neutral-900 selection:text-white pb-20 md:pb-0">
+
+  <!-- 1. Sleek Minimalist Announcement Bar (House of Melone Benchmark) -->
+  <div class="bg-[#111111] text-neutral-200 text-[10px] sm:text-xs py-2 px-3 border-b border-neutral-800 text-center font-medium tracking-wide flex items-center justify-between sm:justify-center gap-2">
+    <div class="flex items-center gap-2 truncate">
+      <span class="inline-block w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0"></span>
+      <span id="topNoticeText" class="text-amber-300 font-extrabold uppercase tracking-wider truncate">
+        ⚠️ STRICTLY ADVANCE PAYMENT ONLY
+      </span>
+      <span class="text-neutral-400 font-normal hidden sm:inline">• Free Express Courier on Orders Above Rs. 4,000</span>
+    </div>
+    <div class="flex items-center gap-2 shrink-0">
+      <button onclick="openPaymentModal()" class="text-amber-300 hover:text-white font-bold text-[10px] flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-neutral-800 border border-neutral-700 tap-active transition">
+        <i class="fa-solid fa-building-columns text-[9px]"></i> Bank Accounts
+      </button>
+
+    </div>
+  </div>
+
+  <!-- 2. Clean Luxury Header / Navbar (White / Minimalist Aesthetic) -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-neutral-200/90 shadow-[0_1px_4px_rgba(0,0,0,0.03)]">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 h-16 sm:h-20 flex items-center justify-between gap-4">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-2.5 group shrink-0">
+        <div class="w-9 h-9 sm:w-11 sm:h-11 rounded-full border border-neutral-900 flex items-center justify-center bg-black text-amber-300 font-serif font-black text-sm sm:text-lg shadow-sm">
+          LC
+        </div>
+        <div class="flex flex-col">
+          <div class="flex items-center gap-1.5">
+            <span class="font-serif font-extrabold text-lg sm:text-2xl tracking-widest text-neutral-900 uppercase">Lakhani</span>
+            <span class="font-serif font-light text-lg sm:text-2xl text-amber-700">Collection</span>
+          </div>
+          <span class="text-[8px] sm:text-[9px] tracking-[0.2em] text-neutral-500 uppercase -mt-0.5 font-bold">House of Fashion • Pakistan</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Menu (Editorial Fashion Links) -->
+      <nav class="hidden lg:flex items-center gap-6 xl:gap-8 text-[11px] uppercase tracking-widest font-bold text-neutral-800">
+        <button onclick="filterCategory('all', null); document.getElementById('productCatalogAnchor').scrollIntoView({behavior: 'smooth'})" class="hover:text-amber-700 transition">
+          All Pieces
+        </button>
+        <button onclick="filterCategory('men', null); document.getElementById('productCatalogAnchor').scrollIntoView({behavior: 'smooth'})" class="hover:text-amber-700 transition">
+          Men's Tracksuits
+        </button>
+        <button onclick="filterCategory('women', null); document.getElementById('productCatalogAnchor').scrollIntoView({behavior: 'smooth'})" class="hover:text-amber-700 transition">
+          Women's Atelier
+        </button>
+        <button onclick="filterCategory('bags', null); document.getElementById('productCatalogAnchor').scrollIntoView({behavior: 'smooth'})" class="hover:text-amber-700 transition">
+          Handbags
+        </button>
+        <button onclick="filterCategory('accessories', null); document.getElementById('productCatalogAnchor').scrollIntoView({behavior: 'smooth'})" class="hover:text-amber-700 transition">
+          Jewelry & Chappals
+        </button>
+      </nav>
+
+      <!-- Desktop Search Bar -->
+      <div class="hidden md:flex flex-1 max-w-xs mx-2">
+        <div class="relative w-full">
+          <input type="text" id="searchInput" placeholder="Search tracksuits, pashmina, lawn..." 
+            class="w-full bg-neutral-100 border border-neutral-200/90 focus:border-black rounded-full py-1.5 pl-8 pr-3 text-xs text-neutral-900 placeholder-neutral-400 focus:outline-none transition">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-2 text-neutral-400 text-xs"></i>
+        </div>
+      </div>
+
+      <!-- Quick Action Icons -->
+      <div class="flex items-center gap-1.5 sm:gap-2.5">
+        <button onclick="toggleMobileSearch()" class="md:hidden p-2 text-neutral-700 hover:text-black tap-active">
+          <i class="fa-solid fa-magnifying-glass text-base"></i>
+        </button>
+
+        <button onclick="openPaymentModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-amber-600/40 bg-amber-50 hover:bg-amber-100 text-amber-900 text-[11px] font-bold tap-active transition">
+          <i class="fa-solid fa-building-columns text-amber-700 text-xs"></i>
+          <span>Accounts</span>
+        </button>
+
+        <button onclick="toggleCartDrawer(true)" class="relative p-2 sm:p-2.5 rounded-full bg-neutral-900 hover:bg-black text-white tap-active transition shadow-sm">
+          <i class="fa-solid fa-bag-shopping text-sm sm:text-base"></i>
+          <span id="cartCountBadge" class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-400 text-neutral-950 font-black text-[9px] flex items-center justify-center hidden shadow">0</span>
+        </button>
+
+        <a href="/admin" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border border-neutral-300 hover:border-black text-neutral-700 hover:text-black text-[11px] font-bold tap-active transition" title="Merchant Admin Dashboard">
+          <i class="fa-solid fa-lock text-[10px]"></i>
+          <span class="hidden xl:inline">Admin</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Mobile Search Dropdown -->
+    <div id="mobileSearchBox" class="hidden md:hidden px-3 pb-3 bg-white border-t border-neutral-200 pt-2">
+      <div class="relative w-full">
+        <input type="text" id="mobileSearchInput" placeholder="Search tracksuits, pashmina, lawn, bags..." 
+          class="w-full bg-neutral-100 border border-neutral-300 focus:border-black rounded-xl py-2 pl-9 pr-8 text-xs text-neutral-900 placeholder-neutral-500 focus:outline-none">
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-neutral-400 text-xs"></i>
+        <button onclick="clearSearchInput()" class="absolute right-3 top-2 text-neutral-400 text-xs">✕</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3. Editorial Campaign Banner (Crisp Luxury Presentation) -->
+  <section class="relative bg-[#FAF9F6] border-b border-neutral-200">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-7">
+      
+      <div class="relative rounded-2xl sm:rounded-3xl overflow-hidden border border-neutral-200/90 h-52 sm:h-96 shadow-lg flex items-center bg-neutral-950">
+        <img src="assets/hero_banner.webp" alt="Lakhani Collection" fetchpriority="high" decoding="async" class="absolute inset-0 w-full h-full object-cover object-center filter brightness-[0.92]">
+        
+        <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/60 to-transparent"></div>
+        <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent"></div>
+
+        <div class="relative z-10 p-5 sm:p-12 max-w-2xl space-y-2.5 sm:space-y-4 text-white">
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/20 border border-amber-400/60 text-amber-300 text-[10px] sm:text-xs font-extrabold uppercase tracking-widest backdrop-blur-md shadow-sm">
+            <i class="fa-solid fa-crown text-amber-300"></i> The '26 Editorial Lookbook
+          </div>
+
+          <h1 class="text-2xl sm:text-5xl font-serif font-black tracking-tight leading-tight text-white drop-shadow-md">
+            Contemporary Luxury. <br class="hidden sm:inline">
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-amber-200">Timeless Pakistani Craft.</span>
+          </h1>
+
+          <p class="text-neutral-200 text-xs sm:text-sm max-w-lg line-clamp-2 leading-relaxed font-light">
+            Direct wholesale prices. Fleece tracksuits, luxury pashmina, designer lawn suits, handbags & bespoke accessories.
+          </p>
+
+          <div class="pt-1.5 flex flex-wrap items-center gap-2 sm:gap-2.5">
+            <span class="text-[10px] sm:text-xs font-bold text-amber-300 bg-neutral-900/90 px-3 py-1.5 rounded-full border border-amber-500/50 backdrop-blur-md shadow-sm flex items-center gap-1.5">
+              <i class="fa-solid fa-bolt text-amber-400"></i> Advance Payment Dispatch
+            </span>
+            <span class="text-[10px] sm:text-xs font-bold text-emerald-300 bg-emerald-950/85 px-3 py-1.5 rounded-full border border-emerald-600/50 backdrop-blur-md shadow-sm flex items-center gap-1.5">
+              <i class="fa-solid fa-truck-fast text-emerald-400"></i> Nationwide Courier (Trax / TCS)
+            </span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 4. Sticky Clean Category Tabs (House of Melone Signature Minimalist Bar) -->
+  <section id="productCatalogAnchor" class="sticky top-16 sm:top-20 z-30 bg-white/95 backdrop-blur-md border-b border-neutral-200 py-2.5 shadow-[0_2px_4px_rgba(0,0,0,0.02)]">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6">
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar">
+        <button onclick="filterCategory('all', this)" class="cat-pill active shrink-0 px-3.5 py-1.5 rounded-full text-xs font-extrabold transition bg-black text-white shadow-sm tap-active">
+          All Pieces
+        </button>
+        <button onclick="filterCategory('men', this)" class="cat-pill shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold transition bg-neutral-100 hover:bg-neutral-200 text-neutral-800 border border-neutral-200/80 tap-active">
+          Men's Tracksuits
+        </button>
+        <button onclick="filterCategory('women', this)" class="cat-pill shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold transition bg-neutral-100 hover:bg-neutral-200 text-neutral-800 border border-neutral-200/80 tap-active">
+          Women's Atelier
+        </button>
+        <button onclick="filterCategory('bags', this)" class="cat-pill shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold transition bg-neutral-100 hover:bg-neutral-200 text-neutral-800 border border-neutral-200/80 tap-active">
+          Handbags & Sets
+        </button>
+        <button onclick="filterCategory('accessories', this)" class="cat-pill shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold transition bg-neutral-100 hover:bg-neutral-200 text-neutral-800 border border-neutral-200/80 tap-active">
+          Jewelry & Chappals
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Product Catalog Grid -->
+  <main class="flex-1 max-w-7xl mx-auto px-3 sm:px-6 py-5 sm:py-10 w-full">
+    
+    <div class="flex items-center justify-between text-xs pb-3 border-b border-neutral-200 mb-4 sm:mb-6">
+      <div class="flex items-center gap-2">
+        <span class="text-neutral-500 font-medium text-xs">Curated Catalog:</span>
+        <strong id="itemCount" class="text-neutral-900 font-bold bg-neutral-100 px-2.5 py-0.5 rounded-full border border-neutral-200">11 Products</strong>
+      </div>
+      
+      <div class="flex items-center gap-1.5">
+        <label for="sortSelect" class="text-neutral-500 text-xs">Sort by:</label>
+        <select id="sortSelect" onchange="applySort(this.value)" class="bg-white border border-neutral-300 text-xs text-neutral-800 rounded-lg px-2.5 py-1 focus:border-black focus:outline-none shadow-sm">
+          <option value="featured">Featured Collection</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Product Grid (2 columns on mobile, 3 on tablet, 4 on desktop) -->
+    <div id="productGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+      <!-- Injected from backend API / preloaded catalog -->
+    </div>
+
+    <div id="noProductsFound" class="hidden text-center py-16 space-y-3 bg-white border border-neutral-200 rounded-2xl p-8">
+      <i class="fa-solid fa-magnifying-glass text-neutral-400 text-3xl"></i>
+      <h3 class="text-base font-bold text-neutral-900">Koi Product Nahi Mila</h3>
+      <p class="text-xs text-neutral-500">Aapki search query ke mutabiq koi item match nahi hua.</p>
+      <button onclick="filterCategory('all', null)" class="px-5 py-2 rounded-full bg-black text-white font-bold text-xs shadow hover:bg-neutral-800 transition">
+        Reset All Filters
+      </button>
+    </div>
+
+  </main>
+
+  <!-- 6. Brand Philosophy & Quality Pillars (Clean Minimalist Luxury Section) -->
+  <section class="border-y border-neutral-200 bg-white py-12 sm:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="text-center max-w-2xl mx-auto space-y-2 mb-10">
+        <span class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-amber-700">The Lakhani Philosophy</span>
+        <h2 class="text-xl sm:text-3xl font-serif font-black text-neutral-900">Uncompromised Quality. Direct Privileges.</h2>
+        <p class="text-xs sm:text-sm text-neutral-500">Pakistani fashion ko high-quality fabrics, exact stitching aur direct factory rates par deliver karna hamara mission hai.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        
+        <div class="p-6 rounded-2xl bg-neutral-50 border border-neutral-200/90 space-y-3 hover:border-black/50 transition shadow-sm">
+          <div class="w-11 h-11 rounded-xl bg-black text-amber-300 flex items-center justify-center text-lg shadow-sm">
+            <i class="fa-solid fa-gem"></i>
+          </div>
+          <h3 class="font-serif font-bold text-base text-neutral-900">100% Authentic Fabrics</h3>
+          <p class="text-xs text-neutral-600 leading-relaxed">Winter fleece heavy GSM, 72-grade pure pashmina shawls, aur 90/70 airjet pure lawn — har piece fabric guaranteed hota hai.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-neutral-50 border border-neutral-200/90 space-y-3 hover:border-black/50 transition shadow-sm">
+          <div class="w-11 h-11 rounded-xl bg-black text-emerald-400 flex items-center justify-center text-lg shadow-sm">
+            <i class="fa-solid fa-tag"></i>
+          </div>
+          <h3 class="font-serif font-bold text-base text-neutral-900">Direct Manufacturer Rates</h3>
+          <p class="text-xs text-neutral-600 leading-relaxed">Bina kisi showroom ya middleman commission ke direct wholesale pricing ka faida seedha hamare customers ko milta hai.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-neutral-50 border border-neutral-200/90 space-y-3 hover:border-black/50 transition shadow-sm">
+          <div class="w-11 h-11 rounded-xl bg-black text-blue-400 flex items-center justify-center text-lg shadow-sm">
+            <i class="fa-solid fa-shield-halved"></i>
+          </div>
+          <h3 class="font-serif font-bold text-base text-neutral-900">Strict Advance Verification</h3>
+          <p class="text-xs text-neutral-600 leading-relaxed">Meezan Bank, Easypaisa aur OPay ke zariye safe advance payments. Payment slip aate hi parcel secure packing mein chala jata hai.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-neutral-50 border border-neutral-200/90 space-y-3 hover:border-black/50 transition shadow-sm">
+          <div class="w-11 h-11 rounded-xl bg-black text-purple-400 flex items-center justify-center text-lg shadow-sm">
+            <i class="fa-solid fa-truck-fast"></i>
+          </div>
+          <h3 class="font-serif font-bold text-base text-neutral-900">Nationwide Express Courier</h3>
+          <p class="text-xs text-neutral-600 leading-relaxed">Trax, TCS aur Leopard courier ke through 2 se 4 working days ke andar pure Pakistan mein doorstep tracking ke sath delivery.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. 3-Step Advance Booking Guide -->
+  <section class="bg-neutral-100/70 py-12 sm:py-16 border-b border-neutral-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="text-center max-w-xl mx-auto space-y-2 mb-10">
+        <span class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-amber-700">Simple Process</span>
+        <h2 class="text-xl sm:text-3xl font-serif font-black text-neutral-900">Order Kaise Book Karein?</h2>
+        <p class="text-xs sm:text-sm text-neutral-500">Aapka order 3 aasan steps mein direct hamari WhatsApp team ke sath confirm hota hai.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+        
+        <div class="p-6 rounded-2xl bg-white border border-neutral-200 space-y-3 shadow-sm">
+          <div class="w-9 h-9 rounded-full bg-black text-amber-300 font-black font-mono text-sm flex items-center justify-center shadow-sm">1</div>
+          <h3 class="font-serif font-bold text-base text-neutral-900">Product & Size Select Karein</h3>
+          <p class="text-xs text-neutral-600 leading-relaxed">Website par tracksuit, pashmina suit ya handbag select karein, color & size choose karein aur <strong>"Order"</strong> button par click karein.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-white border border-neutral-200 space-y-3 shadow-sm">
+          <div class="w-9 h-9 rounded-full bg-black text-amber-300 font-black font-mono text-sm flex items-center justify-center shadow-sm">2</div>
+          <h3 class="font-serif font-bold text-base text-neutral-900">Advance Payment Transfer Karein</h3>
+          <p class="text-xs text-neutral-600 leading-relaxed">Meezan Bank, Easypaisa ya OPay account par payment transfer karein. Hamare verified account details website par 1-click copy ke sath mojood hain.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-white border border-neutral-200 space-y-3 shadow-sm">
+          <div class="w-9 h-9 rounded-full bg-black text-amber-300 font-black font-mono text-sm flex items-center justify-center shadow-sm">3</div>
+          <h3 class="font-serif font-bold text-base text-neutral-900">WhatsApp Par Slip Send Karein</h3>
+          <p class="text-xs text-neutral-600 leading-relaxed">Payment transfer ka screenshot WhatsApp number <strong>03302043491</strong> par share karein. Hamari team foran payment verify karke tracking slip de degi.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Verified Pakistani Customer Reviews -->
+  <section class="bg-white py-12 sm:py-16 border-b border-neutral-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+        <div>
+          <span class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-amber-700">Verified Testimonials</span>
+          <h2 class="text-xl sm:text-3xl font-serif font-black text-neutral-900 mt-1">Customer Reviews & Feedback</h2>
+        </div>
+        <div class="flex items-center gap-1 text-amber-500 text-sm">
+          <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          <span class="text-xs text-neutral-500 ml-2 font-mono font-bold">4.9 / 5.0 (280+ Reviews)</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+        
+        <div class="p-6 rounded-2xl bg-neutral-50 border border-neutral-200 space-y-3 shadow-sm">
+          <div class="flex items-center gap-1 text-amber-500 text-xs">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="text-xs text-neutral-700 italic leading-relaxed">"Men's fleece tracksuit ka fabric bohot warm aur soft hai. Arabic print aur stitching bilkul picture jaisi thi. Advance payment ka pehle dar tha lekin 3 din me TCS parcel mil gaya!"</p>
+          <div class="flex items-center justify-between pt-3 border-t border-neutral-200 text-xs">
+            <span class="font-bold text-neutral-900">Hamza Tariq</span>
+            <span class="text-neutral-500">Lahore • Verified Buyer</span>
+          </div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-neutral-50 border border-neutral-200 space-y-3 shadow-sm">
+          <div class="flex items-center gap-1 text-amber-500 text-xs">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="text-xs text-neutral-700 italic leading-relaxed">"Pashmina shawl ki quality 10/10 hai! Gala embroidery aur fabric ki softness original Kashmiri pashmina jaisi hai. Lakhani Collection ka response time WhatsApp par bohot quick tha."</p>
+          <div class="flex items-center justify-between pt-3 border-t border-neutral-200 text-xs">
+            <span class="font-bold text-neutral-900">Dr. Ayesha Siddiqui</span>
+            <span class="text-neutral-500">Karachi • Verified Buyer</span>
+          </div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-neutral-50 border border-neutral-200 space-y-3 shadow-sm">
+          <div class="flex items-center gap-1 text-amber-500 text-xs">
+            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+          </div>
+          <p class="text-xs text-neutral-700 italic leading-relaxed">"Maine 2-piece handbag set order kiya tha matching wallet ke sath. Finishing aur zip hardware bohot high quality hai. Best experience for online shopping in Pakistan!"</p>
+          <div class="flex items-center justify-between pt-3 border-t border-neutral-200 text-xs">
+            <span class="font-bold text-neutral-900">Zainab Khan</span>
+            <span class="text-neutral-500">Islamabad • Verified Buyer</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. Luxury Editorial Dark Footer Anchor -->
+  <footer class="bg-[#111317] border-t border-neutral-800 text-neutral-400 text-xs pb-24 md:pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-16 space-y-12">
+      
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        
+        <!-- Brand Info -->
+        <div class="space-y-4 md:col-span-2">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-full border border-neutral-700 flex items-center justify-center bg-black text-amber-300 font-serif font-black text-sm">LC</div>
+            <div>
+              <span class="font-serif font-bold text-lg text-white uppercase tracking-wider block">Lakhani Collection</span>
+              <span class="text-[9px] uppercase tracking-widest text-amber-400 font-medium">House of Haute Couture & Ready-to-Wear</span>
+            </div>
+          </div>
+          <p class="text-neutral-400 text-xs leading-relaxed max-w-sm font-light">
+            Pakistan's emerging boutique fashion atelier delivering winter fleece tracksuits, luxury embroidered pashmina shawls, 90/70 summer lawns, handbags and chappals at genuine factory direct rates.
+          </p>
+          <div class="flex items-center gap-2.5 pt-1">
+            <span class="text-[10px] font-bold text-amber-300 bg-neutral-900 border border-neutral-700 px-3 py-1 rounded-full">
+              ⚡ Strict Advance Verification
+            </span>
+            <span class="text-[10px] font-bold text-emerald-400 bg-neutral-900 border border-neutral-700 px-3 py-1 rounded-full">
+              🚚 Nationwide Courier
+            </span>
+          </div>
+        </div>
+
+        <!-- Collections Links -->
+        <div class="space-y-3">
+          <h4 class="font-serif font-bold text-white text-xs uppercase tracking-wider text-amber-300">Catalog Collections</h4>
+          <ul class="space-y-2 text-xs">
+            <li><button onclick="filterCategory('men', null)" class="hover:text-white transition">Men's Winter Tracksuits</button></li>
+            <li><button onclick="filterCategory('women', null)" class="hover:text-white transition">Luxury Pashmina Shawls</button></li>
+            <li><button onclick="filterCategory('women', null)" class="hover:text-white transition">Summer Lawn & Cambric 3-Pc</button></li>
+            <li><button onclick="filterCategory('women', null)" class="hover:text-white transition">Imported Long Cardigan Sweaters</button></li>
+            <li><button onclick="filterCategory('bags', null)" class="hover:text-white transition">2-Pc Luxury Handbags & Wallets</button></li>
+            <li><button onclick="filterCategory('accessories', null)" class="hover:text-white transition">Zircon Jewelry & Flat Chappals</button></li>
+          </ul>
+        </div>
+
+        <!-- Customer Care & Bank Lookup -->
+        <div class="space-y-3">
+          <h4 class="font-serif font-bold text-white text-xs uppercase tracking-wider text-amber-300">Customer Concierge</h4>
+          <p class="text-xs text-neutral-400">Kisi bhi sawal, sizing ya payment slip share karne ke liye hamari WhatsApp helpline par rabta karein:</p>
+          <div class="space-y-2.5 pt-1">
+            <a href="https://wa.me/923302043491" target="_blank" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-sm">
+              <i class="fa-brands fa-whatsapp text-sm"></i> 0330 2043491 (Fahad)
+            </a>
+            <div class="text-[11px] text-neutral-500">
+              Alternate: 0311 2227142
+            </div>
+            <button onclick="openPaymentModal()" class="w-full py-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-amber-300 border border-neutral-700 text-xs font-bold transition flex items-center justify-center gap-1.5 mt-2">
+              <i class="fa-solid fa-building-columns"></i> View Verified Bank Accounts
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="border-t border-neutral-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-neutral-500">
+        <p>© 2026 Lakhani Collection. All rights reserved. Crafted for luxury lovers across Pakistan.</p>
+        <p class="flex items-center gap-2">
+          <span>Nationwide Logistics: TCS • Trax • Leopard Courier</span>
+        </p>
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- 10. Product Details Modal (Mobile Bottom-Sheet / Desktop Clean White Modal) -->
+  <div id="productModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-black/60 backdrop-blur-sm hidden">
+    <div class="mobile-sheet bg-white border border-neutral-200 rounded-t-3xl sm:rounded-3xl max-w-3xl w-full p-4 sm:p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto no-scrollbar">
+      <div class="sm:hidden w-10 h-1 rounded-full bg-neutral-300 mx-auto mb-2.5"></div>
+      <button onclick="closeProductModal()" class="absolute top-3 right-3 sm:top-4 sm:right-4 text-neutral-500 hover:text-black text-base z-20 bg-neutral-100 hover:bg-neutral-200 p-2 rounded-full tap-active transition">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-5" id="modalProductContent"></div>
+    </div>
+  </div>
+
+  <!-- 11. Advance Payment Accounts Modal (Clean White) -->
+  <div id="paymentModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-black/60 backdrop-blur-sm hidden">
+    <div class="mobile-sheet bg-white border border-neutral-200 rounded-t-3xl sm:rounded-3xl max-w-md w-full p-5 sm:p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto no-scrollbar">
+      <div class="sm:hidden w-10 h-1 rounded-full bg-neutral-300 mx-auto mb-2.5"></div>
+      <button onclick="closePaymentModal()" class="absolute top-3 right-3 sm:top-4 sm:right-4 text-neutral-400 hover:text-black text-base tap-active">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="text-center space-y-1 mb-5">
+        <div class="w-11 h-11 mx-auto rounded-full bg-amber-50 text-amber-800 flex items-center justify-center text-lg border border-amber-200 shadow-sm">
+          <i class="fa-solid fa-building-columns"></i>
+        </div>
+        <h3 class="text-base sm:text-lg font-serif font-bold text-neutral-900">Payment Accounts</h3>
+        <p class="text-[10px] text-amber-800 font-extrabold uppercase">⚠️ ONLY ADVANCE PAYMENT ACCEPTED</p>
+        <p class="text-xs text-neutral-500">Account copy karein aur transfer ke baad WhatsApp par slip send karein.</p>
+      </div>
+
+      <div class="space-y-3" id="paymentAccountsContainer">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <div class="mt-4 pt-3 border-t border-neutral-200">
+        <a id="shareSlipWaBtn" href="https://wa.me/923302043491?text=Assalam%20o%20Alaikum!%20Maine%20Advance%20Payment%20kar%20di%20hai,%20screenshot%20share%20kar%20raha%20hoon" target="_blank"
+           class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs uppercase flex items-center justify-center gap-1.5 tap-active shadow transition">
+          <i class="fa-brands fa-whatsapp text-sm"></i> Share Receipt on WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12. Cart Slide-Over Drawer (Clean White) -->
+  <div id="cartDrawer" class="fixed inset-0 z-50 overflow-hidden hidden">
+    <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="toggleCartDrawer(false)"></div>
+    <div class="fixed inset-y-0 right-0 max-w-full flex pl-4 sm:pl-10">
+      <div class="w-screen max-w-sm sm:max-w-md bg-white border-l border-neutral-200 flex flex-col shadow-2xl">
+        
+        <div class="p-4 sm:p-5 border-b border-neutral-200 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-bag-shopping text-neutral-900 text-base"></i>
+            <h3 class="font-serif font-bold text-base text-neutral-900">Shopping Bag</h3>
+            <span id="drawerItemCount" class="text-xs bg-neutral-100 text-neutral-800 px-2.5 py-0.5 rounded-full font-bold border border-neutral-200">0</span>
+          </div>
+          <button onclick="toggleCartDrawer(false)" class="text-neutral-400 hover:text-black p-1 tap-active">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+
+        <div id="cartItemsList" class="flex-1 overflow-y-auto p-4 space-y-3 no-scrollbar"></div>
+
+        <div class="p-4 sm:p-5 border-t border-neutral-200 bg-neutral-50 space-y-3">
+          <div class="space-y-1.5 text-xs text-neutral-600">
+            <div class="flex justify-between">
+              <span>Items Total:</span>
+              <span id="cartSubtotal" class="font-bold text-neutral-900">Rs. 0</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Delivery Fee (Advance):</span>
+              <span id="cartDeliveryFee" class="font-bold text-emerald-700">Rs. 250</span>
+            </div>
+            <div class="flex justify-between border-t border-neutral-200 pt-1.5 text-sm font-bold text-neutral-900">
+              <span>Payable Total:</span>
+              <span id="cartGrandTotal" class="text-neutral-950 font-mono text-base font-black">Rs. 0</span>
+            </div>
+          </div>
+
+          <button onclick="openCheckoutModal()" id="checkoutButton" class="w-full py-3.5 rounded-xl bg-black hover:bg-neutral-800 text-white font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow tap-active transition">
+            <i class="fa-solid fa-file-invoice-dollar"></i> Book Advance Order
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- 13. Checkout Modal (Clean White) -->
+  <div id="checkoutModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-black/60 backdrop-blur-sm hidden">
+    <div class="mobile-sheet bg-white border border-neutral-200 rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-5 sm:p-6 shadow-2xl relative max-h-[92vh] overflow-y-auto no-scrollbar">
+      <div class="sm:hidden w-10 h-1 rounded-full bg-neutral-300 mx-auto mb-2.5"></div>
+      <button onclick="closeCheckoutModal()" class="absolute top-3 right-3 sm:top-4 sm:right-4 text-neutral-400 hover:text-black text-base tap-active">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="border-b border-neutral-200 pb-2.5 mb-3.5">
+        <h3 class="text-base sm:text-lg font-serif font-bold text-neutral-900">Delivery & Order Booking</h3>
+        <p class="text-xs text-neutral-500">Order confirm karne ke liye apni delivery details enter karein.</p>
+      </div>
+
+      <form id="orderForm" onsubmit="handleOrderSubmit(event)" class="space-y-3">
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-xs font-semibold text-neutral-700 mb-1">Naam *</label>
+            <input type="text" id="custName" required placeholder="Full Name" 
+              class="w-full bg-neutral-50 border border-neutral-300 rounded-lg p-2.5 text-xs text-neutral-900 focus:border-black focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-neutral-700 mb-1">WhatsApp / Phone *</label>
+            <input type="tel" id="custPhone" required placeholder="03XXXXXXXXX" 
+              class="w-full bg-neutral-50 border border-neutral-300 rounded-lg p-2.5 text-xs text-neutral-900 focus:border-black focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-xs font-semibold text-neutral-700 mb-1">City / Sheher *</label>
+            <input type="text" id="custCity" required placeholder="City name" 
+              class="w-full bg-neutral-50 border border-neutral-300 rounded-lg p-2.5 text-xs text-neutral-900 focus:border-black focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-neutral-700 mb-1">Payment Via *</label>
+            <select id="custPaymentMethod" required class="w-full bg-neutral-50 border border-neutral-300 rounded-lg p-2.5 text-xs text-neutral-900 focus:border-black focus:outline-none">
+              <option value="Meezan Bank">Meezan Bank (Fahad)</option>
+              <option value="Easypaisa">Easypaisa (Fahad)</option>
+              <option value="OPay">OPay (Fahad)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-neutral-700 mb-1">Complete Address *</label>
+          <textarea id="custAddress" required rows="2" placeholder="House/Flat No, Street, Landmark..." 
+            class="w-full bg-neutral-50 border border-neutral-300 rounded-lg p-2.5 text-xs text-neutral-900 focus:border-black focus:outline-none"></textarea>
+        </div>
+
+        <div class="p-3 rounded-xl bg-neutral-100 border border-neutral-200 flex justify-between items-center text-xs">
+          <span class="text-neutral-600 font-medium">Total Payable:</span>
+          <span id="checkoutAmountTotal" class="font-black text-neutral-950 font-mono text-sm">Rs. 0</span>
+        </div>
+
+        <button type="submit" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow tap-active transition">
+          <i class="fa-solid fa-file-invoice"></i> Confirm Booking & Open WhatsApp
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 14. Digital Invoice Modal (Clean White) -->
+  <div id="invoiceModal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4 bg-black/70 backdrop-blur-sm hidden">
+    <div class="mobile-sheet bg-white border border-neutral-200 rounded-t-3xl sm:rounded-3xl max-w-lg w-full p-5 shadow-2xl relative max-h-[92vh] overflow-y-auto no-scrollbar">
+      <div class="sm:hidden w-10 h-1 rounded-full bg-neutral-300 mx-auto mb-2"></div>
+      <button onclick="closeInvoiceModal()" class="absolute top-3 right-3 text-neutral-400 hover:text-black text-base tap-active">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="bg-neutral-50 p-4 rounded-xl border border-neutral-200 space-y-3.5">
+        <div class="flex justify-between items-center border-b border-neutral-200 pb-2.5">
+          <div>
+            <h2 class="font-serif font-black text-sm text-neutral-900 uppercase">LAKHANI COLLECTION</h2>
+            <p class="text-[10px] text-neutral-500">Order Booking Confirmed</p>
+          </div>
+          <div class="text-right">
+            <span class="text-[9px] bg-neutral-200 text-neutral-800 px-2 py-0.5 rounded font-bold">INVOICE</span>
+            <p id="invNumber" class="text-xs font-mono font-bold text-neutral-900 mt-0.5"></p>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-lg bg-amber-50 border border-amber-200 text-xs space-y-0.5">
+          <span class="text-amber-900 font-bold block uppercase text-[10px]">Advance Payment Transfer To:</span>
+          <p id="invPaymentAccountTitle" class="font-bold text-neutral-900"></p>
+          <p id="invPaymentAccountDetails" class="font-mono text-amber-800 font-bold"></p>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border border-neutral-200 rounded">
+            <thead class="bg-neutral-100 text-neutral-600 uppercase text-[10px]">
+              <tr>
+                <th class="p-2">Item</th>
+                <th class="p-2 text-center">Qty</th>
+                <th class="p-2 text-right">Total</th>
+              </tr>
+            </thead>
+            <tbody id="invItemsBody" class="divide-y divide-neutral-200 text-neutral-800"></tbody>
+          </table>
+        </div>
+
+        <div class="flex justify-between items-center text-sm font-bold pt-1.5 border-t border-neutral-200">
+          <span class="text-neutral-600">Grand Total:</span>
+          <span id="invGrandTotal" class="text-neutral-950 font-mono text-base"></span>
+        </div>
+      </div>
+
+      <div class="mt-3.5">
+        <button id="sendInvoiceWhatsAppBtn" class="w-full py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs uppercase flex items-center justify-center gap-1.5 shadow tap-active transition">
+          <i class="fa-brands fa-whatsapp text-sm"></i> Send Slip on WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toastNotification" class="fixed bottom-20 right-4 z-50 bg-neutral-900 border border-neutral-700 text-white px-4 py-2.5 rounded-xl shadow-2xl flex items-center gap-2 transform translate-y-28 opacity-0 transition duration-300 pointer-events-none text-xs font-bold">
+    <i class="fa-solid fa-circle-check text-amber-400"></i>
+    <span id="toastMessage">Item added</span>
+  </div>
+
+  <!-- 15. Clean Mobile Bottom App Bar (White / Luxury Style) -->
+  <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 border-t border-neutral-200 backdrop-blur-lg px-2 py-2 flex items-center justify-around text-center shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+    <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="flex flex-col items-center text-black w-14 tap-active">
+      <i class="fa-solid fa-store text-base"></i>
+      <span class="text-[9px] font-extrabold mt-0.5">Shop</span>
+    </button>
+
+    <button onclick="openPaymentModal()" class="flex flex-col items-center text-amber-800 w-14 tap-active">
+      <i class="fa-solid fa-building-columns text-base"></i>
+      <span class="text-[9px] font-bold mt-0.5">Accounts</span>
+    </button>
+
+    <button onclick="toggleCartDrawer(true)" class="relative flex flex-col items-center text-neutral-700 w-14 tap-active">
+      <i class="fa-solid fa-bag-shopping text-base"></i>
+      <span id="mobileCartBadge" class="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-black text-white font-black text-[8px] flex items-center justify-center hidden">0</span>
+      <span class="text-[9px] font-bold mt-0.5">Cart</span>
+    </button>
+
+    <a id="mobileWaLink" href="https://wa.me/923302043491?text=Assalam%20o%20Alaikum!%20Lakhani%20Collection%20se%20order%20karna%20hai" target="_blank" class="flex flex-col items-center text-emerald-600 w-14 tap-active">
+      <i class="fa-brands fa-whatsapp text-lg"></i>
+      <span class="text-[9px] font-bold mt-0.5">WhatsApp</span>
+    </a>
+  </nav>
+
+  <!-- Complete Storefront Dynamic Logic with Preloaded Catalog and Backend Sync -->
+  <script>
+    let products = window.INITIAL_PRODUCTS || [];
+    let storeSettings = window.INITIAL_SETTINGS || {};
+    let currentCategory = 'all';
+    let searchQuery = '';
+    let currentSort = 'featured';
+    let cart = [];
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadCartFromStorage();
+      
+      // 1. Instant Render from custom cache or preloaded catalog (Zero wait time)
+      if (window.INITIAL_SETTINGS) {
+        storeSettings = window.INITIAL_SETTINGS;
+        renderPaymentAccounts();
+      }
+
+      // Check if admin added any products on this device
+      let loadedFromCache = false;
+      try {
+        const cached = localStorage.getItem('LAKHANI_CUSTOM_PRODUCTS');
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            products = parsed;
+            loadedFromCache = true;
+            renderCatalog();
+          }
+        }
+      } catch(e) {}
+
+      if (!loadedFromCache && window.INITIAL_PRODUCTS && window.INITIAL_PRODUCTS.length > 0) {
+        products = window.INITIAL_PRODUCTS;
+        renderCatalog();
+      }
+      setupSearch();
+
+      // Real-time broadcast sync across tabs when admin adds/edits products
+      if (window.BroadcastChannel) {
+        try {
+          const bc = new BroadcastChannel('lakhani_catalog_channel');
+          bc.onmessage = (event) => {
+            if (event.data && event.data.type === 'PRODUCTS_UPDATED' && Array.isArray(event.data.products)) {
+              products = event.data.products;
+              renderCatalog();
+            }
+          };
+        } catch(e) {}
+      }
+
+      // 2. Fetch latest live updates from Backend API (Render / Local) in background
+      fetchStoreSettings();
+      loadProducts();
+    });
+
+    async function fetchStoreSettings() {
+      try {
+        let liveSettings = null;
+        if (window.sbApi) {
+          liveSettings = await sbApi.getSettings();
+        } else {
+          const res = await fetch(apiUrl('/api/settings'), { cache: 'no-store' });
+          const json = await res.json();
+          if (json.success && json.data) liveSettings = json.data;
+        }
+        if (liveSettings && Object.keys(liveSettings).length > 0) {
+          storeSettings = liveSettings;
+          renderPaymentAccounts();
+        }
+      } catch (e) {
+        console.warn('Supabase settings fetch fallback:', e);
+      }
+    }
+
+    function renderPaymentAccounts() {
+      const container = document.getElementById('paymentAccountsContainer');
+      const s = storeSettings;
+      container.innerHTML = `
+        <div class="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200 space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-neutral-900 flex items-center gap-1.5">
+              <i class="fa-solid fa-building-columns text-amber-700"></i> Meezan Bank
+            </span>
+            <span class="text-[9px] bg-neutral-200 text-neutral-800 px-2 py-0.5 rounded font-bold uppercase">Bank</span>
+          </div>
+          <div class="flex justify-between text-xs pt-1">
+            <span class="text-neutral-500">Title:</span>
+            <span class="font-bold text-neutral-900">${s.meezanBankTitle || 'Fahad'}</span>
+          </div>
+          <div class="flex justify-between text-xs">
+            <span class="text-neutral-500">A/C No:</span>
+            <span class="font-mono font-bold text-neutral-900">${s.meezanBankNo || '1036 0113829648'}</span>
+          </div>
+          <button onclick="copyToClipboard('${(s.meezanBankNo || '10360113829648').replace(/\s+/g, '')}', this)" class="mt-2 w-full py-2 rounded-lg bg-white border border-neutral-300 hover:bg-neutral-100 text-xs font-bold text-neutral-800 flex items-center justify-center gap-1.5 tap-active transition shadow-sm">
+            <i class="fa-regular fa-copy"></i> Copy Bank Account
+          </button>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200 space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-emerald-800 flex items-center gap-1.5">
+              <i class="fa-solid fa-mobile-screen-button text-emerald-600"></i> Easypaisa Wallet
+            </span>
+            <span class="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold uppercase">Instant</span>
+          </div>
+          <div class="flex justify-between text-xs pt-1">
+            <span class="text-neutral-500">Title:</span>
+            <span class="font-bold text-neutral-900">${s.easypaisaTitle || 'Fahad Fahad'}</span>
+          </div>
+          <div class="flex justify-between text-xs">
+            <span class="text-neutral-500">Number:</span>
+            <span class="font-mono font-bold text-emerald-700">${s.easypaisaNo || '03302043491'}</span>
+          </div>
+          <button onclick="copyToClipboard('${s.easypaisaNo || '03302043491'}', this)" class="mt-2 w-full py-2 rounded-lg bg-white border border-neutral-300 hover:bg-neutral-100 text-xs font-bold text-neutral-800 flex items-center justify-center gap-1.5 tap-active transition shadow-sm">
+            <i class="fa-regular fa-copy"></i> Copy Easypaisa Number
+          </button>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-neutral-50 border border-neutral-200 space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-blue-800 flex items-center gap-1.5">
+              <i class="fa-solid fa-wallet text-blue-600"></i> OPay Wallet
+            </span>
+            <span class="text-[9px] bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-bold uppercase">Wallet</span>
+          </div>
+          <div class="flex justify-between text-xs pt-1">
+            <span class="text-neutral-500">Title:</span>
+            <span class="font-bold text-neutral-900">${s.opayTitle || 'Fahad'}</span>
+          </div>
+          <div class="flex justify-between text-xs">
+            <span class="text-neutral-500">Number:</span>
+            <span class="font-mono font-bold text-blue-700">${s.opayNo || '03302043491'}</span>
+          </div>
+          <button onclick="copyToClipboard('${s.opayNo || '03302043491'}', this)" class="mt-2 w-full py-2 rounded-lg bg-white border border-neutral-300 hover:bg-neutral-100 text-xs font-bold text-neutral-800 flex items-center justify-center gap-1.5 tap-active transition shadow-sm">
+            <i class="fa-regular fa-copy"></i> Copy OPay Number
+          </button>
+        </div>
+      `;
+    }
+
+    async function loadProducts() {
+      try {
+        let liveProducts = null;
+        if (window.sbApi) {
+          liveProducts = await sbApi.getProducts();
+        } else {
+          const res = await fetch(apiUrl('/api/products'), { cache: 'no-store' });
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const json = await res.json();
+          if (json.success && Array.isArray(json.data)) liveProducts = json.data;
+        }
+
+        if (Array.isArray(liveProducts)) {
+          products = liveProducts;
+          try {
+            localStorage.setItem('LAKHANI_CUSTOM_PRODUCTS', JSON.stringify(products));
+          } catch(err) {}
+          renderCatalog();
+          return;
+        }
+      } catch (e) {
+        console.warn('Supabase products fetch notice:', e.message);
+      }
+
+      if (products.length === 0) {
+        try {
+          const cached = localStorage.getItem('LAKHANI_CUSTOM_PRODUCTS');
+          if (cached) {
+            const parsed = JSON.parse(cached);
+            if (Array.isArray(parsed) && parsed.length > 0) products = parsed;
+          }
+        } catch(err) {}
+      }
+      if (products.length === 0 && window.INITIAL_PRODUCTS && window.INITIAL_PRODUCTS.length > 0) {
+        products = window.INITIAL_PRODUCTS;
+      }
+      renderCatalog();
+    }
+
+    function renderCatalog() {
+      const grid = document.getElementById("productGrid");
+      const noFound = document.getElementById("noProductsFound");
+      const itemCountSpan = document.getElementById("itemCount");
+
+      let filtered = products.filter(item => {
+        const matchesCategory = (currentCategory === 'all') || (item.category === currentCategory);
+        const q = searchQuery.toLowerCase().trim();
+        const matchesSearch = !q || 
+          item.title.toLowerCase().includes(q) ||
+          (item.categoryLabel && item.categoryLabel.toLowerCase().includes(q)) ||
+          (item.fabric && item.fabric.toLowerCase().includes(q)) ||
+          (item.colors && item.colors.some(c => c.toLowerCase().includes(q)));
+        return matchesCategory && matchesSearch;
+      });
+
+      if (currentSort === 'price-low') filtered.sort((a, b) => a.price - b.price);
+      else if (currentSort === 'price-high') filtered.sort((a, b) => b.price - a.price);
+
+      itemCountSpan.innerText = `${filtered.length} Products`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = "";
+        noFound.classList.remove("hidden");
+        return;
+      }
+      noFound.classList.add("hidden");
+
+      const colorMap = {
+        'white': '#ffffff', 'black': '#111111', 'baby pink': '#fbcfe8', 'lavender': '#e9d5ff',
+        'maroon': '#800020', 'beige': '#f5f5dc', 'navy blue': '#1e3a8a', 'camel beige': '#d2b48c',
+        'royal maroon': '#58111a', 'midnight navy': '#0f172a', 'sky blue': '#7dd3fc',
+        'brown': '#78350f', 'mustard': '#ca8a04', 'mint green': '#86efac', 'peach pink': '#fecdd3',
+        'teal': '#0d9488', 'ruby red': '#991b1b', 'emerald green': '#065f46', 'dark brown': '#451a03',
+        'silver glitter': '#e2e8f0', 'black beaded': '#18181b', 'gold': '#eab308', 'pink bow': '#f472b6',
+        'leopard': '#b45309', 'grey': '#9ca3af', 'khaki': '#a3a380', 'taupe': '#8b8589',
+        'mint': '#6ee7b7', 'cream': '#fef3c7', 'dusty pink': '#db2777', 'light pink': '#fce7f3', 'tan': '#d97706'
+      };
+
+      grid.innerHTML = filtered.map(item => {
+        const discountPkr = (item.originalPrice && item.originalPrice > item.price) ? (item.originalPrice - item.price) : 0;
+        const colorDots = (item.colors && Array.isArray(item.colors)) ? item.colors.slice(0, 5).map(c => {
+          const bg = colorMap[c.toLowerCase()] || '#999999';
+          const isLight = c.toLowerCase() === 'white' || c.toLowerCase() === 'cream';
+          return `<span title="${c}" class="inline-block w-2.5 h-2.5 rounded-full border ${isLight ? 'border-neutral-400' : 'border-neutral-300'} shadow-sm shrink-0" style="background-color: ${bg};"></span>`;
+        }).join('') : '';
+
+        return `
+        <div class="group bg-white border border-neutral-200/90 hover:border-black/70 rounded-2xl overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-xl transition-all duration-300 relative">
+          
+          <!-- Image Container with 4:5 fashion ratio & hover zoom -->
+          <div class="relative w-full aspect-[4/5] bg-neutral-100 cursor-pointer overflow-hidden" onclick="openProductModal('${item.id}')">
+            <img src="${formatImgUrl(item.aiImage)}" alt="${item.title}" loading="lazy" decoding="async" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='assets/hero_banner.webp';}" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition duration-300"></div>
+            
+            <!-- Category & Badge -->
+            <div class="absolute top-2.5 left-2.5 flex items-center gap-1">
+              <span class="text-[9px] font-black uppercase px-2 py-0.5 rounded-md bg-neutral-900 text-white border border-neutral-800 shadow-sm">
+                ${item.badge}
+              </span>
+              ${item.video ? `<span class="text-[9px] font-bold text-amber-300 bg-black/85 px-1.5 py-0.5 rounded-md shadow flex items-center gap-1"><i class="fa-solid fa-play text-[7px]"></i> Video</span>` : ''}
+            </div>
+
+            <div class="absolute top-2.5 right-2.5 flex items-center gap-1">
+
+              ${item.gallery && item.gallery.length > 1 ? `
+                <span class="text-[9px] font-bold text-white bg-black/75 px-1.5 py-0.5 rounded shadow flex items-center gap-1">
+                  <i class="fa-solid fa-images text-[8px]"></i> ${item.gallery.length}
+                </span>
+              ` : ''}
+            </div>
+
+            <!-- Quick Action Hover Pill (Desktop) -->
+            <div class="absolute bottom-3 inset-x-3 hidden sm:flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
+              <span class="w-full py-2 rounded-xl bg-black/90 text-white text-[11px] font-bold text-center shadow-lg backdrop-blur-md">
+                <i class="fa-solid fa-eye mr-1 text-amber-400"></i> Quick View & Specs
+              </span>
+            </div>
+          </div>
+
+          <!-- Product Details -->
+          <div class="p-3 sm:p-4 flex-1 flex flex-col justify-between space-y-2.5">
+            <div>
+              <div class="flex items-center justify-between gap-1">
+                <span class="text-[9px] font-extrabold uppercase tracking-widest text-amber-800 block truncate">${item.categoryLabel || item.category}</span>
+                <span class="text-[9px] text-emerald-700 font-bold shrink-0 flex items-center gap-1">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"></span> In Stock
+                </span>
+              </div>
+
+              <h3 onclick="openProductModal('${item.id}')" class="font-serif font-bold text-xs sm:text-sm text-neutral-900 line-clamp-1 leading-snug cursor-pointer hover:text-amber-800 transition mt-1">
+                ${item.title}
+              </h3>
+              
+              <p class="text-[10px] sm:text-xs text-neutral-500 line-clamp-1 mt-0.5">${item.fabric}</p>
+
+              <!-- Color Shades Dots -->
+              ${colorDots ? `
+                <div class="flex items-center gap-1.5 mt-2 pt-2 border-t border-neutral-100">
+                  <span class="text-[9px] text-neutral-400 mr-0.5">Colors:</span>
+                  <div class="flex items-center gap-1 overflow-hidden">
+                    ${colorDots}
+                  </div>
+                  ${(item.colors && item.colors.length > 5) ? `<span class="text-[9px] text-neutral-400 font-bold">+${item.colors.length - 5}</span>` : ''}
+                </div>
+              ` : ''}
+            </div>
+
+            <!-- Price & Action Buttons -->
+            <div class="pt-2 border-t border-neutral-100 space-y-2">
+              <div class="flex items-baseline justify-between">
+                <div>
+                  <span class="text-sm sm:text-base font-black text-neutral-950 font-mono tracking-tight">Rs. ${item.price.toLocaleString()}</span>
+                  ${item.originalPrice ? `<span class="text-[10px] text-neutral-400 line-through ml-1.5">Rs. ${item.originalPrice.toLocaleString()}</span>` : ''}
+                </div>
+                <button onclick="openProductModal('${item.id}')" class="text-[10px] text-neutral-500 hover:text-black font-semibold sm:hidden">
+                  Details →
+                </button>
+              </div>
+
+              <div class="grid grid-cols-2 gap-1.5">
+                <button onclick="openProductModal('${item.id}')" class="py-2 rounded-xl bg-neutral-100 hover:bg-neutral-200 text-neutral-800 border border-neutral-300/80 font-bold text-[10px] sm:text-xs flex items-center justify-center gap-1 tap-active transition">
+                  <i class="fa-solid fa-sliders text-[9px] text-neutral-600"></i> Sizes
+                </button>
+                <button onclick="quickOrderWhatsApp('${item.id}')" class="py-2 rounded-xl bg-black hover:bg-neutral-800 text-white font-extrabold text-[10px] sm:text-xs uppercase flex items-center justify-center gap-1 shadow tap-active transition">
+                  <i class="fa-brands fa-whatsapp text-xs text-emerald-400"></i> Order
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+        `;
+      }).join("");
+    }
+
+    function filterCategory(cat, btn) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-pill').forEach(b => {
+        b.className = 'cat-pill shrink-0 px-3.5 py-1.5 rounded-full text-xs font-semibold transition bg-neutral-100 hover:bg-neutral-200 text-neutral-800 border border-neutral-200/80 tap-active';
+      });
+      if (btn) {
+        btn.className = 'cat-pill active shrink-0 px-3.5 py-1.5 rounded-full text-xs font-extrabold transition bg-black text-white shadow-sm tap-active';
+      }
+      renderCatalog();
+    }
+
+    function setupSearch() {
+      const deskInput = document.getElementById("searchInput");
+      const mobInput = document.getElementById("mobileSearchInput");
+
+      const onSearch = (val) => {
+        searchQuery = val;
+        if (deskInput) deskInput.value = val;
+        if (mobInput) mobInput.value = val;
+        renderCatalog();
+      };
+
+      if (deskInput) deskInput.addEventListener("input", (e) => onSearch(e.target.value));
+      if (mobInput) mobInput.addEventListener("input", (e) => onSearch(e.target.value));
+    }
+
+    function toggleMobileSearch() {
+      const box = document.getElementById("mobileSearchBox");
+      box.classList.toggle("hidden");
+      if (!box.classList.contains("hidden")) {
+        document.getElementById("mobileSearchInput").focus();
+      }
+    }
+
+    function clearSearchInput() {
+      document.getElementById("mobileSearchInput").value = "";
+      searchQuery = "";
+      renderCatalog();
+      toggleMobileSearch();
+    }
+
+    function applySort(val) {
+      currentSort = val;
+      renderCatalog();
+    }
+
+    // Modal Details
+    let activeModalItem = null;
+    let selectedColor = "";
+    let selectedSize = "";
+
+    function openProductModal(id) {
+      const item = products.find(p => p.id === id);
+      if (!item) return;
+
+      activeModalItem = item;
+      selectedColor = item.colors && item.colors.length ? item.colors[0] : "Standard";
+      selectedSize = item.sizes && item.sizes.length ? item.sizes[0].name : "Standard";
+
+      // Compile all gallery images
+      const allImgs = Array.isArray(item.gallery) && item.gallery.length > 0 ? [...item.gallery] : (item.aiImage ? [item.aiImage] : []);
+      if (item.colorsImage && !allImgs.includes(item.colorsImage)) allImgs.push(item.colorsImage);
+      if (item.flyerImage && !allImgs.includes(item.flyerImage)) allImgs.push(item.flyerImage);
+      const coverImg = allImgs[0] || 'assets/hero_banner.webp';
+
+      const modalContent = document.getElementById("modalProductContent");
+      modalContent.innerHTML = `
+        <div class="space-y-3">
+          <!-- Main Media Viewer (Supports Photos & Video Player) -->
+          <div id="modalMediaContainer" class="relative w-full h-64 sm:h-84 rounded-2xl overflow-hidden bg-neutral-100 flex items-center justify-center border border-neutral-200">
+            <img id="modalMainImg" src="${formatImgUrl(coverImg)}" alt="${item.title}" loading="lazy" decoding="async" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='assets/hero_banner.webp';}" class="w-full h-full object-contain">
+            <video id="modalMainVideo" controls playsinline class="hidden w-full h-full object-contain bg-black"></video>
+          </div>
+
+          <!-- Thumbnails Row (Images & Video Button) -->
+          <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-thin">
+            ${item.video ? `
+              <button type="button" onclick="switchModalVideo('${formatImgUrl(item.video)}', this)" class="modal-thumb-btn border border-amber-500 bg-amber-50 text-amber-900 rounded-xl overflow-hidden h-14 w-16 p-1 hover:border-black transition flex flex-col items-center justify-center shrink-0 shadow-sm">
+                <i class="fa-solid fa-circle-play text-amber-600 text-base mb-0.5"></i>
+                <span class="text-[9px] font-black uppercase tracking-wider">Video</span>
+              </button>
+            ` : ''}
+
+            ${allImgs.map((img, idx) => `
+              <button type="button" onclick="switchModalImage('${formatImgUrl(img)}', this)" class="modal-thumb-btn ${idx === 0 && !item.video ? 'border-2 border-black' : 'border border-neutral-300'} rounded-xl overflow-hidden h-14 w-14 bg-neutral-100 p-0.5 hover:border-black transition shrink-0">
+                <img src="${formatImgUrl(img)}" loading="lazy" decoding="async" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='assets/hero_banner.webp';}" class="w-full h-full object-cover rounded-lg">
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="space-y-3.5 flex flex-col justify-between">
+          <div class="space-y-2">
+            <div>
+              <span class="text-[9px] font-black text-amber-800 uppercase tracking-widest">${item.badge}</span>
+              <h2 class="text-base sm:text-xl font-serif font-bold text-neutral-900 leading-tight mt-0.5">${item.title}</h2>
+              <div class="flex items-baseline gap-2 mt-1">
+                <span class="text-lg sm:text-2xl font-black text-neutral-950 font-mono">Rs. ${item.price.toLocaleString()}</span>
+                ${item.originalPrice ? `<span class="text-xs text-neutral-400 line-through">Rs. ${item.originalPrice.toLocaleString()}</span>` : ''}
+              </div>
+            </div>
+
+            <div class="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900">
+              ⚠️ <strong>Strict Advance Payment:</strong> Parcel dispatch happens after Meezan Bank, Easypaisa, or OPay transfer verification.
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-neutral-700 mb-1">
+                Color: <span id="selectedColorLabel" class="text-neutral-950 font-extrabold">${selectedColor}</span>
+              </label>
+              <div class="flex flex-wrap gap-1.5">
+                ${(item.colors || []).map((c, i) => `
+                  <button type="button" onclick="selectColor('${c}', this)" 
+                    class="color-btn px-3 py-1 rounded-lg border text-xs font-semibold ${i === 0 ? 'bg-black text-white border-black' : 'bg-neutral-50 text-neutral-800 border-neutral-300 hover:border-black'} transition">
+                    ${c}
+                  </button>
+                `).join("")}
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-neutral-700 mb-1">
+                Size / Cut: <span id="selectedSizeLabel" class="text-neutral-950 font-extrabold">${selectedSize}</span>
+              </label>
+              <div class="flex flex-wrap gap-1.5">
+                ${(item.sizes || []).map((s, i) => `
+                  <button type="button" onclick="selectSize('${s.name}', this)" 
+                    class="size-btn px-3 py-1 rounded-lg border text-xs font-semibold ${i === 0 ? 'bg-black text-white border-black' : 'bg-neutral-50 text-neutral-800 border-neutral-300 hover:border-black'} transition">
+                    ${s.name} ${s.desc ? `<span class="text-[9px] opacity-75">(${s.desc})</span>` : ''}
+                  </button>
+                `).join("")}
+              </div>
+            </div>
+
+            <div class="border-t border-neutral-200 pt-2 text-xs text-neutral-600 space-y-1">
+              <p><strong>Fabric:</strong> ${item.fabric}</p>
+              <p class="leading-relaxed font-light">${item.description}</p>
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-neutral-200 space-y-2">
+            <button onclick="addToCartFromModal()" class="w-full py-3 rounded-xl bg-black hover:bg-neutral-800 text-white font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow tap-active transition">
+              <i class="fa-solid fa-bag-shopping text-sm text-amber-300"></i> Add to Shopping Bag
+            </button>
+            <button onclick="orderViaWhatsAppModal()" class="w-full py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 shadow tap-active transition">
+              <i class="fa-brands fa-whatsapp text-sm"></i> Order Direct on WhatsApp
+            </button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById("productModal").classList.remove("hidden");
+    }
+
+    function switchModalImage(src, btn) {
+      const vid = document.getElementById("modalMainVideo");
+      if (vid) {
+        vid.pause();
+        vid.classList.add("hidden");
+      }
+      const img = document.getElementById("modalMainImg");
+      if (img) {
+        img.src = src;
+        img.classList.remove("hidden");
+      }
+
+      document.querySelectorAll(".modal-thumb-btn").forEach(b => {
+        b.classList.remove("border-2", "border-black", "shadow-sm");
+        b.classList.add("border-neutral-300");
+      });
+      if (btn) {
+        btn.classList.add("border-2", "border-black", "shadow-sm");
+        btn.classList.remove("border-neutral-300");
+      }
+    }
+
+    function switchModalVideo(src, btn) {
+      const img = document.getElementById("modalMainImg");
+      if (img) img.classList.add("hidden");
+
+      const vid = document.getElementById("modalMainVideo");
+      if (vid) {
+        vid.src = src;
+        vid.classList.remove("hidden");
+        vid.play().catch(() => {});
+      }
+
+      document.querySelectorAll(".modal-thumb-btn").forEach(b => {
+        b.classList.remove("border-2", "border-black", "shadow-sm");
+        b.classList.add("border-neutral-300");
+      });
+      if (btn) {
+        btn.classList.add("border-2", "border-black", "shadow-sm");
+        btn.classList.remove("border-neutral-300");
+      }
+    }
+
+    function selectColor(color, btn) {
+      selectedColor = color;
+      document.getElementById("selectedColorLabel").innerText = color;
+      document.querySelectorAll(".color-btn").forEach(b => {
+        b.className = "color-btn px-3 py-1 rounded-lg border text-xs font-semibold bg-neutral-50 text-neutral-800 border-neutral-300 hover:border-black transition";
+      });
+      btn.className = "color-btn px-3 py-1 rounded-lg border text-xs font-semibold bg-black text-white border-black";
+    }
+
+    function selectSize(size, btn) {
+      selectedSize = size;
+      document.getElementById("selectedSizeLabel").innerText = size;
+      document.querySelectorAll(".size-btn").forEach(b => {
+        b.className = "size-btn px-3 py-1 rounded-lg border text-xs font-semibold bg-neutral-50 text-neutral-800 border-neutral-300 hover:border-black transition";
+      });
+      btn.className = "size-btn px-3 py-1 rounded-lg border text-xs font-semibold bg-black text-white border-black";
+    }
+
+    function closeProductModal() {
+      document.getElementById("productModal").classList.add("hidden");
+    }
+
+    function openPaymentModal() {
+      document.getElementById("paymentModal").classList.remove("hidden");
+    }
+
+    function closePaymentModal() {
+      document.getElementById("paymentModal").classList.add("hidden");
+    }
+
+    // Cart Management
+    function addToCartFromModal() {
+      if (!activeModalItem) return;
+      addToCart(activeModalItem, selectedColor, selectedSize);
+      closeProductModal();
+      toggleCartDrawer(true);
+    }
+
+    function addToCart(product, color, size) {
+      const existing = cart.find(i => i.id === product.id && i.color === color && i.size === size);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        cart.push({
+          id: product.id,
+          title: product.title,
+          price: product.price,
+          image: formatImgUrl(product.aiImage),
+          color: color || (product.colors ? product.colors[0] : 'Standard'),
+          size: size || (product.sizes ? product.sizes[0].name : 'Standard'),
+          quantity: 1
+        });
+      }
+      saveCartToStorage();
+      updateCartUI();
+      showToast("Added to bag!");
+    }
+
+    function updateCartUI() {
+      const badge = document.getElementById("cartCountBadge");
+      const mobBadge = document.getElementById("mobileCartBadge");
+      const drawerCount = document.getElementById("drawerItemCount");
+      const itemsList = document.getElementById("cartItemsList");
+
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+      if (totalItems > 0) {
+        badge.innerText = totalItems;
+        badge.classList.remove("hidden");
+        mobBadge.innerText = totalItems;
+        mobBadge.classList.remove("hidden");
+        drawerCount.innerText = totalItems;
+      } else {
+        badge.classList.add("hidden");
+        mobBadge.classList.add("hidden");
+        drawerCount.innerText = "0";
+      }
+
+      if (cart.length === 0) {
+        itemsList.innerHTML = `
+          <div class="text-center py-16 space-y-3">
+            <i class="fa-solid fa-bag-shopping text-neutral-300 text-4xl"></i>
+            <p class="text-xs text-neutral-500 font-semibold">Your shopping bag is empty.</p>
+            <button onclick="toggleCartDrawer(false)" class="px-5 py-2 rounded-full bg-black text-white text-xs font-bold shadow hover:bg-neutral-800 transition">
+              Explore Collections
+            </button>
+          </div>
+        `;
+        document.getElementById("cartSubtotal").innerText = "Rs. 0";
+        document.getElementById("cartGrandTotal").innerText = "Rs. 0";
+        return;
+      }
+
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const deliveryFee = storeSettings.standardDeliveryFee || 250;
+      const grandTotal = subtotal + deliveryFee;
+
+      document.getElementById("cartSubtotal").innerText = `Rs. ${subtotal.toLocaleString()}`;
+      document.getElementById("cartDeliveryFee").innerText = `Rs. ${deliveryFee.toLocaleString()}`;
+      document.getElementById("cartGrandTotal").innerText = `Rs. ${grandTotal.toLocaleString()}`;
+
+      itemsList.innerHTML = cart.map((item, index) => `
+        <div class="flex items-center gap-3 p-3 rounded-xl bg-neutral-50 border border-neutral-200">
+          <img src="${item.image}" alt="${item.title}" onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src='assets/hero_banner.webp';}" class="w-14 h-16 rounded-lg object-cover bg-neutral-200 shrink-0">
+          <div class="flex-1 min-w-0 space-y-0.5">
+            <h4 class="font-serif font-bold text-xs text-neutral-900 truncate">${item.title}</h4>
+            <p class="text-[10px] text-neutral-500">${item.color} • ${item.size}</p>
+            <p class="text-xs font-mono font-black text-neutral-950">Rs. ${item.price.toLocaleString()}</p>
+          </div>
+          <div class="flex items-center gap-1.5 shrink-0">
+            <button onclick="changeCartQty(${index}, -1)" class="w-6 h-6 rounded bg-white border border-neutral-300 text-neutral-700 text-xs flex items-center justify-center font-bold hover:bg-neutral-100">-</button>
+            <span class="text-xs font-bold text-neutral-900 w-4 text-center">${item.quantity}</span>
+            <button onclick="changeCartQty(${index}, 1)" class="w-6 h-6 rounded bg-white border border-neutral-300 text-neutral-700 text-xs flex items-center justify-center font-bold hover:bg-neutral-100">+</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function changeCartQty(index, change) {
+      if (!cart[index]) return;
+      cart[index].quantity += change;
+      if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+      }
+      saveCartToStorage();
+      updateCartUI();
+    }
+
+    function toggleCartDrawer(open) {
+      const drawer = document.getElementById("cartDrawer");
+      if (open) {
+        updateCartUI();
+        drawer.classList.remove("hidden");
+      } else {
+        drawer.classList.add("hidden");
+      }
+    }
+
+    function openCheckoutModal() {
+      if (cart.length === 0) return;
+      toggleCartDrawer(false);
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const deliveryFee = storeSettings.standardDeliveryFee || 250;
+      document.getElementById("checkoutAmountTotal").innerText = `Rs. ${(subtotal + deliveryFee).toLocaleString()}`;
+      document.getElementById("checkoutModal").classList.remove("hidden");
+    }
+
+    function closeCheckoutModal() {
+      document.getElementById("checkoutModal").classList.add("hidden");
+    }
+
+    async function handleOrderSubmit(e) {
+      e.preventDefault();
+      const customerName = document.getElementById("custName").value.trim();
+      const customerPhone = document.getElementById("custPhone").value.trim();
+      const customerCity = document.getElementById("custCity").value.trim();
+      const customerAddress = document.getElementById("custAddress").value.trim();
+      const paymentMethod = document.getElementById("custPaymentMethod").value;
+
+      const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const deliveryFee = storeSettings.standardDeliveryFee || 250;
+      const total = subtotal + deliveryFee;
+
+      const orderPayload = {
+        customerName,
+        customerPhone,
+        customerCity,
+        customerAddress,
+        paymentMethod,
+        items: cart,
+        subtotal,
+        deliveryFee,
+        grandTotal: total
+      };
+
+      let bookedOrderId = "LC-" + Math.floor(100000 + Math.random() * 900000);
+      const now = new Date();
+      const newOrderRecord = {
+        id: bookedOrderId,
+        date: now.toLocaleDateString('en-PK', { day: '2-digit', month: 'short', year: 'numeric' }),
+        createdAt: now.toISOString(),
+        ...orderPayload,
+        paymentStatus: 'Pending Advance Verification',
+        status: 'Pending Verification'
+      };
+
+      // Save order directly to Supabase Cloud Database
+      try {
+        if (window.sbApi) {
+          const saved = await sbApi.createOrder(newOrderRecord);
+          if (saved && saved.id) bookedOrderId = saved.id;
+        } else {
+          const res = await fetch(apiUrl('/api/orders'), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderPayload)
+          });
+          const json = await res.json();
+          if (json.success && json.data) {
+            bookedOrderId = json.data.id;
+          }
+        }
+      } catch (err) {
+        console.error('Supabase order booking error:', err);
+      }
+
+      // Populate Digital Invoice Modal
+      document.getElementById("invNumber").innerText = `#${bookedOrderId}`;
+      let accTitle = paymentMethod === "Meezan Bank" ? (storeSettings.meezanBankTitle || "Fahad") : (paymentMethod === "Easypaisa" ? (storeSettings.easypaisaTitle || "Fahad Fahad") : (storeSettings.opayTitle || "Fahad"));
+      let accNo = paymentMethod === "Meezan Bank" ? (storeSettings.meezanBankNo || "1036 0113829648") : (paymentMethod === "Easypaisa" ? (storeSettings.easypaisaNo || "03302043491") : (storeSettings.opayNo || "03302043491"));
+
+      document.getElementById("invPaymentAccountTitle").innerText = `${paymentMethod} • Title: ${accTitle}`;
+      document.getElementById("invPaymentAccountDetails").innerText = `A/C Number: ${accNo}`;
+
+      document.getElementById("invItemsBody").innerHTML = cart.map(i => `
+        <tr>
+          <td class="p-2 font-medium">${i.title} (${i.color}, ${i.size})</td>
+          <td class="p-2 text-center font-mono">${i.quantity}</td>
+          <td class="p-2 text-right font-mono font-bold">Rs. ${(i.price * i.quantity).toLocaleString()}</td>
+        </tr>
+      `).join("") + `
+        <tr>
+          <td colspan="2" class="p-2 text-neutral-500">Advance Delivery Fee</td>
+          <td class="p-2 text-right font-mono font-bold">Rs. ${deliveryFee}</td>
+        </tr>
+      `;
+
+      document.getElementById("invGrandTotal").innerText = `Rs. ${total.toLocaleString()}`;
+
+      // Prepare WhatsApp URL
+      const itemsSummary = cart.map(i => `• ${i.title} (${i.color}, ${i.size}) x${i.quantity} = Rs. ${i.price * i.quantity}`).join("%0A");
+      const waMsg = `*Assalam o Alaikum Lakhani Collection!*%0A%0A*Mera Order Booking Details:*%0AOrder ID: *#${bookedOrderId}*%0AName: ${customerName}%0APhone: ${customerPhone}%0ACity: ${customerCity}%0AAddress: ${customerAddress}%0A%0A*Ordered Items:*%0A${itemsSummary}%0A%0A*Delivery Fee:* Rs. ${deliveryFee}%0A*Total Payable:* *Rs. ${total.toLocaleString()}*%0APayment Method: *${paymentMethod}*%0A%0A_Maine Advance Payment transfer kar di hai, receipt ka screenshot attach kar raha hoon._`;
+
+      const targetWa = (storeSettings.whatsappNumber || "03302043491").replace(/\D/g, "");
+      const fullWaUrl = `https://wa.me/92${targetWa.startsWith("0") ? targetWa.substring(1) : targetWa}?text=${waMsg}`;
+
+      document.getElementById("sendInvoiceWhatsAppBtn").onclick = () => {
+        window.open(fullWaUrl, "_blank");
+      };
+
+      closeCheckoutModal();
+      document.getElementById("invoiceModal").classList.remove("hidden");
+
+      // Clear Cart
+      cart = [];
+      saveCartToStorage();
+      updateCartUI();
+    }
+
+    function closeInvoiceModal() {
+      document.getElementById("invoiceModal").classList.add("hidden");
+    }
+
+    function quickOrderWhatsApp(id) {
+      const item = products.find(p => p.id === id);
+      if (!item) return;
+
+      const defaultColor = item.colors && item.colors.length ? item.colors[0] : 'Standard';
+      const defaultSize = item.sizes && item.sizes.length ? item.sizes[0].name : 'Standard';
+      const waMsg = `*Assalam o Alaikum Lakhani Collection!*%0A%0AMujhe yeh item order karna hai:%0A*Product:* ${item.title}%0A*Price:* Rs. ${item.price.toLocaleString()}%0A*Color:* ${defaultColor}%0A*Size:* ${defaultSize}%0A%0AMerharbani karke Meezan/Easypaisa account confirm karein taake advance payment transfer kar sakoon.`;
+
+      const targetWa = (storeSettings.whatsappNumber || "03302043491").replace(/\D/g, "");
+      window.open(`https://wa.me/92${targetWa.startsWith("0") ? targetWa.substring(1) : targetWa}?text=${waMsg}`, "_blank");
+    }
+
+    function orderViaWhatsAppModal() {
+      if (!activeModalItem) return;
+      const waMsg = `*Assalam o Alaikum Lakhani Collection!*%0A%0AMujhe yeh item order karna hai:%0A*Product:* ${activeModalItem.title}%0A*Price:* Rs. ${activeModalItem.price.toLocaleString()}%0A*Color:* ${selectedColor}%0A*Size:* ${selectedSize}%0A%0AAdvance Payment transfer ke liye account details confirm karein.`;
+
+      const targetWa = (storeSettings.whatsappNumber || "03302043491").replace(/\D/g, "");
+      window.open(`https://wa.me/92${targetWa.startsWith("0") ? targetWa.substring(1) : targetWa}?text=${waMsg}`, "_blank");
+    }
+
+    function copyToClipboard(text, btn) {
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.innerHTML;
+        btn.innerHTML = `<i class="fa-solid fa-check text-emerald-600"></i> Copied!`;
+        setTimeout(() => { btn.innerHTML = orig; }, 2000);
+      });
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById("toastNotification");
+      document.getElementById("toastMessage").innerText = msg;
+      toast.classList.remove("translate-y-28", "opacity-0");
+      setTimeout(() => { toast.classList.add("translate-y-28", "opacity-0"); }, 2200);
+    }
+
+    function saveCartToStorage() {
+      try { localStorage.setItem("lc_bag", JSON.stringify(cart)); } catch(e){}
+    }
+
+    function loadCartFromStorage() {
+      try {
+        const stored = localStorage.getItem("lc_bag");
+        if (stored) cart = JSON.parse(stored);
+      } catch(e){}
+    }
+  </script>
+
+
+</body>
+</html>

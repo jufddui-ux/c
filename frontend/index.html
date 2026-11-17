@@ -69,8 +69,14 @@
       }
     }
   </style>
-  <script src="config.js"></script>
-  <script src="products-data.js"></script>
+  <script src="/config.js?v=2.6"></script>
+  <script src="/products-data.js?v=2.6"></script>
+  <script>
+    if (!window.sbApi) {
+      document.write('<script src="config.js"><\/script>');
+      document.write('<script src="products-data.js"><\/script>');
+    }
+  </script>
 </head>
 <body class="bg-[#FAF9F6] text-neutral-900 font-sans antialiased min-h-screen flex flex-col selection:bg-neutral-900 selection:text-white pb-20 md:pb-0">
 
@@ -152,6 +158,11 @@
           <i class="fa-solid fa-bag-shopping text-sm sm:text-base"></i>
           <span id="cartCountBadge" class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-amber-400 text-neutral-950 font-black text-[9px] flex items-center justify-center hidden shadow">0</span>
         </button>
+
+        <a href="/admin" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full border border-neutral-300 hover:border-black text-neutral-700 hover:text-black text-[11px] font-bold tap-active transition" title="Merchant Admin Dashboard">
+          <i class="fa-solid fa-lock text-[10px]"></i>
+          <span class="hidden xl:inline">Admin</span>
+        </a>
       </div>
 
     </div>

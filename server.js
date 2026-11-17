@@ -313,17 +313,40 @@ if (PERSISTENT_MOUNT) {
 }
 app.use('/assets', express.static(path.join(__dirname, 'assets'), staticCacheOptions));
 app.use(express.static(__dirname, { maxAge: 0, etag: true }));
+if (fs.existsSync(path.join(__dirname, '..', 'frontend', 'assets'))) {
+  app.use('/assets', express.static(path.join(__dirname, '..', 'frontend', 'assets'), staticCacheOptions));
+}
+
+// Aliased script files so /admin/config.js, /config.js always serve properly
+app.get(['/config.js', '/admin/config.js'], (req, res) => {
+  res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.sendFile(path.join(__dirname, 'config.js'));
+});
+
+app.get(['/products-data.js', '/admin/products-data.js'], (req, res) => {
+  res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.sendFile(path.join(__dirname, 'products-data.js'));
+});
 
 // ==========================================
-// Admin Panel & Diagnostic Endpoints (For Render)
+// Admin Panel & Customer Storefront Endpoints
 // ==========================================
 
-app.get('/admin', (req, res) => {
+// Merchant Admin Portal
+app.get(['/admin', '/admin/', '/admin.html'], (req, res) => {
   res.sendFile(path.join(__dirname, 'admin.html'));
 });
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'admin.html'));
+// Customer Storefront (Root Render URL)
+app.get(['/', '/store', '/shop', '/index.html'], (req, res) => {
+  const storefrontPath = fs.existsSync(path.join(__dirname, 'index.html'))
+    ? path.join(__dirname, 'index.html')
+    : (fs.existsSync(path.join(__dirname, '..', 'frontend', 'index.html'))
+      ? path.join(__dirname, '..', 'frontend', 'index.html')
+      : path.join(__dirname, 'admin.html'));
+  res.sendFile(storefrontPath);
 });
 
 app.get('/api', (req, res) => {
@@ -919,7 +942,7 @@ app.post('/api/upload-multiple', (req, res) => {
   });
 });
 
-// Catch-all fallback: Return 404 for missing API/media files, serve Admin Dashboard for web routes
+// Catch-all fallback: Return 404 for missing API/media/asset files, serve Admin/Storefront for web routes
 app.use((req, res) => {
   if (req.path.startsWith('/api')) {
     return res.status(404).json({ success: false, message: 'API route not found' });
@@ -927,7 +950,18 @@ app.use((req, res) => {
   if (req.path.startsWith('/uploads/') || req.path.startsWith('/assets/')) {
     return res.status(404).send('Media file not found');
   }
-  res.sendFile(path.join(__dirname, 'admin.html'));
+  if (/\.(js|css|png|jpg|jpeg|webp|svg|ico|json|map|woff2?|ttf)$/i.test(req.path)) {
+    return res.status(404).send('Asset not found');
+  }
+  if (req.path.startsWith('/admin')) {
+    return res.sendFile(path.join(__dirname, 'admin.html'));
+  }
+  const storefrontPath = fs.existsSync(path.join(__dirname, 'index.html'))
+    ? path.join(__dirname, 'index.html')
+    : (fs.existsSync(path.join(__dirname, '..', 'frontend', 'index.html'))
+      ? path.join(__dirname, '..', 'frontend', 'index.html')
+      : path.join(__dirname, 'admin.html'));
+  res.sendFile(storefrontPath);
 });
 
 // Start Server
