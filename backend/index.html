@@ -174,7 +174,7 @@
           <i class="fa-solid fa-building-columns text-[10px] text-flux-lilac"></i>
           <span>Bank Accounts</span>
         </button>
-        <a href="https://wa.me/923293026857?text=Assalam%20o%20Alaikum!%20Lakhani%20Collection%20se%20rabta%20kar%20rahe%20hain." target="_blank" class="hidden sm:flex items-center gap-1 text-[11px] text-emerald-400 hover:text-emerald-300 font-semibold transition">
+        <a href="https://wa.me/923112227142?text=Assalam%20o%20Alaikum!%20Lakhani%20Collection%20se%20rabta%20kar%20rahe%20hain." target="_blank" class="hidden sm:flex items-center gap-1 text-[11px] text-emerald-400 hover:text-emerald-300 font-semibold transition">
           <i class="fa-brands fa-whatsapp"></i> WhatsApp Direct
         </a>
       </div>
@@ -601,8 +601,8 @@
         <div class="space-y-3">
           <h4 class="font-heading font-bold text-xs text-white uppercase tracking-widest">Customer Support</h4>
           <p class="text-xs text-neutral-400 font-body">Have a question or custom size request? Talk directly with our team.</p>
-          <a href="https://wa.me/923293026857?text=Assalam%20o%20Alaikum!%20Lakhani%20Collection%20se%20rabta%20kar%20rahe%20hain." target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-heading font-semibold text-xs transition shadow">
-            <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp +92 329 3026857
+          <a href="https://wa.me/923112227142?text=Assalam%20o%20Alaikum!%20Lakhani%20Collection%20se%20rabta%20kar%20rahe%20hain." target="_blank" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-heading font-semibold text-xs transition shadow">
+            <i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp +92 311 2227142
           </a>
         </div>
 
@@ -817,7 +817,7 @@
         </div>
 
         <div class="p-3 rounded-2xl bg-amber-50 border border-amber-200 text-xs text-amber-900 font-body leading-relaxed">
-          <strong>⚠️ Notice:</strong> Lakhani Collection operates on strict advance payment nationwide. Kindly transfer to any of the verified accounts below and share the screenshot/slip on WhatsApp: <strong>0329-3026857</strong>.
+          <strong>⚠️ Notice:</strong> Lakhani Collection operates on strict advance payment nationwide. Kindly transfer to any of the verified accounts below and share the screenshot/slip on WhatsApp: <strong>0311-2227142</strong>.
         </div>
 
         <div id="paymentAccountsContainer" class="space-y-4">
@@ -825,7 +825,7 @@
         </div>
 
         <div class="pt-2 border-t border-flux-border flex items-center justify-between">
-          <a href="https://wa.me/923293026857?text=Assalam%20o%20Alaikum!%20Maine%20advance%20payment%20slip%20share%20karni%20hai." target="_blank" class="w-full py-3 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-heading font-bold text-xs flex items-center justify-center gap-1.5 shadow transition">
+          <a href="https://wa.me/923112227142?text=Assalam%20o%20Alaikum!%20Maine%20advance%20payment%20slip%20share%20karni%20hai." target="_blank" class="w-full py-3 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-heading font-bold text-xs flex items-center justify-center gap-1.5 shadow transition">
             <i class="fa-brands fa-whatsapp text-sm"></i> Send Payment Slip on WhatsApp
           </a>
         </div>
@@ -1037,13 +1037,13 @@
         {
           bank: 'Easypaisa Mobile Wallet',
           title: storeSettings.easypaisaTitle || 'Fahad Lakhani',
-          no: storeSettings.easypaisaNo || '03293026857',
+          no: storeSettings.easypaisaNo || '03112227142',
           icon: 'fa-mobile-screen-button text-green-700 bg-green-50'
         },
         {
           bank: 'Opay / Digital Wallet',
           title: storeSettings.opayTitle || 'Fahad Lakhani',
-          no: storeSettings.opayNo || '03293026857',
+          no: storeSettings.opayNo || '03112227142',
           icon: 'fa-wallet text-amber-700 bg-amber-50'
         }
       ];
@@ -1636,7 +1636,7 @@
       const waMsg = `Assalam o Alaikum Lakhani Collection!%0AMaine website par order book kiya hai.%0A%0A*Order ID:* ${orderId}%0A*Name:* ${encodeURIComponent(name)}%0A*City:* ${encodeURIComponent(city)}%0A*Total Payable:* Rs. ${grandTotal.toLocaleString()}%0A*Payment Method:* ${encodeURIComponent(paymentMethod)}%0A%0A*Items:*%0A${itemsSummary}%0A%0APayment slip screenshot share kar raha hoon.`;
       
       const waBtn = document.getElementById("invoiceWhatsAppBtn");
-      waBtn.href = `https://wa.me/923293026857?text=${waMsg}`;
+      waBtn.href = `https://wa.me/${getWhatsAppNumber()}?text=${waMsg}`;
 
       document.getElementById("invoiceModal").classList.remove("hidden");
       submitBtn.disabled = false;
@@ -1647,18 +1647,27 @@
       document.getElementById("invoiceModal").classList.add("hidden");
     }
 
+    
+    function getWhatsAppNumber() {
+      const raw = (storeSettings && storeSettings.whatsappNumber) || '03112227142';
+      const clean = String(raw).replace(/[^0-9]/g, '');
+      if (clean.startsWith('92')) return clean;
+      if (clean.startsWith('0')) return '92' + clean.slice(1);
+      return '92' + clean;
+    }
+
     function quickOrderWhatsApp(id) {
       const p = products.find(x => x.id === id);
       if (!p) return;
       const msg = `Assalam o Alaikum Lakhani Collection!%0AMujhe yeh piece order karna hai:%0A*Product:* ${encodeURIComponent(p.title)}%0A*Price:* Rs. ${Number(p.price).toLocaleString()}%0A*Category:* ${encodeURIComponent(p.categoryLabel || p.category)}%0APlease advance payment account details aur size guide share karein.`;
-      window.open(`https://wa.me/923293026857?text=${msg}`, '_blank');
+      window.open(`https://wa.me/${getWhatsAppNumber()}?text=${msg}`, '_blank');
     }
 
     function orderViaWhatsAppModalDirect() {
       if (!currentModalProduct) return;
       const p = currentModalProduct;
       const msg = `Assalam o Alaikum Lakhani Collection!%0AMujhe yeh order karna hai:%0A*Product:* ${encodeURIComponent(p.title)}%0A*Size:* ${encodeURIComponent(selectedSize)}%0A*Color:* ${encodeURIComponent(selectedColor)}%0A*Quantity:* ${modalQuantity}%0A*Total:* Rs. ${(p.price * modalQuantity).toLocaleString()}%0AKindly confirm availability aur bank account bhej dein.`;
-      window.open(`https://wa.me/923293026857?text=${msg}`, '_blank');
+      window.open(`https://wa.me/${getWhatsAppNumber()}?text=${msg}`, '_blank');
     }
 
     function orderViaWhatsAppModal() {
@@ -1668,7 +1677,7 @@
       const grandTotal = subtotal + deliveryFee;
       const itemsSummary = cart.map(i => `- ${i.title} (${i.size}, ${i.color}) x${i.quantity}`).join('%0A');
       const msg = `Assalam o Alaikum Lakhani Collection!%0AMaine cart select kiya hai:%0A${itemsSummary}%0A%0A*Total Payable:* Rs. ${grandTotal.toLocaleString()}%0APlease account details bhej dein taake advance pay kar sakun.`;
-      window.open(`https://wa.me/923293026857?text=${msg}`, '_blank');
+      window.open(`https://wa.me/${getWhatsAppNumber()}?text=${msg}`, '_blank');
     }
 
     function copyToClipboard(text, msg) {
